@@ -27,12 +27,9 @@
 		  var p = $("#password", form).val();
 		  var pr = $("#passwordRepeat", form).val();
 		  navigator.notification.alert(u);  
-		  window.location.replace('foodList.html');	
-		  
-
-		  	navigator.notification.alert("Invalid data");  
-		        	window.location.replace('foodList.html');
-		 $.ajax({
+		  window.location.replace("foodList.html");	
+		
+		 /*  $.ajax({
 		        type       : "GET",
 		        url        : "http://localhost:9001/register?",
 		        crossDomain: false,
@@ -55,7 +52,7 @@
 		        	
 		        }
 		    });    
-		 return false;
+		 return false; */
 	}
 
 </script>
