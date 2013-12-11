@@ -24,9 +24,25 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <script type="text/javascript" src="js/databaseModule.js"></script>
+        
         <title>Welcome</title>
     </head>
-    
+    <script>
+    function onLoad() {
+	    document.addEventListener("deviceready", onDeviceReady, false);
+	}
+
+	// Cordova is loaded and it is now safe to make calls Cordova methods
+	//
+	function onDeviceReady() {
+		navigator.notification.alert("PhoneGap is working!!");
+			if(getSavedUserData()) {
+	    	window.location.replace('foodList.html');
+	    } else {        	
+	    	window.location.replace('login.html');
+	    } 
+	}
+    </script>
     <body onload="onLoad();">
         <div class="app">
             <h1>Euphoria</h1>
@@ -35,17 +51,12 @@
                 <p class="event received">Device is Ready</p>
             </div>
         </div>
-        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="phonegap.js"></script>        
+        <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
         app.initialize();
-        if(getSavedUserData()) {
-        	window.location.replace('foodList.html');
-        } else {        	
-        	window.location.replace('login.html');
-        }
            
         </script>
-       
     </body>
 </html>
