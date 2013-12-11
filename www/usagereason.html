@@ -1,0 +1,109 @@
+<html>
+<head>
+
+<title>Title</title>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="phonegap.js"></script>
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<script type="text/javascript" src="js/databaseModule.js"></script>
+<style type=text/css>
+    input.ui-slider-input {
+        display : none !important;
+    }
+
+}
+</style>
+</head>
+<body onload="onLoad();">
+	<div class="app">
+		<div data-role="page" id="usagereason" data-theme="a">
+			<!-- load user food list -->
+			<style type="text/css" title="currentStyle">
+		</style>			
+			<script>
+			
+				loadUserUsageList();
+				if(newUsageNumber != 0) {
+					$('#badge-page5').html(newUsageNumber).fadeIn();	
+				}
+				if(newWasteNumber != 0) {
+					$('#badge-page6').html(newWasteNumber).fadeIn();
+				}
+				
+				function saveUsageReasonsToServer() {
+					for (var i=0; i < userFoodUsageInfo.length; i++) {
+						var id =  userFoodUsageInfo[i][0];
+						var nameValue = "#" + id + "Relationship";
+						var val = $(nameValue).val();
+						var nameValue2 = "#" + id +  "People";
+						var val2 = $(nameValue2).val();
+						sendUsageUpdate(val, val2, i);	
+					}
+					
+					newUsageNumber = 0;
+					//set usage events for bubble count
+					updateUsageBubbles();
+				}
+				
+				function sendUsageUpdate(val, val2, i) {
+					 $.ajax({
+					        type       : "GET",
+					        url        : "http://localhost:9001/updateUsageInformation?",
+					        crossDomain: false,
+					        beforeSend : function() {$.mobile.loading('show')},
+					        complete   : function() {$.mobile.loading('hide')},
+					        dataType   : 'json',
+					        data       : {token : sessionStorage.getItem("usertoken"), foodId: userFoodUsageInfo[i][3], relation : val, number : val2, purchaseDate : userFoodUsageInfo[i][4], usageDate : userFoodUsageInfo[i][5]},
+					        success    : function(data) {	
+					        	updateFoodUsageRelAndPeople(data.members.usageList, i);
+					        },
+					        error      : function(e) {
+					            console.error(e);
+					            alert('Not working!');                  
+					        }
+					    });    
+					 return false;
+				}
+				
+			</script>
+			<div data-role="header" data-position="fixed" data-id="nav"> 
+				<h1>Euphoria</h1>
+			
+			<div data-role="navbar" >
+				<ul>
+					<li><a href="foodList.html" id="shop" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="foodUsage.html" id="list" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="usagereason.html" id="utensils2" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page5" class="badge"></span></a></li>
+					<li><a href="wastereason.html" id="bin" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page6" class="badge"></span></a></li>					
+					<li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li>
+					</ul>
+			</div>
+			</div>
+			<!-- /navbar -->
+			<div data-role="content">
+				<select name="sortBy" id="sortBy" data-native-menu="false" data-mini="true"
+					data-placeholder="true" data-theme="a">
+					<option>Sort by</option>
+					<option value="Food">Food</option>
+					<option value="Amount">Amount</option>
+					<option value="Waste">Waste</option>
+				</select>
+				<div id="usageList"></div>
+				<div align="right">
+					<input type="button" id="done" value="Done" data-inline="true" data-mini="true"
+						data-theme="a" onclick="saveUsageReasonsToServer();">
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+

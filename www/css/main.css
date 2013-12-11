@@ -1,0 +1,257 @@
+.my-button {
+    background-image: url('img/Picture1.jpg') !important;
+}
+
+
+.ui-grid-b input {
+    width  : 100%;
+    height : 15%;
+}
+
+#custom-grid .ui-block-a {
+    width: 35% !important;
+}
+
+#custom-grid .ui-block-b {
+    width: 20% !important;    
+}
+
+#custom-grid .ui-block-c {
+    width: 45% !important;    
+}
+
+	
+.custom-navbar ul li a {
+   
+}
+
+.select-class {
+	display: block;
+	width : 20%;
+	
+}
+
+.table-title-label {
+	font-size:12;
+	display: block;
+	text-align: center;
+}
+
+div.ui-slider{width:60%;}
+
+.ui-li-count { 
+	padding-right:1; 
+	position:static; 
+	color: red;
+	font: bold;
+	text-size: 20px;
+}
+
+.badge {
+  display: none;
+  background: #BA070F;
+  color: #fff;
+  padding: 1px 7px;
+  position: absolute;
+  right: 4px;
+  top: -12px;
+  z-index: 999;
+  border-radius: .8em;
+  border: 2px solid #fff;
+}
+
+.ui-badge-container {
+  position: relative;
+}
+
+.ui-icon-abc
+{
+    background: url(http://glyphish.com/images/demo.png) no-repeat rgba(0, 0, 0, 0.4) !important;
+    background-size: 16px 16px;
+}
+
+#favorite .ui-icon { 
+    background-image: url(http://glyphish.com/images/demo.png);
+    background-position: -345px -112px;
+    background-repeat: no-repeat;
+}
+
+
+.ui-icon {
+    background-color: transparent;
+    width: 35px;
+    height: 35px;
+}
+/* custom icons do not work!!!!*/
+
+
+.ui-widget-header
+{
+	font-size: 12px;
+	color:white;
+	font:italic;
+	align:right;
+}
+
+/* Add alternating row stripes */
+.table-stripe tbody tr:nth-child(odd) td,
+.table-stripe tbody tr:nth-child(odd) th {
+  background-color: rgba(0,0,0,0.04);
+}
+/* Add stroke to the header and last item */
+.table-stripe thead th,
+.table-stripe tbody tr:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.table-stroke thead th {
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+.table-stroke tbody th,
+.table-stroke tbody td {
+  border-bottom: 1px solid rgba(0, 0, 0, .05);
+}
+
+.ui-table-columntoggle-btn {
+    display: none !important;
+}
+
+.selectedImage{
+   border : 3px solid yellow;
+}
+
+.ui-select {
+	width :  100%;
+}
+
+ .scrollable {
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+ 
+.my-label
+{
+	display: block;
+	background-color:#444444;
+	color:white;
+	font-size:18px;
+	width:70px;
+	text-align:center;
+}
+
+
+table.dataTable.display tr.odd.gradeA {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeA {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeC {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeC {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeX {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeX {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeU {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeU {
+	background-color: #444444;
+}
+
+
+table.dataTable.display tr.odd {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd td.sorting_1 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd td.sorting_2 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd td.sorting_3 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even td.sorting_1 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even td.sorting_2 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even td.sorting_3 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeA td.sorting_1 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeA td.sorting_2 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeA td.sorting_3 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeA td.sorting_1 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeA td.sorting_2 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeA td.sorting_3 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeC td.sorting_1 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeC td.sorting_2 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.odd.gradeC td.sorting_3 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeC td.sorting_1 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeC td.sorting_2 {
+	background-color: #444444;
+}
+
+table.dataTable.display tr.even.gradeC td.sorting_3 {
+	background-color: #444444;
+}
+
+
+

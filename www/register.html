@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta name="viewport" content="width=320; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Auth Demo</title>
+    <script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="phonegap.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script
+	src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+</head>
+
+<script type="text/javascript">	
+	function register() {
+		 var form = $("#registerform");    
+		  var u = $("#username", form).val();
+		  var e = $("#email", form).val();
+		  var p = $("#password", form).val();
+		  var pr = $("#passwordRepeat", form).val();
+		  navigator.notification.alert(u);  
+		  window.location.replace('foodList.html');	
+		  
+
+		  	navigator.notification.alert("Invalid data");  
+		        	window.location.replace('foodList.html');
+		 $.ajax({
+		        type       : "GET",
+		        url        : "http://localhost:9001/register?",
+		        crossDomain: false,
+		        beforeSend : function() {$.mobile.loading('show')},
+		        complete   : function() {$.mobile.loading('hide')},
+		        data       : {username : u, password : p, passwordRepeat : pr, email : e},
+		        dataType   : 'json',
+		        success    : function(data) {
+					if(data.members.value != 'ok') {
+		        		alert(data.members.value);
+		        	} else  {
+		        		sessionStorage.setItem("usertoken", data.members.token);
+		        		
+			        	window.location.replace('foodList.html');			        	
+		        	}		        	
+		        },
+		        error      : function(err) {
+		        	navigator.notification.alert("Invalid data");  
+		        	window.location.replace('foodList.html');	
+		        	
+		        }
+		    });    
+		 return false;
+	}
+
+</script>
+<body>
+    
+<div id="loginPage" data-role="page" data-theme="a">
+
+    <div data-role="header">
+        <h1>Welcome to Euphoria</h1>
+    </div>
+
+    <div data-role="content">    
+
+        <form id="registerform">
+        <div data-role="fieldcontain" class="ui-hide-label">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" value="" placeholder="Username" />
+        </div>
+ 		<div data-role="fieldcontain" class="ui-hide-label">
+            <label for="email">E-mail:</label>
+            <input type="text" name="email" id="email" value="" placeholder="E-mail" />
+        </div>
+        <div data-role="fieldcontain" class="ui-hide-label">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" value="" placeholder="Password" />
+        </div>
+       
+        <div data-role="fieldcontain" class="ui-hide-label">
+            <label for="passwordRepeat">Password:</label>
+            <input type="password" name="passwordRepeat" id="passwordRepeat" value="" placeholder="Password" />
+        </div>
+		
+		<div class="ui-block-b">
+        	<input type="submit" value="Register" id="registerButton" onclick="register(); return false;">
+        </div>
+        </form>
+        
+    </div>
+
+</div>
+
+</body>
+</html>
