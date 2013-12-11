@@ -24,7 +24,7 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <script type="text/javascript" src="js/databaseModule.js"></script>
-        <title>Welcome to Euphoria</title>
+        <title>Welcome</title>
     </head>
     
     <body onload="onLoad();">
@@ -38,12 +38,13 @@
         <script type="text/javascript" src="phonegap.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
+        app.initialize();
         if(getSavedUserData()) {
         	window.location.replace('foodList.html');
-        } else {
+        } else {        	
         	window.location.replace('login.html');
         }
-            app.initialize();
+           
         </script>
        
     </body>
