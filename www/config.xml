@@ -20,7 +20,7 @@
         Enable individual API permissions here.
         The "device" permission is required for the 'deviceready' event.
     -->
-    <feature name="http://api.phonegap.com/1.0/device" />
+    <feature name="http://api.phonegap.com/2.0/device" />
     <feature name="Notification">
 	    <param name="android-package" value="org.apache.cordova.Notification" />
 	</feature>
@@ -31,6 +31,8 @@
         permission on your app, which PhoneGap requires.
     -->
     <preference name="permissions"                value="none"/>
+    
+     <gap:platform name="android" />
 
     <!-- Customize your app and platform with the preference element. -->
     <preference name="phonegap-version"           value="2.9.0" />          <!-- all: current version of PhoneGap -->
