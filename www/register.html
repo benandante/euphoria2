@@ -84,15 +84,19 @@
             <label for="passwordRepeat">Password:</label>
             <input type="password" name="passwordRepeat" id="passwordRepeat" value="" placeholder="Password" />
         </div>
-		
-		<div class="ui-block-b">
+		  <div class="ui-grid-a">	
+		<div class="ui-block-a">
         	<input type="submit" value="Register" id="registerButton" onclick="register(); return false;">
+        	
         </div>
-        </form>
-        
+        <div class="ui-block-b">
+        	<input type="submit" value="Login" id="loginButton" onclick="window.location.href = 'login.html'; return false;">
+        </div>
+        </div>
+        </form>        
     </div>
-
 </div>
 </div>
+ <script type="text/javascript" src="phonegap.js"></script>
 </body>
 </html>
