@@ -40,12 +40,29 @@
 		        }
 		    });    
 		 return false; */
-		navigator.notification.alert("PhoneGap is working!!");
+		 showAlert();
+		//navigator.notification.alert("PhoneGap is working!!");
 	}
 	function openRegister() {		 
 		window.location.href = "register.html";
 		//$.mobile.changePage("register.html")
 	}
+	
+	// alert dialog dismissed
+    function alertDismissed() {
+        // do something
+    }
+
+// Show a custom alertDismissed
+//
+function showAlert() {
+    navigator.notification.alert(
+        'You are the winner!',  // message
+        alertDismissed,         // callback
+        'Game Over',            // title
+        'Done'                  // buttonName
+    );
+}
 	
 </script>
 <body>
