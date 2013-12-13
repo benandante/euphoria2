@@ -47,9 +47,10 @@ function successCallbackSQLite() {
 		deviceVersion = window.device.version;
 		navigator.notification.alert(deviceName);*/
 		
-	currentUser = window.localStorage.getItem("currentuser");	
+	currentUser = window.localStorage.getItem("currentuser");
+	console.log("db will be opened");
 	db = window.openDatabase("DatabaseFulya", "1.0", "Cordova Demo", 200000);
-
+	console.log("db is opened");
 	db.transaction(populateDB, errorCallbackSQLite, successCallbackSQLite);
 
 	db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	

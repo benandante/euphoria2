@@ -18,41 +18,50 @@
 <script type="text/javascript">	
 
 	function register() {
+		var form = $("#registerform");
+		var u = $("#username", form).val();
+		var e = $("#email", form).val();
+		var p = $("#password", form).val();
+		var pr = $("#passwordRepeat", form).val();
 
-		 var form = $("#registerform");    
-		  var u = $("#username", form).val();
-		  var e = $("#email", form).val();
-		  var p = $("#password", form).val();
-		  var pr = $("#passwordRepeat", form).val();
-		 navigator.notification.alert("PhoneGap is working!!");
-		// window.location.href='foodList.html';
-		
-		 /*  $.ajax({
-		        type       : "GET",
-		        url        : "http://localhost:9001/register?",
-		        crossDomain: false,
-		        beforeSend : function() {$.mobile.loading('show')},
-		        complete   : function() {$.mobile.loading('hide')},
-		        data       : {username : u, password : p, passwordRepeat : pr, email : e},
-		        dataType   : 'json',
-		        success    : function(data) {
-					if(data.members.value != 'ok') {
-		        		alert(data.members.value);
-		        	} else  {
-		        		sessionStorage.setItem("usertoken", data.members.token);
-		        		
-			        	window.location.replace('foodList.html');			        	
-		        	}		        	
-		        },
-		        error      : function(err) {
-		        	navigator.notification.alert("Invalid data");  
-		        	window.location.replace('foodList.html');	
-		        	
-		        }
-		    });    
-		 return false; */
+       
+	 $.ajax({
+			type : "GET",
+			url : "http://131.155.226.193:9001/register?",
+			crossDomain : false,
+			beforeSend : function() {
+				$.mobile.loading('show')
+			},
+			complete : function() {
+				$.mobile.loading('hide')
+			},
+			data : {
+				username : u,
+				password : p,
+				passwordRepeat : pr,
+				email : e
+			},
+			dataType : 'json',
+			success : function(data) {
+				if (data.members.value != 'ok') {
+					navigator.notification.alert(data.members.value);
+					console.log("failure!");
+				} else {
+					sessionStorage.setItem("usertoken", data.members.token);
+					window.location.replace('foodList.html');
+				}
+				 console.log("success!");
+			},
+			error : function(err) {
+				navigator.notification.alert("Invalid data");
+				console.log("failure!");
+				window.location.replace('foodList.html');
+				 
+
+			}
+		}); 
+		return false;
 	}
-
 </script>
 
 <body>
