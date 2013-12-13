@@ -29,7 +29,11 @@
     </head>
     <script>
     function onLoad() {
-	    document.addEventListener("deviceready", onDeviceReady, false);
+    	if (typeof navigator.device == "undefined"){
+            document.addEventListener("deviceready", onDeviceReady, false);
+       } else {
+       onDeviceReady();
+       }
 	}
 
 	// Cordova is loaded and it is now safe to make calls Cordova methods
