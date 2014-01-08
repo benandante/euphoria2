@@ -18,12 +18,12 @@
 <script type="text/javascript">
 
 	function sendData() {
-		 /* var form = $("#loginForm");    
+	  var form = $("#loginForm");    
 		  var u = $("#username", form).val();
 		  var p = $("#password", form).val();
 		 $.ajax({
 		        type       : "GET",
-		        url        : "http://localhost:9001/login?",
+		        url        : "http://131.155.224.226:9001/login?",
 		        crossDomain: false,
 		        beforeSend : function() {$.mobile.loading('show')},
 		        complete   : function() {$.mobile.loading('hide')},
@@ -36,12 +36,12 @@
 		        },
 		        error      : function(e) {
 		        	//TODO phonegap alerts
-		            window.confirm("Username or password is invalied");     
+		           navigator.notification.alert("Username or password is invalied");     
 		        }
 		    });    
-		 return false; */
+		 return false; 
 		 //showAlert();
-		navigator.notification.alert("PhoneGap is working!!");
+		//navigator.notification.alert("PhoneGap is working!!");
 	}
 	function openRegister() {		 
 		window.location.href = "register.html";
