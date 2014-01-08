@@ -24,11 +24,11 @@
 		 $.ajax({
 		        type       : "GET",
 		        url        : "http://131.155.224.226:9001/login?",
-		        crossDomain: false,
+		        crossDomain: true,
 		        beforeSend : function() {$.mobile.loading('show')},
 		        complete   : function() {$.mobile.loading('hide')},
 		        data       : {username : u, password : p},
-		        dataType   : 'json',
+		        dataType   : 'jsonp',
 		        success    : function(data) {
 		        	sessionStorage.setItem("usertoken", data.members.token);
 		        	sessionStorage.setItem("currentUser", u);
@@ -36,7 +36,7 @@
 		        },
 		        error      : function(e) {
 		        	//TODO phonegap alerts
-		           navigator.notification.alert("Username or password is invalied");     
+		           navigator.notification.alert("Username or password is invalid");     
 		        }
 		    });    
 		 return false; 
