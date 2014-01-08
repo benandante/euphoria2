@@ -28,7 +28,7 @@
 		        beforeSend : function() {$.mobile.loading('show')},
 		        complete   : function() {$.mobile.loading('hide')},
 		        data       : {username : u, password : p},
-		        dataType   : 'jsonp',
+		        dataType   : 'json',
 		        success    : function(data) {
 		        	sessionStorage.setItem("usertoken", data.members.token);
 		        	sessionStorage.setItem("currentUser", u);
@@ -36,7 +36,8 @@
 		        },
 		        error      : function(e) {
 		        	//TODO phonegap alerts
-		           navigator.notification.alert(e.message);     
+		           navigator.notification.alert(e);
+		           
 		        }
 		    });    
 		 return false; 
