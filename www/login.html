@@ -36,7 +36,7 @@
 		        },
 		        error      : function(e) {
 		        	//TODO phonegap alerts
-		           navigator.notification.alert("Username or password is invalid");     
+		           navigator.notification.alert(e.message);     
 		        }
 		    });    
 		 return false; 
