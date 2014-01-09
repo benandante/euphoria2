@@ -21,6 +21,7 @@
 	  var form = $("#loginForm");    
 		  var u = $("#username", form).val();
 		  var p = $("#password", form).val();
+		  alert(sessionStorage.getItem("serverDomain") + "/login?");
 		 $.ajax({
 		        type       : "GET",
 		        url        : sessionStorage.getItem("serverDomain") + "/login?",

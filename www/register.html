@@ -51,11 +51,8 @@
 				 console.log("success!");
 			},
 			error : function(err) {
-				navigator.notification.alert("Invalid data");
+				navigator.notification.alert(err);
 				console.log("failure!");
-				window.location.replace('foodList.html');
-				 
-
 			}
 		}); 
 		return false;
