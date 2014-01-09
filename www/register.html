@@ -16,18 +16,16 @@
 </head>
 
 <script type="text/javascript">	
-
+	
 	function register() {
 		var form = $("#registerform");
 		var u = $("#username", form).val();
 		var e = $("#email", form).val();
 		var p = $("#password", form).val();
 		var pr = $("#passwordRepeat", form).val();
-
-       
 	 $.ajax({
 			type : "GET",
-			url : "http://131.155.224.226:9001/register?",
+			url : sessionStorage.getItem("serverDomain") + "/register?",
 			crossDomain : true,
 			beforeSend : function() {
 				$.mobile.loading('show')

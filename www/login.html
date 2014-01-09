@@ -16,14 +16,14 @@
 </head>
 
 <script type="text/javascript">
-
+	sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
 	function sendData() {
 	  var form = $("#loginForm");    
 		  var u = $("#username", form).val();
 		  var p = $("#password", form).val();
 		 $.ajax({
 		        type       : "GET",
-		        url        : "http://131.155.224.226:9001/login?",
+		        url        : sessionStorage.getItem("serverDomain") + "/login?",
 		        crossDomain: true,
 		        beforeSend : function() {$.mobile.loading('show')},
 		        complete   : function() {$.mobile.loading('hide')},
