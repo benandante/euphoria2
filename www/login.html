@@ -21,10 +21,10 @@
 	  var form = $("#loginForm");    
 		  var u = $("#username", form).val();
 		  var p = $("#password", form).val();
-		  alert(sessionStorage.getItem("serverDomain") + "/login?");
+		 var address = sessionStorage.getItem("serverDomain") + "/login?";
 		 $.ajax({
 		        type       : "GET",
-		        url        : sessionStorage.getItem("serverDomain") + "/login?",
+		        url        : address,
 		        crossDomain: true,
 		        beforeSend : function() {$.mobile.loading('show')},
 		        complete   : function() {$.mobile.loading('hide')},
@@ -38,6 +38,7 @@
 		        error      : function(e) {
 		        	//TODO phonegap alerts
 		           navigator.notification.alert(e);
+		           navigator.notification.alert(address);
 		           
 		        }
 		    });    
