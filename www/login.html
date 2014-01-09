@@ -24,7 +24,7 @@
 		 var address = sessionStorage.getItem("serverDomain") + "/login?";
 		 $.ajax({
 		        type       : "GET",
-		        url        : address,
+		        url        : "http://diserver.id.tue.nl:8080/EServer/login?",
 		        crossDomain: true,
 		        beforeSend : function() {$.mobile.loading('show')},
 		        complete   : function() {$.mobile.loading('hide')},
