@@ -16,12 +16,11 @@
 </head>
 
 <script type="text/javascript">
-	sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
+	
 	function sendData() {
 	  var form = $("#loginForm");    
 		  var u = $("#username", form).val();
 		  var p = $("#password", form).val();
-		 var address = sessionStorage.getItem("serverDomain") + "/login?";
 		 $.ajax({
 		        type       : "GET",
 		        url        : sessionStorage.getItem("serverDomain") + "/login?",

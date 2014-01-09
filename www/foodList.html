@@ -103,7 +103,7 @@
 	function getFoodList() {
 		$.ajax({
 			type : "GET",
-			url : "http://131.155.224.226:9001/foodList?",
+			url : sessionStorage.getItem("serverDomain") + "/foodList?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')
@@ -130,7 +130,7 @@
 	function getUserFoodList() {
 		$.ajax({
 			type : "GET",
-			url : "http://131.155.224.226:9001/userFoodList?",
+			url : sessionStorage.getItem("serverDomain") + "/userFoodList?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')
@@ -155,7 +155,7 @@
 	function buyNewFood(purchaseId, amount, statusValue) {
 		$.ajax({
 			type : "GET",
-			url : "http://131.155.224.226:9001/buyFood?",
+			url : sessionStorage.getItem("serverDomain") + "/buyFood?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')
@@ -185,7 +185,7 @@
 	function getUsageInformation() {
 		$.ajax({
 			type : "GET",
-			url : "http://131.155.224.226:9001/usageList?",
+			url : sessionStorage.getItem("serverDomain") + "/usageList?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')
@@ -210,7 +210,7 @@
 	function getWasteInformation() {
 		$.ajax({
 			type : "GET",
-			url : "http://131.155.224.226:9001/wasteList?",
+			url : sessionStorage.getItem("serverDomain") + "/wasteList?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')
@@ -235,7 +235,7 @@
 	function getSurveyDataFromServer() {
 		$.ajax({
 			type : "GET",
-			url : "http://131.155.224.226:9001/surveyData?",
+			url : sessionStorage.getItem("serverDomain") + "/surveyData?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')

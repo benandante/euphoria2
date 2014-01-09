@@ -77,7 +77,7 @@
 				function sendUpdateAmount(id, d, value, purchaseId, rowNumber) {
 					 $.ajax({
 					        type       : "GET",
-					        url        : "http://localhost:9001/updateFoodAmount?",
+					        url        : sessionStorage.getItem("serverDomain") + "/updateFoodAmount?",
 					        crossDomain: false,
 					        beforeSend : function() {$.mobile.loading('show')},
 					        complete   : function() {$.mobile.loading('hide')},
@@ -97,7 +97,7 @@
 				function sendWaste(id, d, purchaseId, value, rowNumber) {
 					 $.ajax({
 					        type       : "GET",
-					        url        : "http://localhost:9001/wasteFood?",
+					        url        : sessionStorage.getItem("serverDomain") + "/wasteFood?",
 					        crossDomain: false,
 					        beforeSend : function() {$.mobile.loading('show')},
 					        complete   : function() {$.mobile.loading('hide')},
@@ -117,7 +117,7 @@
 				function sendUsage(id, d, purchaseId, value, rowNumber) {
 					 $.ajax({
 					        type       : "GET",
-					        url        : "http://localhost:9001/consumeFood?",
+					        url        : sessionStorage.getItem("serverDomain") + "/consumeFood?",
 					        crossDomain: false,
 					        beforeSend : function() {$.mobile.loading('show')},
 					        complete   : function() {$.mobile.loading('hide')},
@@ -137,7 +137,7 @@
 				function sendDeletion(fId, dateOfPurchase, purchaseId, value, rowNumber) {
 					 $.ajax({
 					        type       : "GET",
-					        url        : "http://localhost:9001/deletePurchase?",
+					        url        : sessionStorage.getItem("serverDomain") + "/deletePurchase?",
 					        crossDomain: false,
 					        beforeSend : function() {$.mobile.loading('show')},
 					        complete   : function() {$.mobile.loading('hide')},
