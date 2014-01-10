@@ -769,7 +769,7 @@ function successCallbackSQLite() {
 		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
 		    	 '</i></label></td>';
 	    		 resultHTML += '<td><input  style="width:35%" type="button" id="shoppingConfirm' + currentId + '" value="Confirm" data-inline="true" data-mini="true" data-theme="a"></td>';
-	    		 resultHTML += '<td><div id="deleteShopping' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" value="Delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
+	    		 resultHTML += '<td><div id="deleteShopping' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
 	    		
 	    		 
 	    	 } else {
@@ -783,7 +783,7 @@ function successCallbackSQLite() {
 	    		 resultHTML += '<td style="width:60%">';
 	    		 resultHTML += '<input type="range" id="sliderUsage' + currentId + '"';
 		    	 resultHTML += 'value="50" step="1" min="0" max="100" /></td>';
-		    	 resultHTML += '<td><div id="deleteAvailable' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" value="Delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
+		    	 resultHTML += '<td><div id="deleteAvailable' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
 	    	 }
 	    
 	    	
@@ -848,6 +848,10 @@ function successCallbackSQLite() {
 			var buttonValue =  event.target.id.replace("swipeImage","deleteAvailable");
 			$('#' + buttonValue).show();
 	      });
+		$(document).on("swipeleft", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
+			var buttonValue =  event.target.id.replace("swipeImage","deleteAvailable");
+			$('#' + buttonValue).hide();
+	      });
 	}
 	
 	createShoppingListTable(results);
@@ -877,6 +881,10 @@ function successCallbackSQLite() {
 		$(document).on("swiperight", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
 			var buttonValue =  event.target.id.replace("swipeImage","deleteShopping");
 			$('#' + buttonValue).show();
+	      });
+		$(document).on("swipeleft", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
+			var buttonValue =  event.target.id.replace("swipeImage","deleteShopping");
+			$('#' + buttonValue).hide();
 	      });
 	}
  }
