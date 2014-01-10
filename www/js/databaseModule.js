@@ -47,10 +47,9 @@ function successCallbackSQLite() {
 		deviceVersion = window.device.version;
 		navigator.notification.alert(deviceName);*/
 		
-	currentUser = window.localStorage.getItem("currentuser");
-	console.log("db will be opened");
+	currentUser = window.localStorage.getItem("currentuser");	
 	db = window.openDatabase("DatabaseFulya", "1.0", "Cordova Demo", 200000);
-	console.log("db is opened");
+
 	db.transaction(populateDB, errorCallbackSQLite, successCallbackSQLite);
 
 	db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	
@@ -704,13 +703,13 @@ function successCallbackSQLite() {
 		 var rowHtmlR = '';
 		 currentId =  results.rows.item(i).id;
 		 
-		 rowHtmlR += ' <tr class="gradeA"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" width="50" height="50"></td>';
+		 rowHtmlR += ' <tr class="gradeA"><td style="width:15%"><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" width="50" height="50"></td>';
     	 
-		 rowHtmlR += '<td><input type="text" class="version" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+		 rowHtmlR += '<td style="width:15%"><input type="text" class="version" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
     	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
     	 '</i></label></td>';
     	 
-		 rowHtmlR += '<td width="20px">';
+		 rowHtmlR += '<td style="width:70%">';
 		 rowHtmlR += '<input type="range" id="sliderUsage' + currentId + '"';
 		 rowHtmlR += 'value="50" step="1" min="0" max="100" /></div></td>';
 
@@ -727,6 +726,29 @@ function successCallbackSQLite() {
 	 }
 	 //this is needed for refreshing html item
 	 $('#my-table').trigger("create");
+	 
+	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
+		for (var i=0; i<len; i++){
+			userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID );
+		}
+		
+		for (var i=0; i<len; i++){
+			currentId =  results.rows.item(i).id;
+			$('#sliderUsage' + currentId).change(function(event, ui){
+			    var slider_value = $(this).val();
+				var amountVal =  event.target.id.replace("sliderUsage","amount");
+				var oldVal =  findCurrentAmountById(event.target.id.replace("sliderUsage",""));
+				var newVal = oldVal - oldVal * slider_value / 100;			
+				 $('#' + amountVal).val(newVal);
+			});
+		}
+		
+		//set slider values to 0
+		for (var i=0; i < userFoodUsageData.length; i++) {
+			var nameValue = '#sliderUsage' + userFoodUsageData[i][0];
+			$(nameValue).val(0);
+			$(nameValue).trigger("change");
+		}
  }
  
  function addUserFoodsToTable(results, tableStatus) {
@@ -738,28 +760,33 @@ function successCallbackSQLite() {
 		 
 		 //if the item is in the current list (available or shopping)
 		 if(results.rows.item(i).status == tableStatus) {
-			 
-			 //add it as a row
-			 resultHTML += ' <tr class="gradeA"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" width="50" height="50"></td>';
-	    	 
-	    	 resultHTML += '<td><input type="text" class="version" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-	    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
-	    	 '</i></label></td>';
-	    	 
-	    	
-	    	
 	    	 if(tableStatus == 0) {
 	    		 //if it is shopping list
-	    		 resultHTML += '<td><input type="button" id="confirm' + currentId + '" value="Confirm" data-inline="true" data-mini="true" data-theme="a"></td>';
+	    		 //add it as a row
+				 resultHTML += '<tr class="gradeA"><td style="width:15%" ><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'"  id="swipeImage' + currentId + '" width="50" height="50"></td>';
+		    	 
+		    	 resultHTML += '<td style="width:40%"><input type="text" maxlength="4" size="4" name="amount' + currentId +  '" id="shoppingAmount' + currentId + '" data-mini="true" value="' + 
+		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
+		    	 '</i></label></td>';
+	    		 resultHTML += '<td><input  style="width:35%" type="button" id="shoppingConfirm' + currentId + '" value="Confirm" data-inline="true" data-mini="true" data-theme="a"></td>';
+	    		 resultHTML += '<td><div id="deleteShopping' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" value="Delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
+	    		
 	    		 
 	    	 } else {
 	    		 //if it is available list
-	    		 resultHTML += '<td width="20px">';
+	    		 //add it as a row
+				 resultHTML += ' <tr class="gradeA"><td style="width:15%"><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
+		    	 
+		    	 resultHTML += '<td style="width:15%"><input type="text" maxlength="4" size="4" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
+		    	 '</i></label></td>';
+	    		 resultHTML += '<td style="width:60%">';
 	    		 resultHTML += '<input type="range" id="sliderUsage' + currentId + '"';
 		    	 resultHTML += 'value="50" step="1" min="0" max="100" /></td>';
+		    	 resultHTML += '<td><div id="deleteAvailable' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" value="Delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
 	    	 }
+	    
 	    	
-
 	    	resultHTML += '</tr>';
 		 } 	
      }
@@ -774,8 +801,8 @@ function successCallbackSQLite() {
 	 var len = results.rows.length;
 	 
 	 //create the table for displaying : food-icon, amount, usage selection
-	 myHTMLOutput = '<table data-role="table" id="my-table" >' +
-		  '<thead class="ui-widget-header"><th width="20%"></th><th width="20%"></th><th width="60%"></th></thead><tbody>';
+	 myHTMLOutput = '<table data-role="table" id="my-table" style="width:100%"><thead>' + 
+	 '<tr><th style="width:15%"></th><th style="width:15%"></th><th style="width:70%"></th></tr></thead><tbody>';
 	 myHTMLOutput += '<div class="scrollable" >';
 		
 	 //add table rows with the data retrieved from database to the available table list
@@ -789,41 +816,12 @@ function successCallbackSQLite() {
 	//refresh divison
 	$('#userFoodInfo').trigger("create");
 	
-	/*//these functions are needed for sortable table to add ability for sorting input fields
-	
-	//sort by amount
-	$.fn.dataTableExt.afnSortData['dom-text'] = function  ( oSettings, iColumn )
-	{					
-		return $.map( oSettings.oApi._fnGetTrNodes(oSettings), function (tr, i) {
-			return $('td:eq('+iColumn+') input', tr).val();
-		} );
-	} 
-	
-	//sort by food name
-	$.fn.dataTableExt.afnSortData['dom-img'] = function  ( oSettings, iColumn ) {
-		return $.map( oSettings.oApi._fnGetTrNodes(oSettings), function (tr, i) {
-			return $('td:eq('+iColumn+') img', tr).attr('rel');
-		} );
-	}*/
-	 /*$('#my-table').dataTable( {
-			"aoColumns": [
-				{ "sSortDataType": "dom-img", "sType": "string"  },
-				{ "sSortDataType": "dom-text", "sType": "numeric"  },
-				null
-			],
-			"bPaginate": false,
-			"bLengthChange": false,
-			"bFilter": false,
-			"bSort": false,
-			"bInfo": false,
-			"bAutoWidth": false
-		} );	
-	*/
 	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
 	for (var i=0; i<len; i++){
 		userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID );
 	}
 	
+	//set usage slider information
 	for (var i=0; i<len; i++){
 		currentId =  results.rows.item(i).id;
 		$('#sliderUsage' + currentId).change(function(event, ui){
@@ -833,24 +831,23 @@ function successCallbackSQLite() {
 			var newVal = oldVal - oldVal * slider_value / 100;			
 			 $('#' + amountVal).val(newVal);
 		});
-		/*$('#sliderWaste' + currentId).change(function(event, ui){
-		    var slider_value = $(this).val();
-			var amountVal =  event.target.id.replace("sliderWaste","amount");
-			var oldVal =  findCurrentAmountById(event.target.id.replace("sliderWaste",""));
-			var newVal = oldVal - oldVal * slider_value / 100;			
-			 $('#' + amountVal).val(newVal);
-		});*/
 	}
 	
 	//set slider values to 0
 	for (var i=0; i < userFoodUsageData.length; i++) {
-		/*var nameValue = '#sliderWaste' + userFoodUsageData[i][0];
-		$(nameValue).val(0);
-		$(nameValue).trigger("change");*/
-		
 		var nameValue = '#sliderUsage' + userFoodUsageData[i][0];
 		$(nameValue).val(0);
 		$(nameValue).trigger("change");
+	}
+	
+	//set swipe actions
+	for (var i=0; i < userFoodUsageData.length; i++) {
+		var nameValue = '#deleteAvailable' + userFoodUsageData[i][0];
+		$(nameValue).hide();
+		$(document).on("swiperight", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
+			var buttonValue =  event.target.id.replace("swipeImage","deleteAvailable");
+			$('#' + buttonValue).show();
+	      });
 	}
 	
 	createShoppingListTable(results);
@@ -873,36 +870,22 @@ function successCallbackSQLite() {
 	//refresh divison
 	$('#userShoppingList').trigger("create");
 	
-	/*//these functions are needed for sortable table to add ability for sorting input fields
-	
-	//sort by amount
-	$.fn.dataTableExt.afnSortData['dom-text'] = function  ( oSettings, iColumn )
-	{					
-		return $.map( oSettings.oApi._fnGetTrNodes(oSettings), function (tr, i) {
-			return $('td:eq('+iColumn+') input', tr).val();
-		} );
-	} 
-	
-	//sort by food name
-	$.fn.dataTableExt.afnSortData['dom-img'] = function  ( oSettings, iColumn ) {
-		return $.map( oSettings.oApi._fnGetTrNodes(oSettings), function (tr, i) {
-			return $('td:eq('+iColumn+') img', tr).attr('rel');
-		} );
-	}*/
-	 $('#shoppingListTable').dataTable( {
-			"aoColumns": [
-				{ "sSortDataType": "dom-img", "sType": "string"  },
-				{ "sSortDataType": "dom-text", "sType": "numeric"  },
-				null
-			],
-			"bPaginate": false,
-			"bLengthChange": false,
-			"bFilter": false,
-			"bSort": false,
-			"bInfo": false,
-			"bAutoWidth": false
-		} );	
+	//set swipe actions
+	for (var i=0; i < userFoodUsageData.length; i++) {
+		var nameValue = '#deleteShopping' + userFoodUsageData[i][0];
+		$(nameValue).hide();
+		$(document).on("swiperight", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
+			var buttonValue =  event.target.id.replace("swipeImage","deleteShopping");
+			$('#' + buttonValue).show();
+	      });
+	}
  }
+ 
+ 
+ function deleteUserFoodItem(id) {
+	//TODO delete user food item
+ }
+ 
  
 function findCurrentAmountById(id) {
 	for(var i=0; i < userFoodUsageData.length; i++) {

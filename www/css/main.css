@@ -37,7 +37,7 @@
 	text-align: center;
 }
 
-div.ui-slider{width:60%;}
+.fullwidth { width: 100%; }
 
 .ui-li-count { 
 	padding-right:1; 
