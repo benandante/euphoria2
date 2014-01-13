@@ -157,7 +157,7 @@ function successCallbackSQLite() {
  function populateDB(tx) {
 	 
 	 //delete old data
-	 //resetDatabase(tx);
+	 resetDatabase(tx);
 	 
 	//create current user table
 	 tx.executeSql('CREATE TABLE IF NOT EXISTS TABLECURRENTUSER (userID INTEGER PRIMARY KEY, name TEXT)');
@@ -765,11 +765,11 @@ function successCallbackSQLite() {
 	    		 //add it as a row
 				 resultHTML += '<tr class="gradeA"><td style="width:15%" ><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'"  id="swipeImage' + currentId + '" width="50" height="50"></td>';
 		    	 
-		    	 resultHTML += '<td style="width:40%"><input type="text" maxlength="4" size="4" name="amount' + currentId +  '" id="shoppingAmount' + currentId + '" data-mini="true" value="' + 
+		    	 resultHTML += '<td style="width:40%"><input type="text" maxlength="4" size="4" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
 		    	 '</i></label></td>';
 	    		 resultHTML += '<td><input  style="width:35%" type="button" id="shoppingConfirm' + currentId + '" value="Confirm" data-inline="true" data-mini="true" data-theme="a"></td>';
-	    		 resultHTML += '<td><div id="deleteShopping' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
+	    		 resultHTML += '<td><div id="deleteShopping' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" style="width:10px" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
 	    		
 	    		 
 	    	 } else {
@@ -780,10 +780,11 @@ function successCallbackSQLite() {
 		    	 resultHTML += '<td style="width:15%"><input type="text" maxlength="4" size="4" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
 		    	 '</i></label></td>';
-	    		 resultHTML += '<td style="width:60%">';
-	    		 resultHTML += '<input type="range" id="sliderUsage' + currentId + '"';
+	    		 resultHTML += '<td style="width:65%">';
+	    		 resultHTML += '<input type="range" style="display:none" data-mini="true" id="sliderUsage' + currentId + '"';
 		    	 resultHTML += 'value="50" step="1" min="0" max="100" /></td>';
-		    	 resultHTML += '<td><div id="deleteAvailable' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
+		    	 resultHTML += '<td style="width:5%"><div id="deleteAvailable' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
+		    	 
 	    	 }
 	    
 	    	
@@ -816,9 +817,9 @@ function successCallbackSQLite() {
 	//refresh divison
 	$('#userFoodInfo').trigger("create");
 	
-	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
+	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food, 6: status
 	for (var i=0; i<len; i++){
-		userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID );
+		userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID, results.rows.item(i).status );
 	}
 	
 	//set usage slider information
@@ -843,7 +844,7 @@ function successCallbackSQLite() {
 	//set swipe actions
 	for (var i=0; i < userFoodUsageData.length; i++) {
 		var nameValue = '#deleteAvailable' + userFoodUsageData[i][0];
-		$(nameValue).hide();
+		//$(nameValue).hide();
 		$(document).on("swiperight", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
 			var buttonValue =  event.target.id.replace("swipeImage","deleteAvailable");
 			$('#' + buttonValue).show();
@@ -877,7 +878,7 @@ function successCallbackSQLite() {
 	//set swipe actions
 	for (var i=0; i < userFoodUsageData.length; i++) {
 		var nameValue = '#deleteShopping' + userFoodUsageData[i][0];
-		$(nameValue).hide();
+		//$(nameValue).hide();
 		$(document).on("swiperight", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
 			var buttonValue =  event.target.id.replace("swipeImage","deleteShopping");
 			$('#' + buttonValue).show();
@@ -889,12 +890,6 @@ function successCallbackSQLite() {
 	}
  }
  
- 
- function deleteUserFoodItem(id) {
-	//TODO delete user food item
- }
- 
- 
 function findCurrentAmountById(id) {
 	for(var i=0; i < userFoodUsageData.length; i++) {
 		if(userFoodUsageData[i][0] == id) {
@@ -902,6 +897,15 @@ function findCurrentAmountById(id) {
 		}
 	}
 	return 0;
+}
+
+function findPurchaseInfoById(id) {
+	for(var i=0; i < userFoodUsageData.length; i++) {
+		if(userFoodUsageData[i][0] == id) {
+			return i;
+		}
+	}
+	return -1;
 }
 
  /**
@@ -1353,8 +1357,21 @@ function queryUpdateSurveyData(data) {
 	 }, errorCallbackSQLite );
  }
  
- 
- 
+ /**
+  * delete given purchase from purchase table
+  */
+function queryDeleteData(deletedPurchase, rowNumber, purchaseId) {
+	 db.transaction( function(tx){ 
+		 tx.executeSql('DELETE FROM TABLEUSAGE WHERE userfoodID = ' + purchaseId);
+	 }, errorCallbackSQLite); 
+	 db.transaction( function(tx){
+		 tx.executeSql('DELETE FROM TABLEWASTE WHERE userfoodID = ' + purchaseId);
+	 }, errorCallbackSQLite);
+	 db.transaction( function(tx){
+		 tx.executeSql('DELETE FROM TABLEUSERFOOD WHERE id = ' + purchaseId);
+	 }, errorCallbackSQLite);
+	loadUserList();
+}	
  
  
  
