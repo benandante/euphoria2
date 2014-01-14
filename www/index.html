@@ -24,7 +24,7 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <script type="text/javascript" src="js/databaseModule.js"></script>
-        
+        <script type="text/javascript" src="js/local-notification.js"></script>
         <title>Welcome</title>
     </head>
     <script>
@@ -39,6 +39,7 @@
 	// Cordova is loaded and it is now safe to make calls Cordova methods
 	//
 	function onDeviceReady() {
+		window.plugin.notification.local.add({ message: 'Great app!' });
 		sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
 		/* showAlert(); */
 		/* if(getSavedUserData()) {
