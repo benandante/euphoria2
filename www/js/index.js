@@ -43,7 +43,7 @@ var app = {
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
-        
+        navigator.notification.alert("before timer");
         var now                  = new Date().getTime(),
         _60_seconds_from_now = new Date(now + 6*1000);
         window.plugin.notification.local.add({
@@ -56,7 +56,7 @@ var app = {
             background: 'background'
         });
 
-       
+        navigator.notification.alert("after timer");
         console.log('Received Event: ' + id);
     }
     
