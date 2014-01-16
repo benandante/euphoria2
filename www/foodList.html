@@ -22,10 +22,13 @@ function selectFoodByImage(id) {
 	}
 
 }
+function notify() {
+	 navigator.notification.alert("hooop");
+}
 function onLoad() {
 	//TODO document.addEventListener("deviceready", onDeviceReady, true);
 	onDeviceReady();
-	
+	setInterval("notify()", 3000);
 	getFoodList();
 	
 	getUserFoodList();

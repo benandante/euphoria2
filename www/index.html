@@ -40,7 +40,6 @@
 	function onDeviceReady() {
 		
 		sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
-		setTimeout("notify()", 10000);
 		/* showAlert(); */
 		/* if(getSavedUserData()) {
 	    	window.location.replace('foodList.html');
@@ -52,22 +51,6 @@
     function alertDismissed() {
         // do something
     }
-
-    function notify() {
-        navigator.notification.alert("hooop");
-        return false;
-    }
-    
-// Show a custom alertDismissed
-//
-function showAlert() {
-    navigator.notification.alert(
-        'You are the winner!',  // message
-        alertDismissed,         // callback
-        'Game Over',            // title
-        'Done'                  // buttonName
-    );
-}
 
     </script>
     <body onload="onLoad();">
