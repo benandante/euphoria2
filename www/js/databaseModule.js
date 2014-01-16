@@ -769,10 +769,10 @@ function successCallbackSQLite() {
 		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
 		    	 '</i></label></td>';
 	    		 resultHTML += '<td><input  style="width:35%" type="button" id="shoppingConfirm' + currentId + '" value="Confirm" data-inline="true" data-mini="true" data-theme="a"></td>';
-	    		 resultHTML += '<td><div id="deleteShopping' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" style="width:10px" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
+	    		 resultHTML += '<td><div id="deleteShopping' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" style="width:10px" onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
 	    		
 	    		 
-	    	 } else {
+	    	 } else if (tableStatus == 1){
 	    		 //if it is available list
 	    		 //add it as a row
 				 resultHTML += ' <tr class="gradeA"><td style="width:15%"><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
@@ -783,12 +783,11 @@ function successCallbackSQLite() {
 	    		 resultHTML += '<td style="width:65%">';
 	    		 resultHTML += '<input type="range" style="display:none" data-mini="true" id="sliderUsage' + currentId + '"';
 		    	 resultHTML += 'value="50" step="1" min="0" max="100" /></td>';
-		    	 resultHTML += '<td style="width:5%"><div id="deleteAvailable' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td>';
+		    	 resultHTML += '<td style="width:5%"><div id="deleteAvailable' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
 		    	 
+	    	 } else {
+	    		 //do nothing since this means the item is deleted
 	    	 }
-	    
-	    	
-	    	resultHTML += '</tr>';
 		 } 	
      }
 	 resultHTML += '</div></tbody></table>';
@@ -1200,29 +1199,56 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 	//set waste info to memory for further updates
 	 //0: waste id, 1: reason, 2:foodId , 3:purchase date, 4: waste date
 		for (var i=0; i<len; i++){
-			userFoodWasteInfo[i] = new Array(results.rows.item(i).wasteID, results.rows.item(i).wasteType, results.rows.item(i).foodID, results.rows.item(i).date, results.rows.item(i).wasteDate );
+			userFoodWasteInfo[i] = new Array(results.rows.item(i).wasteID, results.rows.item(i).wasteType, 
+					results.rows.item(i).foodID, results.rows.item(i).date, results.rows.item(i).wasteDate );
 		}
-	if(len > 0) {
+
 		myHTMLOutput = '<table data-role="table" class="table-stroke" id="waste-table" data-mode="columntoggle">' +
-		  '<thead class="ui-widget-header"><th></th><th></th><th><i>Reason for Wastage</i></th></thead><tbody>';
+		  '<thead class="ui-widget-header"><th></th><th></th><th><i>Reason</i></th><th></th></thead><tbody>';
 		myHTMLOutput += '<div class="scrollable" >';
+		var wasteIdd;
 	    for (var i=0; i<len; i++){
-	    	 myHTMLOutput += ' <tr><td><img src="' + results.rows.item(i).foodIcon + '" width="50" height="50"></td>';
+	    	wasteIdd = results.rows.item(i).wasteID;
+	    	 myHTMLOutput += ' <tr><td><img src="' + results.rows.item(i).foodIcon + '" id="swipeWaste' + wasteIdd + ' width="50" height="50"></td>';
 	    	 
 	    	 myHTMLOutput += '<td><label class="my-label">' + results.rows.item(i).amount.toFixed(2) + '</label></td>';
 	    
-	    	 myHTMLOutput += '<td><select name="reason" id="' + results.rows.item(i).wasteID + 'WasteType" data-native-menu="false" data-theme="a" data-mini="true" data-icon="false">'; 
+	    	 myHTMLOutput += '<td><select name="reason" id="' + wasteIdd + 'WasteType" data-native-menu="false" data-theme="a" data-mini="true" data-icon="false">'; 
 	    	 myHTMLOutput += getReasonsHTML(results.rows.item(i).wasteType, wasteReasons);
-	    	 myHTMLOutput += '</select></td></tr>';
+	    	 myHTMLOutput += '</select></td>';
+	    	 myHTMLOutput += '<td style="width:5%"><div id="deleteWaste' + wasteIdd + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteWasteItem(' + wasteIdd + ')"></div></td></tr>';
 	     }
 	     myHTMLOutput += '</div></tbody></table>';
 		//Update the DIV called Content Area with the HTML string
 		document.getElementById("wasteList").innerHTML = myHTMLOutput;
 		$('#wasteList').trigger("create");
+	
+	//set swipe actions
+	for (var i=0; i < userFoodWasteInfo.length; i++) {
+		var nameValue = '#deleteWaste' + userFoodWasteInfo[i][0];
+		//$(nameValue).hide();
+		$(document).on("swiperight", "#swipeWaste" + userFoodUsageData[i][0], function(event, ui) {
+			var buttonValue =  event.target.id.replace("swipeImage","deleteWaste");
+			$('#' + buttonValue).show();
+	      });
+		$(document).on("swipeleft", "#swipeWaste" + userFoodUsageData[i][0], function(event, ui) {
+			var buttonValue =  event.target.id.replace("swipeImage","deleteWaste");
+			$('#' + buttonValue).hide();
+	      });
 	}
-	
-	
  }
+ 
+ 
+ function findWasteInfoById(id) {
+	 for(var i=0; i < userFoodWasteInfo.length; i++) {
+		if(userFoodWasteInfo[i][0] == id) {
+				return i;
+		}
+	}
+	return -1;
+ }
+ 
+
  
  /**
   * finds the usage information
@@ -1360,18 +1386,23 @@ function queryUpdateSurveyData(data) {
  /**
   * delete given purchase from purchase table
   */
-function queryDeleteData(deletedPurchase, rowNumber, purchaseId) {
-	 db.transaction( function(tx){ 
-		 tx.executeSql('DELETE FROM TABLEUSAGE WHERE userfoodID = ' + purchaseId);
-	 }, errorCallbackSQLite); 
+function queryDeleteData(wasteList, rowNumber, purchaseId) {
 	 db.transaction( function(tx){
-		 tx.executeSql('DELETE FROM TABLEWASTE WHERE userfoodID = ' + purchaseId);
+		 tx.executeSql('UPDATE TABLEUSERFOOD SET status = 2 WHERE id = ' + purchaseId);
 	 }, errorCallbackSQLite);
-	 db.transaction( function(tx){
-		 tx.executeSql('DELETE FROM TABLEUSERFOOD WHERE id = ' + purchaseId);
-	 }, errorCallbackSQLite);
+	 db.transaction( function(tx) {
+		 tx.executeSql('INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate) VALUES ( NULL ,' + 
+				 purchaseId + ',' + wasteList[0].amount + ', ' + wasteList[0].type +', "' + wasteList[0].date + '" )' );
+	 });
 	loadUserList();
+
 }	
  
+function queryDeleteWaste(rowNumber, wasteId) {
+	 db.transaction( function(tx){
+		 tx.executeSql('DELETE FROM TABLEWASTE WHERE wasteID = ' + wasteId);
+	 }, errorCallbackSQLite);
+	 loadUserWasteList();
+ }
  
  

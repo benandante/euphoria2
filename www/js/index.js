@@ -44,7 +44,7 @@ var app = {
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
         
-        window.plugin.notification.local.add({ message: 'Great app!' });
+       
         console.log('Received Event: ' + id);
     }
 };
