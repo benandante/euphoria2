@@ -67,11 +67,13 @@
         // do something
     }
 	function foreground (id) {
-	    console.log('I WAS RUNNING ID='+id)
+	    console.log('I WAS RUNNING ID='+id);
+	    navigator.notification.alert("foreground");
 	}
 	
 	function background (id) {
-	    console.log('I WAS IN THE BACKGROUND ID='+id)
+	    console.log('I WAS IN THE BACKGROUND ID='+id);
+	    navigator.notification.alert("background");
 	}
 
     </script>
