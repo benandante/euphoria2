@@ -41,6 +41,20 @@
 	function onDeviceReady() {
 		
 		sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
+		 navigator.notification.alert("before timer");
+	        var now                  = new Date().getTime(),
+	        _60_seconds_from_now = new Date(now + 6*1000);
+	        window.plugin.notification.local.add({
+	            id:         1, // is converted to a string
+	            title:      'Reminder',
+	            message:    'Dont forget to buy some flowers.',
+	            repeat:     'weekly',
+	            date:       _60_seconds_from_now,
+	            foreground: 'foreground',
+	            background: 'background'
+	        });
+
+	        navigator.notification.alert("after timer");
 		/* showAlert(); */
 		/* if(getSavedUserData()) {
 	    	window.location.replace('foodList.html');
@@ -52,6 +66,13 @@
     function alertDismissed() {
         // do something
     }
+	function foreground (id) {
+	    console.log('I WAS RUNNING ID='+id)
+	}
+	
+	function background (id) {
+	    console.log('I WAS IN THE BACKGROUND ID='+id)
+	}
 
     </script>
     <body onload="onLoad();">
