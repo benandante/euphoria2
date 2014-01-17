@@ -69,22 +69,36 @@
     }
 	function foreground (id) {
 	    console.log('I WAS RUNNING ID='+id);
-	    navigator.notification.alert("foreground");
+	    var now                  = new Date().getTime(),
+        _60_seconds_from_now = new Date(now + 6*1000);
+       
+        window.plugin.notification.local.add({
+            id:         "1", // is converted to a string
+            title:      'Reminder',
+            message:    'Dont forget to buy some a.',
+            repeat:      1,
+            date:       _60_seconds_from_now,
+            foreground: 'foreground',
+            background: 'background'
+        }); 
+
 	}
 	
 	function background (id) {
 	    console.log('I WAS IN THE BACKGROUND ID='+id);
 	    var now                  = new Date().getTime(),
         _60_seconds_from_now = new Date(now + 6*1000);
-	    window.plugin.notification.local.add({
-            id:         2, // is converted to a string
+       
+        window.plugin.notification.local.add({
+            id:         "1", // is converted to a string
             title:      'Reminder',
-            message:    'Dont forget to buy something.',
-            repeat:     'hourly',
+            message:    'Dont forget to buy some b.',
+            repeat:      1,
             date:       _60_seconds_from_now,
             foreground: 'foreground',
-            background: 'foreground'
+            background: 'background'
         }); 
+
 	}
 
     </script>
