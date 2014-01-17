@@ -21,19 +21,17 @@ var app = {
     initialize: function() {
         this.bindEvents();
         
-        d = d.getTime() + 60*1000; //60 seconds from now
-		d = new Date(d);
-		plugins.localNotification.add({
-			date: d,
-            repeat:'hourly',
-			message: 'This just fired after a minute!',
-			hasAction: true,
-			badge: 1,
-			id: '123',
-			sound:'horn.caf',
-			background:'app.background',
-			foreground:'app.running'
-		});
+        var now  = new Date().getTime(),
+	    _60_seconds_from_now = new Date(now + 6*1000);
+	        window.plugin.notification.local.add({
+	            id:         1, // is converted to a string
+	            title:      'Reminder',
+	            message:    'Dont forget to buy some daffodil.',
+	            repeat:     'hourly',
+	            date:       _60_seconds_from_now,
+	            foreground: 'foreground',
+	            background: 'background'
+	        });
 	},
 	
 	background:function(id){
