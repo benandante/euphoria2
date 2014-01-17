@@ -20,7 +20,30 @@ var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
-    },
+        
+        d = d.getTime() + 60*1000; //60 seconds from now
+		d = new Date(d);
+		plugins.localNotification.add({
+			date: d,
+            repeat:'hourly',
+			message: 'This just fired after a minute!',
+			hasAction: true,
+			badge: 1,
+			id: '123',
+			sound:'horn.caf',
+			background:'app.background',
+			foreground:'app.running'
+		});
+	},
+	
+	background:function(id){
+		console.log("I was in the background but i'm back now! ID="+id);
+	},
+	running:function(id){
+		console.log("I am currently running, what should I do? ID="+id);
+	}
+	
+	
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
