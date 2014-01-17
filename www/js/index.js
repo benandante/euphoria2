@@ -20,27 +20,7 @@ var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
-        
-        var now  = new Date().getTime(),
-	    _60_seconds_from_now = new Date(now + 6*1000);
-	        window.plugin.notification.local.add({
-	            id:         1, // is converted to a string
-	            title:      'Reminder',
-	            message:    'Dont forget to buy some daffodil.',
-	            repeat:     'hourly',
-	            date:       _60_seconds_from_now,
-	            foreground: 'foreground',
-	            background: 'background'
-	        });
 	},
-	
-	background:function(id){
-		console.log("I was in the background but i'm back now! ID="+id);
-	},
-	running:function(id){
-		console.log("I am currently running, what should I do? ID="+id);
-	}
-	
 	
     // Bind Event Listeners
     //
@@ -56,6 +36,7 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
     },
+    
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
