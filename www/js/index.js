@@ -28,6 +28,8 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
+        document.addEventListener('online', this.onOnline, false);
+        document.addEventListener('offline', this.onOffline, false);
     },
     // deviceready Event Handler
     //
@@ -47,7 +49,17 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
        
         console.log('Received Event: ' + id);
-    }
+        alert("Device ready");
+    },
     
+    onOnline : function() {
+        console.log("onOnline");
+        alert("online");
+    },
+ 
+    onOffline : function() {
+        console.log("onOffline");
+        alert("offline");
+    }
 
 };
