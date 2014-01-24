@@ -49,15 +49,14 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
        
         console.log('Received Event: ' + id);
-        alert("Device ready");
     },
     
-    onOnline : function() {
+    onOnline: function() {
         console.log("onOnline");
         alert("online");
     },
  
-    onOffline : function() {
+    onOffline: function() {
         console.log("onOffline");
         alert("offline");
     }

@@ -3,11 +3,11 @@ var db;
 var wasteReasons = new Array();
 var usageReasons = new Array();
 var FOOD_NUMBER_ON_MAIN = 12;
-var userFoodUsageData = new Array();
+var userFoodUsageData = new Array();	// 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
 var newUsageNumber = 0;
 var newWasteNumber = 0;
-var userFoodUsageInfo = new Array();
-var userFoodWasteInfo = new Array();
+var userFoodUsageInfo = new Array();	
+var userFoodWasteInfo = new Array(); 	 //0: waste id, 1: reason, 2:foodId , 3:purchase date, 4: waste date
 var foodListSelectHtml;
 var mainPageFoods = new Array();
 
@@ -34,19 +34,7 @@ function successCallbackSQLite() {
 
 //open database
  function onDeviceReady(){
-	/*navigator.notification.alert("PhoneGap is working!!");
-	navigator.compass.getCurrentHeading(
-			function(heading){
-				deviceHeading = heading;
-			},
-			function(){
-				deviceHeading = 'Not defined';
-			}
-		);
-		deviceName = window.device.name;
-		deviceVersion = window.device.version;
-		navigator.notification.alert(deviceName);*/
-		
+	
 	currentUser = window.localStorage.getItem("currentuser");	
 	db = window.openDatabase("DatabaseFulya", "1.0", "Cordova Demo", 200000);
 
@@ -157,7 +145,7 @@ function successCallbackSQLite() {
  function populateDB(tx) {
 	 
 	 //delete old data
-	 resetDatabase(tx);
+	 //resetDatabase(tx);
 	 
 	//create current user table
 	 tx.executeSql('CREATE TABLE IF NOT EXISTS TABLECURRENTUSER (userID INTEGER PRIMARY KEY, name TEXT)');
@@ -171,7 +159,7 @@ function successCallbackSQLite() {
      //tx.executeSql('PRAGMA foreign_keys = ON');
 	 //TODO foreign key does not work FOREIGN KEY (foodID) REFERENCES TABLEFOODS (foodID)
 	 //tx.executeSql('DELETE FROM TABLEUSERFOOD');
-	 tx.executeSql('CREATE TABLE IF NOT EXISTS TABLEUSERFOOD (id  INTEGER PRIMARY KEY, userID TEXT,  foodID INTEGER, date TEXT, amount REAL, usage REAL, waste REAL, status INTEGER)');
+	 tx.executeSql('CREATE TABLE IF NOT EXISTS TABLEUSERFOOD (id  INTEGER PRIMARY KEY, userID TEXT,  foodID INTEGER, date TEXT, amount REAL, usage REAL, waste REAL, status INTEGER, deletionDate TEXT)');
 	
 	 
 	 //create relationship table
@@ -193,7 +181,7 @@ function successCallbackSQLite() {
 
 	 //create waste table
 	 //tx.executeSql('DELETE FROM TABLEWASTE');
-	 tx.executeSql('CREATE TABLE IF NOT EXISTS TABLEWASTE (wasteID INTEGER PRIMARY KEY, userfoodID INTEGER, amount REAL, wasteType INTEGER, wasteDate TEXT)');	 
+	 tx.executeSql('CREATE TABLE IF NOT EXISTS TABLEWASTE (wasteID INTEGER PRIMARY KEY, userfoodID INTEGER, amount REAL, wasteType INTEGER, wasteDate TEXT, wasteStatus INTEGER,  deletionDate TEXT)');	 
 
 	 
 	 //create survey table
@@ -209,6 +197,8 @@ function successCallbackSQLite() {
 	  * 4 : update waste reason
 	  * 5 : update usage type
 	  * 6 : add survey
+	  * 7 : delete purchase
+	  * 8 : delete waste
 	  */
 	 /*
 	  * table numbers
@@ -256,13 +246,174 @@ function successCallbackSQLite() {
 		 tx.executeSql('SELECT * FROM TABLEOFFLINEACTIONS WHERE actionNum = 5', [], processAddUsage, errorCallbackSQLite);
 	 }, errorCallbackSQLite);
 	 
-	 //add survey
+	 //add delete waste
+	 db.transaction(function(tx){
+		 tx.executeSql('SELECT * FROM TABLEOFFLINEACTIONS WHERE actionNum = 8', [], processDeleteWaste, errorCallbackSQLite);
+	 }, errorCallbackSQLite);
 	 
+	 //add delete purchase
+	 db.transaction(function(tx){
+		 tx.executeSql('SELECT * FROM TABLEOFFLINEACTIONS WHERE actionNum = 7', [], processDeletePurchase, errorCallbackSQLite);
+	 }, errorCallbackSQLite);
+	 
+	 //add survey
+	 db.transaction(function(tx){
+		 tx.executeSql('SELECT * FROM TABLEOFFLINEACTIONS WHERE actionNum = 6', [], processSurvey, errorCallbackSQLite);
+	 }, errorCallbackSQLite);
 	 
 	 db.transaction( function(tx){
 		 tx.executeSql('DELETE FROM TABLEOFFLINEACTIONS');
 	 }, errorCallbackSQLite);
 	 
+ }
+ 
+ function processDeleteWaste(tx, results) {
+	 var len = results.rows.length;
+	 for(var i = 0; i < len; i++) {
+		 tx.executeSql('SELECT * FROM TABLEWASTE WHERE wasteID = ' + results.rows.item(i).tableId, [], processDeleteWasteHelper, errorCallbackSQLite);
+	 } 
+ }
+ 
+ function processDeleteWasteHelper(tx, results) {
+	 var len = results.rows.length;
+	 for(var i = 0; i < len; i++) {
+		 processDeleteWasteHelper2( results.rows.item(i));
+	 }
+ }
+ 
+ function processDeleteWasteHelper2(newItem) {
+	 //0: waste id, 1: reason, 2:foodId , 3:purchase date, 4: waste date
+	 //get purchase info from waste info
+	 var rowNumber = 0;
+	 for(i=0; i < userFoodWasteInfo.length; i++ ) {
+		 if(userFoodWasteInfo[i][0] == newItem.wasteID) {
+			 rowNumber = i;
+			 break;
+		 }
+	 }
+	 //send waste deletion request
+	 $.ajax({
+			type : "GET",
+			url : sessionStorage.getItem("serverDomain") + "/deleteWasteOffline?",
+			crossDomain : false,
+			beforeSend : function() {
+				$.mobile.loading('show')
+			},
+			complete : function() {
+				$.mobile.loading('hide')
+			},
+			dataType : 'json',
+			data : {
+				token : sessionStorage.getItem("usertoken"),
+				foodId : userFoodWasteInfo[rowNumber][2],
+				purchaseDate : userFoodWasteInfo[rowNumber][3],
+				deletionDate : newItem.deletionDate,
+			},
+			success : function(data) {
+				queryDeleteWaste(rowNumber, newItem.wasteID);
+			},
+			error : function(e) {
+				console.log(e + ' :Server connection failed!');
+			}
+		});
+		return false;
+ }
+ 
+ function processDeletePurchase(tx, results) {
+	 var len = results.rows.length;
+	 for(var i = 0; i < len; i++) {
+		 tx.executeSql('SELECT * FROM TABLEUSERFOOD WHERE id = ' + results.rows.item(i).tableId, [], processDeletePurchaseHelper, errorCallbackSQLite);
+	 } 
+ }
+ function processDeletePurchaseHelper(tx, results) {
+	 var len = results.rows.length;
+	 for(var i = 0; i < len; i++) {
+		 processDeletePurchaseHelper2( results.rows.item(i));
+	 }
+ }
+ 
+ function processDeletePurchaseHelper2(newItem) {
+	 //0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
+	 //get purchase info
+	 var rowNumber = 0;
+	 for(i=0; i < userFoodUsageData.length; i++ ) {
+		 if(userFoodUsageData[i][0] == newItem.id) {
+			 rowNumber = i;
+			 break;
+		 }
+	 }
+	 
+	 //send waste deletion request
+	 $.ajax({
+			type : "GET",
+			url : sessionStorage.getItem("serverDomain") + "/deletePurchaseOffline?",
+			crossDomain : false,
+			beforeSend : function() {
+				$.mobile.loading('show')
+			},
+			complete : function() {
+				$.mobile.loading('hide')
+			},
+			dataType : 'json',
+			data : {
+				token : sessionStorage.getItem("usertoken"),
+				foodId : userFoodUsageData[rowNumber][5],
+				purchaseDate : userFoodUsageData[rowNumber][4],
+				deletionDate : newItem.deletionDate,
+			},
+			success : function(e) {
+				console.log(e + ' :Data sent to the server!');
+			},
+			error : function(e) {
+				console.log(e + ' :Server connection failed!');
+			}
+		});
+		return false;
+ }
+ 
+ function processSurvey(tx, results) {
+	 var len = results.rows.length;
+	 for(var i = 0; i < len; i++) {
+		 tx.executeSql('SELECT * FROM TABLESURVEY WHERE surveyID = ' + results.rows.item(i).tableId, [], processSurveyHelper, errorCallbackSQLite);
+	 } 
+ }
+ 
+ function processSurveyHelper(tx, results) {
+	 var len = results.rows.length;
+	 for(var i = 0; i < len; i++) {
+		 processSurveyHelper2( results.rows.item(i));
+	 }
+ }
+ 
+ function processSurveyHelper2(newItem) {
+	 //send survey
+	 $.ajax({
+			type : "GET",
+			url : sessionStorage.getItem("serverDomain") + "/surveyOffline?",
+			crossDomain : false,
+			beforeSend : function() {
+				$.mobile.loading('show')
+			},
+			complete : function() {
+				$.mobile.loading('hide')
+			},
+			dataType : 'json',
+			data : {
+				token : sessionStorage.getItem("usertoken"),
+				q1 : newItem.q1,
+				q2 : newItem.q2,
+				q3 : newItem.q3,
+				q4 : newItem.q4,
+				date : newItem.date,
+			},
+			success : function(e) {
+				console.log(e + ' :Offline Survey data sent to the server!');
+			},
+			error : function(e) {
+				console.log(e + ' :Server connection failed! Offline survey data could not be sent');
+			}
+		});
+		return false;
  }
  
  /**
@@ -286,9 +437,10 @@ function successCallbackSQLite() {
  }
 
  function processAddFoodHelper2(newItem) {
+	 
 	 $.ajax({
 			type : "GET",
-			url : "http://localhost:9001/buyFoodOffline?",
+			url : sessionStorage.getItem("serverDomain") + "/buyFoodOffline?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')
@@ -336,7 +488,7 @@ function successCallbackSQLite() {
  function processAddWasteHelper2(newItem) {
 	 $.ajax({
 			type : "GET",
-			url : "http://localhost:9001/addWasteOffline?",
+			url : sessionStorage.getItem("serverDomain") + "/addWasteOffline?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')
@@ -384,7 +536,7 @@ function successCallbackSQLite() {
  function processAddUsageHelper2(newItem) {
 	 $.ajax({
 			type : "GET",
-			url : "http://localhost:9001/addUsageOffline?",
+			url : sessionStorage.getItem("serverDomain") + "/addUsageOffline?",
 			crossDomain : false,
 			beforeSend : function() {
 				$.mobile.loading('show')
@@ -469,9 +621,9 @@ function successCallbackSQLite() {
  
  
  function addUserFoodToDatabase(tx, data, i) {
-	 tx.executeSql('INSERT INTO TABLEUSERFOOD (id, userID, foodID, date, amount, usage, waste, status) VALUES ( ' +
+	 tx.executeSql('INSERT INTO TABLEUSERFOOD (id, userID, foodID, date, amount, usage, waste, status, deletionDate) VALUES ( ' +
 			 data[i].id + ', "' + data[i].userID + '", ' + data[i].foodID + ', "' +   data[i].date + '" , ' + data[i].amount + ',' + data[i].used + ',' + data[i].wasted
-			 + ',' + data[i].status + ' )');
+			 + ',' + data[i].status + ', NULL )');
 	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
 	userFoodUsageData[userFoodUsageData.length] = new Array( data[i].id,  data[i].amount,  data[i].used,  data[i].wasted, data[i].date,  data[i].foodID);
 	
@@ -487,8 +639,8 @@ function successCallbackSQLite() {
   */
  function buyFoodOffline(foodID, date, amount, statusValue) {
 	 db.transaction( function(tx){
-		 tx.executeSql('INSERT INTO TABLEUSERFOOD (id, userID, foodID, date, amount, usage, waste, status) VALUES ( NULL, "' + 
-			 currentUser + '", ' + foodID + ', "' + date + '" ,' + amount + ', 0, 0, ' + statusValue +  ')'); 
+		 tx.executeSql('INSERT INTO TABLEUSERFOOD (id, userID, foodID, date, amount, usage, waste, status, deletionDate) VALUES ( NULL, "' + 
+			 currentUser + '", ' + foodID + ', "' + date + '" ,' + amount + ', 0, 0, ' + statusValue +  ', NULL)'); 
 		 }, errorCallbackSQLite);
 	 
 	 db.transaction( function(tx){
@@ -521,8 +673,8 @@ function successCallbackSQLite() {
 		 newVal += parseInt(value);
 		 userFoodUsageData[rowNumber][3] = newVal;
 		 tx.executeSql( 'UPDATE TABLEUSERFOOD SET waste = ' + userFoodUsageData[rowNumber][3] +  ' WHERE id = ' + purchaseId);
-		 tx.executeSql( 'INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate) VALUES ( NULL ,' + 
-				 purchaseId + ',' + value + ', 0, "' + date + '" )' );
+		 tx.executeSql( 'INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate, wasteStatus,  deletionDate) VALUES ( NULL ,' + 
+				 purchaseId + ',' + value + ', 0, "' + date + '", 0 , NULL )' );
 		 tx.executeSql('SELECT * FROM TABLEWASTE WHERE userfoodID = ' + purchaseId + ' AND amount = ' + value + ' AND wasteDate = "' + date + '"', [],
 				 fillOfflineWaste, errorCallbackSQLite);
 		
@@ -587,6 +739,10 @@ function successCallbackSQLite() {
 	 }, errorCallbackSQLite );
  }
  
+ 
+
+ 
+ 
  /**
   * functions to load usage information from server
   * @param data
@@ -629,9 +785,8 @@ function successCallbackSQLite() {
  }
  
  function addUserWasteToDatabase(tx, data, i) {
-	 console.log()
-	 tx.executeSql('INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate) VALUES (' + 
-			 data[i].id + ',' + data[i].purchaseID + ',' + data[i].amount + ',' +   data[i].type  + ', "' +  data[i].date + '" )');
+	 tx.executeSql('INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate, wasteStatus,  deletionDate) VALUES (' + 
+			 data[i].id + ',' + data[i].purchaseID + ',' + data[i].amount + ',' +   data[i].type  + ', "' +  data[i].date + '", 0, NULL )');
 	
  }
  
@@ -1123,7 +1278,8 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
  function addFood(tx, foodId) {
 	 var now = new Date();
 	 var val = formatDate(now);
-	 tx.executeSql('INSERT INTO TABLEUSERFOOD (id, userID, foodID, date, amount, usage, waste, status) VALUES (NULL,"' + currentUser + '",' + foodId + ', ' + val + ', 0, 0, 0, 1)');
+	 tx.executeSql('INSERT INTO TABLEUSERFOOD (id, userID, foodID, date, amount, usage, waste, status, deletionDate) VALUES (NULL,"' + 
+			 currentUser + '",' + foodId + ', ' + val + ', 0, 0, 0, 1, NULL)');
  }
   
  function formatDate(date) {
@@ -1176,8 +1332,8 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 		 tx.executeSql( 'UPDATE TABLEUSERFOOD SET waste = ' + userFoodUsageData[usageRowNumber][3] +  ' WHERE id = ' + data[0].purchaseID);
 		 var newVal =  data[0].amount;
 		 var id =  data[0].id;
-		 tx.executeSql( 'INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate) VALUES (' + id + ',' + 
-				 purchaseId + ',' + newVal + ', 0, "' + data[0].date + '" )' );
+		 tx.executeSql( 'INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate, wasteStatus, deletionDate) VALUES (' + id + ',' + 
+				 purchaseId + ',' + newVal + ', 0, "' + data[0].date + '", 0, NULL )' );
 		
 	 }, errorCallbackSQLite );
  }
@@ -1187,7 +1343,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   * @param tx
   */
  function queryWasteWithReason(tx) {	 
-	 tx.executeSql('SELECT TABLEWASTE.wasteID, TABLEWASTE.userfoodID, TABLEWASTE.amount, TABLEWASTE.wasteType, TABLEWASTE.wasteDate, TABLEUSERFOOD.id, TABLEUSERFOOD.foodID, TABLEUSERFOOD.userID,  TABLEUSERFOOD.date, TABLEFOODS.foodID, TABLEFOODS.foodIcon, TABLEWASTETYPE.wasteTypeID, TABLEWASTETYPE.data FROM TABLEWASTETYPE INNER JOIN TABLEWASTE ON TABLEWASTETYPE.wasteTypeID = TABLEWASTE.wasteType INNER JOIN TABLEUSERFOOD ON TABLEUSERFOOD.id = TABLEWASTE.userfoodID INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '"', 
+	 tx.executeSql('SELECT TABLEWASTE.wasteID, TABLEWASTE.userfoodID, TABLEWASTE.amount, TABLEWASTE.wasteType, TABLEWASTE.wasteDate, TABLEWASTE.wasteStatus, TABLEUSERFOOD.id, TABLEUSERFOOD.foodID, TABLEUSERFOOD.userID,  TABLEUSERFOOD.date, TABLEFOODS.foodID, TABLEFOODS.foodIcon, TABLEWASTETYPE.wasteTypeID, TABLEWASTETYPE.data FROM TABLEWASTETYPE INNER JOIN TABLEWASTE ON TABLEWASTETYPE.wasteTypeID = TABLEWASTE.wasteType INNER JOIN TABLEUSERFOOD ON TABLEUSERFOOD.id = TABLEWASTE.userfoodID INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '"', 
 			 [], getFoodWasteList, errorCallbackSQLite);
  }
  
@@ -1199,8 +1355,11 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 	//set waste info to memory for further updates
 	 //0: waste id, 1: reason, 2:foodId , 3:purchase date, 4: waste date
 		for (var i=0; i<len; i++){
-			userFoodWasteInfo[i] = new Array(results.rows.item(i).wasteID, results.rows.item(i).wasteType, 
-					results.rows.item(i).foodID, results.rows.item(i).date, results.rows.item(i).wasteDate );
+			
+				userFoodWasteInfo[i] = new Array(results.rows.item(i).wasteID, results.rows.item(i).wasteType, 
+						results.rows.item(i).foodID, results.rows.item(i).date, results.rows.item(i).wasteDate );
+			
+			
 		}
 
 		myHTMLOutput = '<table data-role="table" class="table-stroke" id="waste-table" data-mode="columntoggle">' +
@@ -1208,16 +1367,19 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 		myHTMLOutput += '<div class="scrollable" >';
 		var wasteIdd;
 	    for (var i=0; i<len; i++){
-	    	wasteIdd = results.rows.item(i).wasteID;
-	    	 myHTMLOutput += ' <tr><td><img src="' + results.rows.item(i).foodIcon + '" id="swipeWaste' + wasteIdd + ' width="50" height="50"></td>';
-	    	 
-	    	 myHTMLOutput += '<td><label class="my-label">' + results.rows.item(i).amount.toFixed(2) + '</label></td>';
-	    
-	    	 myHTMLOutput += '<td><select name="reason" id="' + wasteIdd + 'WasteType" data-native-menu="false" data-theme="a" data-mini="true" data-icon="false">'; 
-	    	 myHTMLOutput += getReasonsHTML(results.rows.item(i).wasteType, wasteReasons);
-	    	 myHTMLOutput += '</select></td>';
-	    	 myHTMLOutput += '<td style="width:5%"><div id="deleteWaste' + wasteIdd + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteWasteItem(' + wasteIdd + ')"></div></td></tr>';
-	     }
+	    	if(results.rows.item(i).wasteStatus == 0) {
+	    		wasteIdd = results.rows.item(i).wasteID;
+		    	 myHTMLOutput += ' <tr><td><img src="' + results.rows.item(i).foodIcon + '" id="swipeWaste' + wasteIdd + ' width="50" height="50"></td>';
+		    	 
+		    	 myHTMLOutput += '<td><label class="my-label">' + results.rows.item(i).amount.toFixed(2) + '</label></td>';
+		    
+		    	 myHTMLOutput += '<td><select name="reason" id="' + wasteIdd + 'WasteType" data-native-menu="false" data-theme="a" data-mini="true" data-icon="false">'; 
+		    	 myHTMLOutput += getReasonsHTML(results.rows.item(i).wasteType, wasteReasons);
+		    	 myHTMLOutput += '</select></td>';
+		    	 myHTMLOutput += '<td style="width:5%"><div id="deleteWaste' + wasteIdd + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteWasteItem(' + wasteIdd + ')"></div></td></tr>';
+
+	    	}
+	    }
 	     myHTMLOutput += '</div></tbody></table>';
 		//Update the DIV called Content Area with the HTML string
 		document.getElementById("wasteList").innerHTML = myHTMLOutput;
@@ -1344,7 +1506,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   * @param tx
   */
  function querySurveyData(tx) {
-	 tx.executeSql('SELECT * FROM TABLESURVEY WHERE userID = "' + currentUser + '" ORDER BY datetime(date) DESC', [], getSurveyData, errorCallbackSQLite);
+	 tx.executeSql('SELECT * FROM TABLESURVEY WHERE userID = "' + currentUser + '" ORDER BY date DESC', [], getSurveyData, errorCallbackSQLite);
  }
  
  /**
@@ -1391,8 +1553,8 @@ function queryDeleteData(wasteList, rowNumber, purchaseId) {
 		 tx.executeSql('UPDATE TABLEUSERFOOD SET status = 2 WHERE id = ' + purchaseId);
 	 }, errorCallbackSQLite);
 	 db.transaction( function(tx) {
-		 tx.executeSql('INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate) VALUES ( NULL ,' + 
-				 purchaseId + ',' + wasteList[0].amount + ', ' + wasteList[0].type +', "' + wasteList[0].date + '" )' );
+		 tx.executeSql('INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate, wasteStatus, deletionDate) VALUES ( NULL ,' + 
+				 purchaseId + ',' + wasteList[0].amount + ', ' + wasteList[0].type +', "' + wasteList[0].date + '", 0, NULL)' );
 	 });
 	loadUserList();
 
@@ -1403,6 +1565,84 @@ function queryDeleteWaste(rowNumber, wasteId) {
 		 tx.executeSql('DELETE FROM TABLEWASTE WHERE wasteID = ' + wasteId);
 	 }, errorCallbackSQLite);
 	 loadUserWasteList();
- }
+}
  
+/**
+ * updates waste reason info offline
+ */
+function updateFoodWasteReasonsOffline(reason, rowNumber) {
+	var rowI = parseInt(rowNumber);
+	db.transaction( 
+			function(tx){ 
+				queryUpdateFoodWasteReason(tx, userFoodWasteInfo[rowI][0], reason, rowI); 
+				tx.executeSql('INSERT INTO TABLEOFFLINEACTIONS (offlineID, actionNum, tableNum, tableId) VALUES (NULL, 4, 1, ' +  userFoodWasteInfo[rowI][0] + ')' ); 
+				}, 
+	errorCallbackSQLite);	
+}
+
+/**
+ * deletes purchase data offline
+ * @param pId
+ * @param rowNumber
+ */
+function deletePurchaseDataOffline(pId, rowNumber) {
+	var amount = 0;
+	for(i=0; i < userFoodUsageData.length; i++) {
+		if(userFoodUsageData[i][0] == pId) {
+			amount = userFoodUsageData[i][1];
+			break;
+		}
+	}
+	
+	var now = new Date();
+	var val = formatDate(now);
+	wasteFoodOffline(pId, amount, rowNumber,  val);
+	db.transaction( function(tx){ 
+		 tx.executeSql('UPDATE TABLEUSERFOOD SET status = ' + 2 +  ' WHERE id = ' + pId );
+		 tx.executeSql('UPDATE TABLEUSERFOOD SET deletionDate = ' + val +  ' WHERE id = ' + pId );
+		 tx.executeSql('INSERT INTO TABLEOFFLINEACTIONS (offlineID, actionNum, tableNum, tableId) VALUES (NULL, 7, 0, ' + pId + ')' );	 
+	}, 
+	errorCallbackSQLite);	
+}
+
+/**
+ * deletes waste offline
+ * @param wasteId
+ * @param rowNumber
+ */
+function deleteWasteOffline(rowNumber, wasteId) {
+	var now = new Date();
+	var val = formatDate(now);
+	db.transaction( function(tx){ 
+		 tx.executeSql('UPDATE TABLEWASTE SET status = 1 WHERE wasteID = ' + wasteId);
+		 tx.executeSql('UPDATE TABLEWASTE SET deletionDate = ' + val + ' WHERE wasteID = ' + wasteId);
+		 tx.executeSql('INSERT INTO TABLEOFFLINEACTIONS (offlineID, actionNum, tableNum, tableId) VALUES (NULL, 8, 1, ' + wasteId + ')' );	 
+	}, 
+	errorCallbackSQLite);	
+	loadUserWasteList();
+}
+
+function saveSurveyOffline(q1, q2, q3, q4) {
+	var now = new Date();
+	var val = formatDate(now);
+	 db.transaction( function(tx){
+		 tx.executeSql('INSERT INTO TABLESURVEY (surveyID, userID, q1, q2, q3, q4, date) VALUES ( NULL'  + ', "' + currentUser + '",' +
+				 q1 + ',' +  q2 + ',' +  q3 + ',' + q4 + ', ' +  val + ' )');
+		
+	 }, errorCallbackSQLite );
+	 
+	 db.transaction( function(tx){
+		 tx.executeSql('SELECT * FROM TABLESURVEY WHERE userID = "' + currentUser + '"  AND date = ' + val, [], fillOfflineSurvey, errorCallbackSQLite);
+	 }, errorCallbackSQLite);
+}
+
+function fillOfflineSurvey(tx, results) {
+	if(results.rows.length == 1) {
+		tx.executeSql('INSERT INTO TABLEOFFLINEACTIONS (offlineID, actionNum, tableNum, tableId) VALUES (NULL, 6, 3, ' + results.rows.item(0).surveyID + ')' );	
+	}
+	 	
+}
+
+
+
  

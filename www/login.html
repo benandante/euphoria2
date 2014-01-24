@@ -5,26 +5,27 @@
     <meta name="viewport" content="width=320, user-scalable=no" />
     <meta http-equiv="Content-type" content="text/html, charset=utf-8">
     <title></title>
-  
+
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="css/jquery.mobile-1.3.2.min.css" />
 <script src="js/jquery-1.9.1.min.js"></script>
 <script src="js/jquery.mobile-1.3.2.min.js"></script>
 
+
 <link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
 
 <script type="text/javascript">
-	
+
 	function sendData() {
-	  var form = $("#loginForm");    
+		 var form = $("#loginForm");    
 		  var u = $("#username", form).val();
 		  var p = $("#password", form).val();
 		 $.ajax({
 		        type       : "GET",
-		        url        : sessionStorage.getItem("serverDomain") + "/login?",
-		        crossDomain: true,
+		        url        :  sessionStorage.getItem("serverDomain") + "/login?",
+		        crossDomain: false,
 		        beforeSend : function() {$.mobile.loading('show')},
 		        complete   : function() {$.mobile.loading('hide')},
 		        data       : {username : u, password : p},
@@ -33,36 +34,17 @@
 		        	sessionStorage.setItem("usertoken", data.members.token);
 		        	sessionStorage.setItem("currentUser", u);
 		        	window.location.replace('foodList.html');
+		        	console.log("login success!");
 		        },
 		        error      : function(e) {
-		         	//TODO phonegap alerts
-		          alert("Application requires internet access");
-		           
+		        	// phonegap alerts
+		           navigator.notification.alert("Please specify a valid username and password");
+		           console.log("login failure!"); 
 		        }
 		    });    
-		 return false; 
+		 return false;
 	}
 	
-	function openRegister() {		 
-		window.location.href = "register.html";
-		//$.mobile.changePage("register.html")
-	}
-	
-	// alert dialog dismissed
-    function alertDismissed() {
-        // do something
-    }
-
-// Show a custom alertDismissed
-//
-function showAlert() {
-    navigator.notification.alert(
-        'You are the winner!',  // message
-        alertDismissed,         // callback
-        'Game Over',            // title
-        'Done'                  // buttonName
-    );
-}
 	
 </script>
 <body>
@@ -111,7 +93,7 @@ function showAlert() {
         	<input type="submit" value="Login" id="submitButton" onclick="sendData(); return false;">
         </div>
         <div class="ui-block-b">
-        	<input type="submit" value="Register" id="regButton" onclick="openRegister();">
+        	<input type="submit" value="Register" id="regButton" onclick="window.location.href='register.html'; return false;">
         </div>
          </div>
         </form>
@@ -120,6 +102,6 @@ function showAlert() {
 
 </div>
 </div>
- <script type="text/javascript" src="phonegap.js"></script>
+	<script type="text/javascript" src="cordova.js"></script>
 </body>
 </html>
