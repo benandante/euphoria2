@@ -19,7 +19,7 @@
 <script type="text/javascript">
 
 	function sendData() {
-		 var form = $("#loginForm");    
+		/*  var form = $("#loginForm");    
 		  var u = $("#username", form).val();
 		  var p = $("#password", form).val();
 		 $.ajax({
@@ -42,7 +42,8 @@
 		           console.log("login failure!"); 
 		        }
 		    });    
-		 return false;
+		 return false; */
+		 navigator.notification.alert("Please specify a valid username and password");
 	}
 	
 	
