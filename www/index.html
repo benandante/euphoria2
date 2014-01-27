@@ -29,46 +29,47 @@
     </head>
     <script>
     function onLoad() {
-    	//if (typeof navigator.device == "undefined"){
+            if (typeof navigator.device == "undefined"){
             document.addEventListener("deviceready", onDeviceReady, false);
-      /* } else {
-      		 onDeviceReady();
-       }*/
-	}
+       } else {
+                       onDeviceReady();
+       }
+        }
 
-	// Cordova is loaded and it is now safe to make calls Cordova methods
-	//
-	function onDeviceReady() {
-		
-		sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
-	/*	//  navigator.notification.alert("before timer");
-	       var now                  = new Date().getTime(),
-	        _60_seconds_from_now = new Date(now + 6*1000);
-	       
-	        window.plugin.notification.local.add({
-	            id:         "1", // is converted to a string
-	            title:      'Reminder',
-	            message:    'Dont forget to buy some daffodil.',
-	            repeat:      1,
-	            date:       _60_seconds_from_now,
-	            foreground: 'foreground',
-	            background: 'background'
-	        });  */
+        // Cordova is loaded and it is now safe to make calls Cordova methods
+        //
+        function onDeviceReady() {
+                
+                sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
+                //  navigator.notification.alert("before timer");
+               var now                  = new Date().getTime(),
+                _60_seconds_from_now = new Date(now + 6*1000);
+               
+                window.plugin.notification.local.add({
+                    id:         "1", // is converted to a string
+                    title:      'Reminder',
+                    message:    'Dont forget to buy some daffodil.',
+                    repeat:      1,
+                    date:       _60_seconds_from_now,
+                    foreground: 'foreground',
+                    background: 'background'
+                }); 
  
-		/* showAlert(); */
-		/* if(getSavedUserData()) {
-	    	window.location.replace('foodList.html');
-	    } else {  */       	
-	    	window.location.replace('login.html');
-	    //}  
-	}
-	// alert dialog dismissed
+                //navigator.notification.alert("after timer");
+                /* showAlert(); */
+                /* if(getSavedUserData()) {
+                    window.location.replace('foodList.html');
+            } else {  */               
+                    window.location.replace('login.html');
+            //}  
+        }
+        // alert dialog dismissed
     function alertDismissed() {
         // do something
     }
-	function foreground (id) {
-	    console.log('I WAS RUNNING ID='+id);
-	    var now                  = new Date().getTime(),
+        function foreground (id) {
+            console.log('I WAS RUNNING ID='+id);
+            var now                  = new Date().getTime(),
         _60_seconds_from_now = new Date(now + 6*1000);
        
         window.plugin.notification.local.add({
@@ -81,11 +82,11 @@
             background: 'background'
         }); 
 
-	}
-	
-	function background (id) {
-	    console.log('I WAS IN THE BACKGROUND ID='+id);
-	    var now                  = new Date().getTime(),
+        }
+        
+        function background (id) {
+            console.log('I WAS IN THE BACKGROUND ID='+id);
+            var now                  = new Date().getTime(),
         _60_seconds_from_now = new Date(now + 6*1000);
        
         window.plugin.notification.local.add({
@@ -98,7 +99,7 @@
             background: 'background'
         }); 
 
-	}
+        }
 
     </script>
     <body onload="onLoad();">
@@ -109,7 +110,7 @@
                 <p class="event received">Device is Ready</p>
             </div>
         </div>        
-        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
         app.initialize();
@@ -117,3 +118,4 @@
         </script>
     </body>
 </html>
+Status API Training Shop Blog About

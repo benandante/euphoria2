@@ -39,8 +39,8 @@
     <feature name="http://api.phonegap.com/1.0/notification"/>
 
      <gap:platform name="android" />
-	
-	
+        
+        
     <!-- Customize your app and platform with the preference element. -->
     <preference name="phonegap-version"           value="3.0.0" />          <!-- all: current version of PhoneGap -->
     <preference name="orientation"                value="default" />        <!-- all: default means both landscape and portrait are enabled -->
@@ -63,8 +63,8 @@
         <gap:plugin name="Example" />
         A list of available plugins are available at https://build.phonegap.com/docs/plugins
     -->
-	<gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.6.3"/>
-	
+        <gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.6.3"/>
+        
 
     <!-- Define app icon for each platform. -->
     <icon src="icon.png" />
