@@ -29,11 +29,11 @@
     </head>
     <script>
     function onLoad() {
-    	if (typeof navigator.device == "undefined"){
+    	//if (typeof navigator.device == "undefined"){
             document.addEventListener("deviceready", onDeviceReady, false);
-       } else {
+      /* } else {
       		 onDeviceReady();
-       }
+       }*/
 	}
 
 	// Cordova is loaded and it is now safe to make calls Cordova methods
@@ -41,7 +41,7 @@
 	function onDeviceReady() {
 		
 		sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
-		//  navigator.notification.alert("before timer");
+	/*	//  navigator.notification.alert("before timer");
 	       var now                  = new Date().getTime(),
 	        _60_seconds_from_now = new Date(now + 6*1000);
 	       
@@ -53,7 +53,7 @@
 	            date:       _60_seconds_from_now,
 	            foreground: 'foreground',
 	            background: 'background'
-	        }); 
+	        });  */
  
 		/* showAlert(); */
 		/* if(getSavedUserData()) {
