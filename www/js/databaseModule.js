@@ -21,7 +21,7 @@ var mainPageFoods = new Array();
  *  Transaction error callback
  */
 function errorCallbackSQLite(tx, err) {
-	console.log("SQLStatementError " + err);
+	alert("SQLStatementError " + err);
 }
 
 /**
@@ -145,7 +145,7 @@ function successCallbackSQLite() {
  function populateDB(tx) {
 	 
 	 //delete old data
-	 //resetDatabase(tx);
+	 resetDatabase(tx);
 	 
 	//create current user table
 	 tx.executeSql('CREATE TABLE IF NOT EXISTS TABLECURRENTUSER (userID INTEGER PRIMARY KEY, name TEXT)');
