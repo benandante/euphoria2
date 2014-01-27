@@ -158,7 +158,7 @@
 					        	alert('Deletion been sent to the server successfully!');
 					        },
 					        error      : function(e) {
-					        	alert(e + 'Deletion could not be sent to the server!');					             
+					        	alert(e + 'Deletion could not be sent to the server! ' + purchaseId + ' ' + rowNumber);					             
 					           deletePurchaseDataOffline(purchaseId, rowNumber);
 					        }
 					    });    
