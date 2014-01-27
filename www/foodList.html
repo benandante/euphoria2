@@ -140,10 +140,10 @@
 			},
 			success : function(data) {				
 				updateUserFoodListToDatabase(data.members.userList);
-				alert("User food list retrieved successfully");
+				console.log("User food list retrieved successfully");
 			},
 			error : function(e) {
-				alert(e + ' :Server connection failed while retrieving user food list!');
+				console.log(e + ' :Server connection failed while retrieving user food list!');
 			}
 		});
 		return false;
@@ -169,10 +169,10 @@
 			},
 			success : function(data) {
 				addUserFoodInLoop(data.members.userList, 0); //O = index
-				alert("Purchase information has been sent to the server successfully");
+				console.log("Purchase information has been sent to the server successfully");
 			},
 			error : function(e) {
-				alert(e + ' :Purchase information could not be sent! It will be stored locally');
+				console.log(e + ' :Purchase information could not be sent! It will be stored locally');
 				buyFoodOffline(purchaseId, new Date()
 						.format("mm/dd/yyyy hh:mm:ss"), amount, statusValue);
 			}

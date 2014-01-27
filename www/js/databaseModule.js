@@ -910,6 +910,7 @@ function successCallbackSQLite() {
 	 var len = results.rows.length;
 	//travserse the results and insert rows to the table	 
 	 resultHTML = '';
+	 alert("user food number: " + len);
 	 for (var i=0; i<len; i++){
 		 currentId =  results.rows.item(i).id;
 		 
