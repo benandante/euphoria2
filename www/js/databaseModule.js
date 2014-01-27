@@ -1586,7 +1586,7 @@ function deletePurchaseDataOffline(pId, rowNumber) {
 			break;
 		}
 	}
-	
+	alert(amount);
 	var now = new Date();
 	var val = formatDate(now);
 	wasteFoodOffline(pId, amount, rowNumber,  val);
