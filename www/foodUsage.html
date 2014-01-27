@@ -155,10 +155,10 @@
 					        data       : {token : sessionStorage.getItem("usertoken"), foodId: fId, date: dateOfPurchase},
 					        success    : function(data) {
 					        	queryDeleteData(data.members.wasteList, rowNumber, purchaseId);	
-					        	console.log('Deletion been sent to the server successfully!');
+					        	alert('Deletion been sent to the server successfully!');
 					        },
 					        error      : function(e) {
-					            console.error(e + 'Deletion could not be sent to the server!');					             
+					        	alert(e + 'Deletion could not be sent to the server!');					             
 					           deletePurchaseDataOffline(purchaseId, rowNumber);
 					        }
 					    });    

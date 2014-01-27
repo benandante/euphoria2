@@ -21,7 +21,7 @@ var mainPageFoods = new Array();
  *  Transaction error callback
  */
 function errorCallbackSQLite(tx, err) {
-	alert("SQLStatementError " + err);
+	console.log("SQLStatementError " + err);
 }
 
 /**
@@ -145,7 +145,7 @@ function successCallbackSQLite() {
  function populateDB(tx) {
 	 
 	 //delete old data
-	 resetDatabase(tx);
+	 //resetDatabase(tx);
 	 
 	//create current user table
 	 tx.executeSql('CREATE TABLE IF NOT EXISTS TABLECURRENTUSER (userID INTEGER PRIMARY KEY, name TEXT)');
@@ -866,7 +866,7 @@ function successCallbackSQLite() {
     	 
 		 rowHtmlR += '<td style="width:70%">';
 		 rowHtmlR += '<input type="range" id="sliderUsage' + currentId + '"';
-		 rowHtmlR += 'value="50" step="1" min="0" max="100" /></div></td>';
+		 rowHtmlR += 'value="0" step="1" min="0" max="100" /></div></td>';
 
 		 rowHtmlR += '</tr>';
 		
@@ -910,7 +910,6 @@ function successCallbackSQLite() {
 	 var len = results.rows.length;
 	//travserse the results and insert rows to the table	 
 	 resultHTML = '';
-	 alert("user food number: " + len);
 	 for (var i=0; i<len; i++){
 		 currentId =  results.rows.item(i).id;
 		 
@@ -924,22 +923,22 @@ function successCallbackSQLite() {
 		    	 resultHTML += '<td style="width:40%"><input type="text" maxlength="4" size="4" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
 		    	 '</i></label></td>';
-	    		 resultHTML += '<td><input  style="width:35%" type="button" id="shoppingConfirm' + currentId + '" value="Confirm" data-inline="true" data-mini="true" data-theme="a"></td>';
+	    		 resultHTML += '<td><input style="width:35%" type="button" id="shoppingConfirm' + currentId + '" value="Confirm" data-inline="true" data-mini="true" data-theme="a"></td>';
 	    		 resultHTML += '<td><div id="deleteShopping' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" style="width:10px" onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
 	    		
 	    		 
 	    	 } else if (tableStatus == 1){
 	    		 //if it is available list
 	    		 //add it as a row
-				 resultHTML += ' <tr class="gradeA"><td style="width:15%"><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
+				 resultHTML += ' <tr class="gradeA"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
 		    	 
-		    	 resultHTML += '<td style="width:15%"><input type="text" maxlength="4" size="4" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+		    	 resultHTML += '<td><input type="text" maxlength="4" size="4" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
 		    	 '</i></label></td>';
-	    		 resultHTML += '<td style="width:65%">';
-	    		 resultHTML += '<input type="range" style="display:none" data-mini="true" id="sliderUsage' + currentId + '"';
-		    	 resultHTML += 'value="50" step="1" min="0" max="100" /></td>';
-		    	 resultHTML += '<td style="width:5%"><div id="deleteAvailable' + currentId + '"><input  style="width:10%" type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
+	    		 resultHTML += '<td>';
+	    		 resultHTML += '<input type="range" style="display:none" class="fullwidth" data-mini="true" id="sliderUsage' + currentId + '"';
+		    	 resultHTML += 'value="0" step="1" min="0" max="100" /></td>';
+		    	 resultHTML += '<td><div id="deleteAvailable' + currentId + '"><input type="button"  data-icon="delete" data-inline="true" data-mini="true" data-theme="a" onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
 		    	 
 	    	 } else {
 	    		 //do nothing since this means the item is deleted
@@ -957,8 +956,8 @@ function successCallbackSQLite() {
 	 var len = results.rows.length;
 	 
 	 //create the table for displaying : food-icon, amount, usage selection
-	 myHTMLOutput = '<table data-role="table" id="my-table" style="width:100%"><thead>' + 
-	 '<tr><th style="width:15%"></th><th style="width:15%"></th><th style="width:70%"></th></tr></thead><tbody>';
+	 myHTMLOutput = '<table data-role="table" id="my-table" style="width:100%" data-mode="reflow" ><thead>' + 
+	 '<tr><th style="width:5%"></th><th style="width:5%"></th><th style="width:80%"></th><th style="width:10%"></th></tr></thead><tbody>';
 	 myHTMLOutput += '<div class="scrollable" >';
 		
 	 //add table rows with the data retrieved from database to the available table list
@@ -985,21 +984,14 @@ function successCallbackSQLite() {
 			var amountVal =  event.target.id.replace("sliderUsage","amount");
 			var oldVal =  findCurrentAmountById(event.target.id.replace("sliderUsage",""));
 			var newVal = oldVal - oldVal * slider_value / 100;			
-			 $('#' + amountVal).val(newVal);
+			 $('#' + amountVal).val(newVal.toFixed(2));
 		});
-	}
-	
-	//set slider values to 0
-	for (var i=0; i < userFoodUsageData.length; i++) {
-		var nameValue = '#sliderUsage' + userFoodUsageData[i][0];
-		$(nameValue).val(0);
-		$(nameValue).trigger("change");
 	}
 	
 	//set swipe actions
 	for (var i=0; i < userFoodUsageData.length; i++) {
 		var nameValue = '#deleteAvailable' + userFoodUsageData[i][0];
-		//$(nameValue).hide();
+		$(nameValue).hide();
 		$(document).on("swiperight", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
 			var buttonValue =  event.target.id.replace("swipeImage","deleteAvailable");
 			$('#' + buttonValue).show();
@@ -1017,7 +1009,7 @@ function successCallbackSQLite() {
  function createShoppingListTable(results) {
     //create the table for displaying shopping list
 	 myShoppingList = '<table data-role="table" id="shoppingListTable">' +
-		  '<thead class="ui-widget-header"><th width="20%"></th><th width="30%"></th><th width="20%" ></th></thead><tbody>';
+		  '<thead class="ui-widget-header"><th width="20%"></th><th width="30%"></th><th width="20%" ></th><th width="30%" ></th></thead><tbody>';
 	 myShoppingList += '<div class="scrollable" >';
 		
 	 //add table rows with the data retrieved from database to the available table list
@@ -1033,7 +1025,7 @@ function successCallbackSQLite() {
 	//set swipe actions
 	for (var i=0; i < userFoodUsageData.length; i++) {
 		var nameValue = '#deleteShopping' + userFoodUsageData[i][0];
-		//$(nameValue).hide();
+		$(nameValue).hide();
 		$(document).on("swiperight", "#swipeImage" + userFoodUsageData[i][0], function(event, ui) {
 			var buttonValue =  event.target.id.replace("swipeImage","deleteShopping");
 			$('#' + buttonValue).show();
