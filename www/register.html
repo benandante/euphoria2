@@ -15,48 +15,55 @@
 <link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
 
-<script type="text/javascript">        
-        
-        function register() {
-                var form = $("#registerform");
-                var u = $("#username", form).val();
-                var e = $("#email", form).val();
-                var p = $("#password", form).val();
-                var pr = $("#passwordRepeat", form).val();
-         $.ajax({
-                        type : "GET",
-                        url : sessionStorage.getItem("serverDomain") + "/register?",
-                        crossDomain : true,
-                        beforeSend : function() {
-                                $.mobile.loading('show')
-                        },
-                        complete : function() {
-                                $.mobile.loading('hide')
-                        },
-                        data : {
-                                username : u,
-                                password : p,
-                                passwordRepeat : pr,
-                                email : e
-                        },
-                        dataType : 'json',
-                        success : function(data) {
-                                if (data.members.value != 'ok') {
-                                        navigator.notification.alert(data.members.value);
-                                        console.log("failure!");
-                                } else {
-                                        sessionStorage.setItem("usertoken", data.members.token);
-                                        window.location.replace('foodList.html');
-                                }
-                                 console.log("success!");
-                        },
-                        error : function(err) {
-                                navigator.notification.alert(err);
-                                console.log("failure!");
-                        }
-                }); 
-                return false;
-        }
+<script type="text/javascript">	
+	
+	function register() {
+		var form = $("#registerform");
+		var u = $("#username", form).val();
+		var e = $("#email", form).val();
+		var p = $("#password", form).val();
+		var pr = $("#passwordRepeat", form).val();
+		var ad = $("#address", form).val();
+		var ag = $("#selectAge", form).val();
+		var ge = $("#gender", form).val();
+	 $.ajax({
+			type : "GET",
+			url : sessionStorage.getItem("serverDomain") + "/register?",
+			crossDomain : true,
+			beforeSend : function() {
+				$.mobile.loading('show')
+			},
+			complete : function() {
+				$.mobile.loading('hide')
+			},
+			data : {
+				username : u,
+				password : p,
+				passwordRepeat : pr,
+				email : e,
+				address : ad,
+				age : ag, 
+				gender : ge	
+			},
+			dataType : 'json',
+			success : function(data) {
+				if (data.members.value != 'ok') {
+					navigator.notification.alert(data.members.value);
+					console.log("failure!");
+				} else {
+					sessionStorage.setItem("usertoken", data.members.token);
+					window.location.replace('foodList.html');
+				}
+				 console.log("register success!");
+			},
+			error : function(err) {
+				navigator.notification.alert(err);
+				console.log("register failure!");
+			}
+		}); 
+		return false;
+	}
+	
 </script>
 
 <body>
@@ -73,32 +80,59 @@
             <label for="username">Username:</label>
             <input type="text" name="username" id="username" value="" placeholder="Username" />
         </div>
-                 <div data-role="fieldcontain" class="ui-hide-label">
+ 		<div data-role="fieldcontain" class="ui-hide-label">
             <label for="email">E-mail:</label>
             <input type="text" name="email" id="email" value="" placeholder="E-mail" />
         </div>
         <div data-role="fieldcontain" class="ui-hide-label">
             <label for="password">Password:</label>
             <input type="password" name="password" id="password" value="" placeholder="Password" />
-        </div>
-       
+        </div>       
         <div data-role="fieldcontain" class="ui-hide-label">
             <label for="passwordRepeat">Password:</label>
             <input type="password" name="passwordRepeat" id="passwordRepeat" value="" placeholder="Repeat Password" />
         </div>
-                  <div class="ui-grid-a">        
-                <div class="ui-block-a">
-                <input type="submit" value="Register" id="registerButton" onclick="register(); return false;">
-                
+        <div data-role="fieldcontain" class="ui-hide-label">
+            <label for="address">Postal Code</label>
+            <input type="text" name="address" id="address" value="" placeholder="Postal code without blanks" />
         </div>
-        <div class="ui-block-b">
-                <input type="submit" value="Login" id="loginButton" onclick="window.location.href = 'login.html'; return false;">
+        <div data-role="fieldcontain" class="ui-hide-label">
+            <label for="age">Age</label>
+           		<select name="selectAge" id="selectAge" data-mini="true" data-theme="a">
+          
+		  	 	</select>
         </div>
+        <div data-role="fieldcontain" class="ui-hide-label">
+            <label for="selectGender">Gender</label>
+	           <select name="gender" id="gender"  data-mini="true" data-theme="a">
+				   <option value="0">Gender</option>
+				   <option value="1">Female</option>
+				   <option value="2">Male</option>  
+			   </select>
+        </div>
+		  <div class="ui-grid-a">	
+				<div class="ui-block-a">
+		        	<input type="submit" value="Register" id="registerButton" onclick="register(); return false;">
+		        	
+		        </div>
+		        <div class="ui-block-b">
+		        	<input type="submit" value="Login" id="loginButton" onclick="window.location.href = 'login.html'; return false;">
+		        </div>
+		        
         </div>
         </form>        
     </div>
 </div>
 </div>
  <script type="text/javascript" src="cordova.js"></script>
+ <script type="text/javascript">
+	selectAgeHTML = '<select name="selectAge" id="selectAge" data-mini="true" data-theme="a">';
+	for(i=5; i < 100; i++) {
+		selectAgeHTML += '<option value="' +  i + '">' + i + '</option>';
+	}
+	selectAgeHTML += '</select>';
+	document.getElementById("selectAge").innerHTML = selectAgeHTML;
+	$('#selectAge').trigger("create");
+</script>
 </body>
 </html>

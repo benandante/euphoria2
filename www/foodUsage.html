@@ -1,7 +1,7 @@
 <html>
 <head>
 
-<title>Title</title>
+<title></title>
 
 <link rel="stylesheet" href="css/jquery.mobile-1.3.2.min.css" />
 <script src="js/jquery-1.9.1.min.js"></script>
@@ -11,242 +11,240 @@
 <script type="text/javascript" src="js/date.format.js"></script>
 </head>
 
-<script type="text/javascript">
-
-</script>
 <body>
-        
-        <div class="app">
-                <div data-role="page" id="user" data-theme="a">
-                        <!-- load user food list -->
-        
-                        <script>
-                        var errorOccured = 0;
-                        loadUserList();
-                        if(newUsageNumber != 0) {
-                                $('#badge-page3').html(newUsageNumber).fadeIn();        
-                        }
-                        if(newWasteNumber != 0) {
-                                $('#badge-page4').html(newWasteNumber).fadeIn();
-                        }
-                        
-                        /*
-                         * save user changes by comparing the whole table entry with current database values
-                         * and saves the change if there is any
-                         * updates current database values on local array
-                         */
-                        function saveChangesToServer() {
-                                var newUsage = 0;
-                                var newWaste = 0;
-                                navigator.notification.alert("hebele");
-                                for (var i=0; i < userFoodUsageData.length; i++) {
-                                        /* var nameValue = "#sliderWaste" +userFoodUsageData[i][0];
-                                        var sliderAmount = getSliderAmount(i , nameValue);
-                                        if(sliderAmount != 0) {
-                                                sendWaste(userFoodUsageData[i][5], userFoodUsageData[i][4], userFoodUsageData[i][0], sliderAmount, i);
-                                                newWaste++;
-                                        } */
-                                        if(userFoodUsageData[i][6] == 1) {
-                                                //if it is in available list
-                                                nameValue = "#sliderUsage" +userFoodUsageData[i][0];
-                                                sliderAmount = getSliderAmount(i , nameValue);                                        
-                                                if(sliderAmount != 0) {                                                        
-                                                        sendUsage(userFoodUsageData[i][5], userFoodUsageData[i][4], userFoodUsageData[i][0], sliderAmount, i);
-                                                        newUsage++;
-                                                }                                                        
-                                        }        
-                                        nameValue = "#amount" +userFoodUsageData[i][0];
-                                        if($(nameValue).val() !=  userFoodUsageData[i][1] ) {                                                        
-                                                sendUpdateAmount(userFoodUsageData[i][5], userFoodUsageData[i][4], $(nameValue).val(), userFoodUsageData[i][0], i);
-                                        }
-                                }
-                                newUsageNumber += newUsage;
-                                newWasteNumber += newWaste;
-                                
-                                //set usage events for bubble count
-                                updateUsageBubbles();
-                                
-                                //set waste events for bubble count
-                                updateWasteBubbles();        
-                                
-                        }
-                        
-                        function getSliderAmount(rowNumber, nameOfSlider) {
-                                return userFoodUsageData[rowNumber][1] * $(nameOfSlider).val() / 100;
-                        }
-                        
-                        function sendUpdateAmount(id, d, value, purchaseId, rowNumber) {
-                                 $.ajax({
-                                        type       : "GET",
-                                        url        : sessionStorage.getItem("serverDomain") + "/updateFoodAmount?",
-                                        crossDomain: false,
-                                        beforeSend : function() {$.mobile.loading('show')},
-                                        complete   : function() {$.mobile.loading('hide')},
-                                        dataType   : 'json',
-                                        data       : {token : sessionStorage.getItem("usertoken"), foodId: id, date: d, quantity : value},
-                                        success    : function(data) {
-                                                queryUpdateFoodAmount(purchaseId, value, rowNumber);                                          
-                                        },
-                                        error      : function(e) {
-                                            console.error(e);
-                                            updateFoodAmountOffline(purchaseId, value, rowNumber);                
-                                        }
-                                    });    
-                                 return false;
-                        }
-                        
-                        function sendWaste(id, d, purchaseId, value, rowNumber) {
-                                 $.ajax({
-                                        type       : "GET",
-                                        url        : sessionStorage.getItem("serverDomain") + "/wasteFood?",
-                                        crossDomain: false,
-                                        beforeSend : function() {$.mobile.loading('show')},
-                                        complete   : function() {$.mobile.loading('hide')},
-                                        dataType   : 'json',
-                                        data       : {token : sessionStorage.getItem("usertoken"), foodId: id, quantity : value, date: d},
-                                        success    : function(data) {
-                                                queryUpdateFoodWaste(data.members.wasteList, rowNumber, purchaseId);                          
-                                        },
-                                        error      : function(e) {
-                                                 console.error(e);
-                                            wasteFoodOffline(purchaseId, value, rowNumber,  new Date().format("mm/dd/yyyy hh:mm:ss"))  ;           
-                                        }
-                                    });    
-                                 return false;
-                        }
-                        
-                        function sendUsage(id, d, purchaseId, value, rowNumber) {
-                                 $.ajax({
-                                        type       : "GET",
-                                        url        : sessionStorage.getItem("serverDomain") + "/consumeFood?",
-                                        crossDomain: false,
-                                        beforeSend : function() {$.mobile.loading('show')},
-                                        complete   : function() {$.mobile.loading('hide')},
-                                        dataType   : 'json',
-                                        data       : {token : sessionStorage.getItem("usertoken"), foodId: id, quantity : value, date: d},
-                                        success    : function(data) {
-                                                queryUpdateFoodUsage(data.members.usageList, rowNumber, purchaseId);                          
-                                        },
-                                        error      : function(e) {
-                                            console.error(e);
-                                            consumeFoodOffline(purchaseId, value, rowNumber,  new Date().format("mm/dd/yyyy hh:mm:ss"))  ;          
-                                        }
-                                    });    
-                                 return false;
-                        }
-                        
-                        function sendDeletion(fId, dateOfPurchase, purchaseId, rowNumber) {
-                                 $.ajax({
-                                        type       : "GET",
-                                        url        : sessionStorage.getItem("serverDomain") + "/deletePurchase?",
-                                        crossDomain: false,
-                                        beforeSend : function() {$.mobile.loading('show')},
-                                        complete   : function() {$.mobile.loading('hide')},
-                                        dataType   : 'json',
-                                        data       : {token : sessionStorage.getItem("usertoken"), foodId: fId, date: dateOfPurchase},
-                                        success    : function(data) {
-                                                queryDeleteData(data.members.deletedPurchase, rowNumber, purchaseId);                          
-                                        },
-                                        error      : function(e) {
-                                            console.error(e);        
-                                            errorOccured = 1;  
-                                        }
-                                    });    
-                                 return false;
-                        }
-                        
-                        function confirmDeletion() {
-                                 $('#popupDialog' ).popup('open');
-                        }
-                        
-                        function closePopup() {
-                                 $('#popupDialog' ).popup('close');
-                        }
-                        
-                        function showError() {
-                                 $('#popupDialog' ).popup('close'); 
-                                 $('#internetError' ).popup('open');
-                        }
-                        
-                        function deleteOldData() {
-                                /* for (var i=0; i < userFoodUsageData.length; i++) {                                                
-                                        if(0 ==  userFoodUsageData[i][1] ) {
-                                                sendDeletion(userFoodUsageData[i][5], userFoodUsageData[i][4], userFoodUsageData[i][0], 0, i);
-                                        }
-                                }
-                                if(errorOccured == 1) {
-                                        showError();
-                                        errorOccured = 0;
-                                } */
-                        }
-                        
-                        function deleteUserFoodItem(id) {
-                                //TODO delete user food item
-                                
-                                var purchaseRow = findPurchaseInfoById(id);
-                                alert(purchaseRow);
-                                if(purchaseRow != -1) {
-                                        sendDeletion(userFoodUsageData[purchaseRow][5], userFoodUsageData[purchaseRow][4], id, purchaseRow);
-                                }
-                                         
-                        }
-                                
-                        </script>
-                        <div data-role="popup" id="popupDialog" data-overlay-theme="a">
+	
+	<div class="app">
+		<div data-role="page" id="user" data-theme="a">
+			<!-- load user food list -->
+	
+			<script>
+				loadUserList();
+				if(newUsageNumber != 0) {
+					$('#badge-page3').html(newUsageNumber).fadeIn();	
+				}
+				if(newWasteNumber != 0) {
+					$('#badge-page4').html(newWasteNumber).fadeIn();
+				}
+				
+				/*
+				 * save user changes by comparing the whole table entry with current database values
+				 * and saves the change if there is any
+				 * updates current database values on local array
+				 */
+				function saveChangesToServer() {
+					 navigator.notification.confirm(
+						        'The changes will be saved',  // message
+						        onConfirmSaveChanges,              // callback to invoke with index of button pressed
+						        'Confirmation',            // title
+						        'OK,Cancel'          // buttonLabels
+						    );
+				 }
+				
+				function onConfirmSaveChanges(button) {
+					 
+					alert('You selected button ' + button);
+					if(button == 1) {
+						var newUsage = 0;
+						var newWaste = 0;
+						for (var i=0; i < userFoodUsageData.length; i++) {
+							/* var nameValue = "#sliderWaste" +userFoodUsageData[i][0];
+							var sliderAmount = getSliderAmount(i , nameValue);
+							if(sliderAmount != 0) {
+								sendWaste(userFoodUsageData[i][5], userFoodUsageData[i][4], userFoodUsageData[i][0], sliderAmount, i);
+								newWaste++;
+							} */
+							if(userFoodUsageData[i][6] == 1) {
+								//if it is in available list
+								nameValue = "#sliderUsage" +userFoodUsageData[i][0];
+								sliderAmount = getSliderAmount(i , nameValue);					
+								if(sliderAmount != 0) {							
+									sendUsage(userFoodUsageData[i][5], userFoodUsageData[i][4], userFoodUsageData[i][0], sliderAmount, i);
+									newUsage++;
+								}							
+							}	
+							nameValue = "#amount" +userFoodUsageData[i][0];
+							if($(nameValue).val() !=  userFoodUsageData[i][1] ) {							
+								sendUpdateAmount(userFoodUsageData[i][5], userFoodUsageData[i][4], $(nameValue).val(), userFoodUsageData[i][0], i);
+							}
+						}
+						newUsageNumber += newUsage;
+						newWasteNumber += newWaste;
+						
+						//set usage events for bubble count
+						updateUsageBubbles();
+						
+						//set waste events for bubble count
+						updateWasteBubbles();	
+					}
+				}
+				
+				function getSliderAmount(rowNumber, nameOfSlider) {
+					return userFoodUsageData[rowNumber][1] * $(nameOfSlider).val() / 100;
+				}
+				
+				function sendUpdateAmount(id, d, value, purchaseId, rowNumber) {
+					 $.ajax({
+					        type       : "GET",
+					        url        : sessionStorage.getItem("serverDomain") + "/updateFoodAmount?",
+					        crossDomain: false,
+					        beforeSend : function() {$.mobile.loading('show')},
+					        complete   : function() {$.mobile.loading('hide')},
+					        dataType   : 'json',
+					        data       : {token : sessionStorage.getItem("usertoken"), foodId: id, date: d, quantity : value},
+					        success    : function(data) {
+					        	queryUpdateFoodAmount(purchaseId, value, rowNumber);
+					        	console.log('Changes have been sent to the server successfully!');
+					        },
+					        error      : function(e) {
+					        	console.log(e + ' : Changes could not be sent to the server!');
+					            updateFoodAmountOffline(purchaseId, value, rowNumber);                
+					        }
+					    });    
+					 return false;
+				}
+				
+				function sendWaste(id, d, purchaseId, value, rowNumber) {
+					 $.ajax({
+					        type       : "GET",
+					        url        : sessionStorage.getItem("serverDomain") + "/wasteFood?",
+					        crossDomain: false,
+					        beforeSend : function() {$.mobile.loading('show')},
+					        complete   : function() {$.mobile.loading('hide')},
+					        dataType   : 'json',
+					        data       : {token : sessionStorage.getItem("usertoken"), foodId: id, quantity : value, date: d},
+					        success    : function(data) {
+					        	queryUpdateFoodWaste(data.members.wasteList, rowNumber, purchaseId);	
+					        	console.log('Waste have been sent to the server successfully!');
+					        },
+					        error      : function(e) {
+					        	console.log(e + ' : Waste changes could not be sent to the server!');
+					            wasteFoodOffline(purchaseId, value, rowNumber,  new Date().format("mm/dd/yyyy hh:mm:ss"))  ;           
+					        }
+					    });    
+					 return false;
+				}
+				
+				function sendUsage(id, d, purchaseId, value, rowNumber) {
+					 $.ajax({
+					        type       : "GET",
+					        url        : sessionStorage.getItem("serverDomain") + "/consumeFood?",
+					        crossDomain: false,
+					        beforeSend : function() {$.mobile.loading('show')},
+					        complete   : function() {$.mobile.loading('hide')},
+					        dataType   : 'json',
+					        data       : {token : sessionStorage.getItem("usertoken"), foodId: id, quantity : value, date: d},
+					        success    : function(data) {
+					        	queryUpdateFoodUsage(data.members.usageList, rowNumber, purchaseId);
+					        	console.log('Usage have been sent to the server successfully!');
+					        },
+					        error      : function(e) {
+					            console.error(e + ' : Usage changes could not be sent to the server!');
+					            consumeFoodOffline(purchaseId, value, rowNumber,  new Date().format("mm/dd/yyyy hh:mm:ss"))  ;          
+					        }
+					    });    
+					 return false;
+				}
+				
+				function sendDeletion(fId, dateOfPurchase, purchaseId, rowNumber) {
+					 $.ajax({
+					        type       : "GET",
+					        url        : sessionStorage.getItem("serverDomain") + "/deletePurchase?",
+					        crossDomain: false,
+					        beforeSend : function() {$.mobile.loading('show')},
+					        complete   : function() {$.mobile.loading('hide')},
+					        dataType   : 'json',
+					        data       : {token : sessionStorage.getItem("usertoken"), foodId: fId, date: dateOfPurchase},
+					        success    : function(data) {
+					        	queryDeleteData(data.members.wasteList, rowNumber, purchaseId);	
+					        	console.log('Deletion been sent to the server successfully!');
+					        },
+					        error      : function(e) {
+					            console.error(e + 'Deletion could not be sent to the server!');					             
+					           deletePurchaseDataOffline(purchaseId, rowNumber);
+					        }
+					    });    
+					 return false;
+				}
+				
+				function confirmDeletion() {
+					 $('#popupDialog' ).popup('open');
+				}
+				
+				function closePopup() {
+					 $('#popupDialog' ).popup('close');
+				}
+				
+				function showError() {
+					 $('#popupDialog' ).popup('close'); 
+					 $('#internetError' ).popup('open');
+				}
+	
+				function deleteUserFoodItem(id) {					
+					var purchaseRow = findPurchaseInfoById(id);
+					if(purchaseRow != -1) {
+						sendDeletion(userFoodUsageData[purchaseRow][5], userFoodUsageData[purchaseRow][4], id, purchaseRow);
+						newWasteNumber += 1;
+						updateWasteBubbles();
+					}
+						 
+				}
+				
+			</script>
+			<div data-role="popup" id="popupDialog" data-overlay-theme="a">
                 <i>Are you sure you want to delete old data? <br> All related information will be lost. </i>
                 <div align="right">
-                                        <input type="button" id="yes" value="Delete" data-inline="true" data-mini="true"
-                                                data-theme="a" onclick="deleteOldData();">
-                        
-                                        <input type="button" id="cancel" value="Cancel" data-inline="true" data-mini="true"
-                                                data-theme="a" onclick="closePopup();">
-                                </div>
-                         </div>
-                         
-                         <div data-role="popup" id="internetError" data-overlay-theme="a">
+					<input type="button" id="yes" value="Delete" data-inline="true" data-mini="true"
+						data-theme="a" onclick="deleteOldData();">
+			
+					<input type="button" id="cancel" value="Cancel" data-inline="true" data-mini="true"
+						data-theme="a" onclick="closePopup();">
+				</div>
+ 			</div>
+ 			
+ 			<div data-role="popup" id="internetError" data-overlay-theme="a">
                 <i>Internet connection is needed for this operation </i>
                 <div align="right">
-                                        <input type="button" id="ok" value="Ok" data-inline="true" data-mini="true" data-theme="a" >
-                                </div>
-                         </div>
-                         
-                        <div data-role="header" data-position="fixed" data-id="nav"> 
-                                <h1>Euphoria</h1>
-                        
-                        <div data-role="navbar">
-                                <ul>
-                                        <li><a href="foodList.html" id="shop" data-icon="custom" class="ui-badge-container"></a></li>
-                                        <li><a href="foodUsage.html" id="list2" data-icon="custom" class="ui-badge-container"></a></li>
-                                        <!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
-                                        <span id="badge-page3" class="badge"></span></a></li> -->
-                                        <li><a href="wastereason.html" id="bin" data-icon="custom" class="ui-badge-container">
-                                        <span id="badge-page4" class="badge"></span></a></li>                                        
-                                        <li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li>
-                                        </ul>
-                        </div>
-                        </div>
-                        <!-- /navbar -->
-                        <div data-role="content">                                
-                                <label class="table-title-label"><i>Shopping list</i></label>
-                                <div id="userShoppingList"></div>
-                                
-                                <select name="sortBy" id="sortBy" data-native-menu="false" class="select-class"
-                                         data-theme="a" value="Sort by Date" data-mini="true" data-inline="true" onchange="sortUserFoodsByDate(this.value)";>
-                                        <option value="ASC">Oldest to Newest</option>
-                                        <option value="DESC">Newest to Oldest</option>
-                                </select>
-                                <label class="table-title-label"><i>Available</i></label>
-                                <div id="userFoodInfo"></div>                                
-                                <div align="right">
-                                        <input type="button" id="save" value="Delete Old" data-inline="true" data-mini="true"
-                                                data-theme="a" onclick="confirmDeletion();">
-                        
-                                        <input type="button" id="save" value="Save Data" data-inline="true" data-mini="true"
-                                                data-theme="a" onclick="saveChangesToServer();">
-                                </div>
-                        </div>
-                </div>
-        </div>
+					<input type="button" id="ok" value="Ok" data-inline="true" data-mini="true" data-theme="a" >
+				</div>
+ 			</div>
+ 			
+			<div data-role="header" data-position="fixed" data-id="nav"> 
+				<h1>Euphoria</h1>
+			
+			<div data-role="navbar">
+				<ul>
+					<li><a href="foodList.html" id="shop" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="foodUsage.html" id="list2" data-icon="custom" class="ui-badge-container"></a></li>
+					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page3" class="badge"></span></a></li> -->
+					<li><a href="wastereason.html" id="bin" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page4" class="badge"></span></a></li>					
+					<li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li>
+					</ul>
+			</div>
+			</div>
+			<!-- /navbar -->
+			<div data-role="content">				
+				<label class="table-title-label"><i>Shopping list</i></label>
+				<div id="userShoppingList"></div>
+				
+				<select name="sortBy" id="sortBy" data-native-menu="false" class="select-class"
+					 data-theme="a" value="Sort by Date" data-mini="true" data-inline="true" onchange="sortUserFoodsByDate(this.value)";>
+					<option value="ASC">Oldest</option>
+					<option value="DESC">Newest</option>
+				</select>
+				<label class="table-title-label"><i>Available</i></label>
+				
+				<div id="userFoodInfo"></div>				
+				<div align="right">
+					
+					<input type="button" id="save" value="Save Data" data-inline="true" data-mini="true"
+						data-theme="a" onclick="saveChangesToServer();">
+				</div>
+			</div>
+		</div>
+	</div>
 <script type="text/javascript" src="cordova.js"></script>
 </body>
 </html>
+
