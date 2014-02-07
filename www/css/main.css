@@ -1,3 +1,52 @@
+#shop .ui-icon {
+	background: url("../img/icons/shoppingcar2.png");
+	background-size: 35px 35px;
+}
+#list .ui-icon {
+	background: url("../img/icons/shoppingcar1.png");
+	background-size: 35px 35px;
+}
+#utensils .ui-icon {
+	background: url("../img/icons/utensils.png");
+		background-size: 35px 35px;
+}
+#bin .ui-icon {
+	background: url("../img/icons/bin.png");
+		background-size: 35px 35px;
+}
+#survey .ui-icon {
+	background: url("../img/icons/pencil.png");
+	background-size: 35px 35px;
+}
+#userInfo .ui-icon {
+	background: url("../img/icons/profile.png");
+	background-size: 35px 35px;
+}
+#shop2 .ui-icon {
+	background: url("../img/icons/shoppingcar22.png");
+	background-size: 35px 35px;
+}
+#list2 .ui-icon {
+	background: url("../img/icons/shoppingcar12.png");
+	background-size: 35px 35px;
+}
+#utensils2 .ui-icon {
+	background: url("../img/icons/utensils2.png");
+		background-size: 35px 35px;
+}
+#bin2 .ui-icon {
+	background: url("../img/icons/bin2.png");
+		background-size: 35px 35px;
+}
+#survey2 .ui-icon {
+	background: url("../img/icons/pencil2.png");
+	background-size: 35px 35px;
+}
+#userInfo2 .ui-icon {
+	background: url("../img/icons/profile2.png");
+	background-size: 35px 35px;
+}
+
 .my-button {
     background-image: url('img/Picture1.jpg') !important;
 }
@@ -38,7 +87,13 @@
 }
 
 .fullwidth { width: 100%; }
-
+div.ui-slider{
+	width:100%;
+ float: left;
+  padding: 6px;
+  margin: 8px 0;
+  margin-left: 1%;
+	}
 .ui-li-count { 
 	padding-right:1; 
 	position:static; 
@@ -93,24 +148,6 @@
 	align:right;
 }
 
-/* Add alternating row stripes */
-.table-stripe tbody tr:nth-child(odd) td,
-.table-stripe tbody tr:nth-child(odd) th {
-  background-color: rgba(0,0,0,0.04);
-}
-/* Add stroke to the header and last item */
-.table-stripe thead th,
-.table-stripe tbody tr:last-child {
-  border-bottom: 1px solid rgba(0, 0, 0, .1);
-}
-
-.table-stroke thead th {
-  border-bottom: 1px solid rgba(0, 0, 0, .1);
-}
-.table-stroke tbody th,
-.table-stroke tbody td {
-  border-bottom: 1px solid rgba(0, 0, 0, .05);
-}
 
 .ui-table-columntoggle-btn {
     display: none !important;
@@ -139,119 +176,16 @@
 	text-align:center;
 }
 
-
-table.dataTable.display tr.odd.gradeA {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeA {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeC {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeC {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeX {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeX {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeU {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeU {
-	background-color: #444444;
+.ui-hidden-accessible {
+    display : none !important;
+    width	: 100%;
 }
 
 
-table.dataTable.display tr.odd {
-	background-color: #444444;
+/* Hide the number input */
+.full-width-slider input {
+    display: none;
 }
-
-table.dataTable.display tr.even {
-	background-color: #444444;
+.full-width-slider .ui-slider-track {
+    margin-left: 0px;
 }
-
-table.dataTable.display tr.odd td.sorting_1 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd td.sorting_2 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd td.sorting_3 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even td.sorting_1 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even td.sorting_2 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even td.sorting_3 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeA td.sorting_1 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeA td.sorting_2 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeA td.sorting_3 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeA td.sorting_1 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeA td.sorting_2 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeA td.sorting_3 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeC td.sorting_1 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeC td.sorting_2 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.odd.gradeC td.sorting_3 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeC td.sorting_1 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeC td.sorting_2 {
-	background-color: #444444;
-}
-
-table.dataTable.display tr.even.gradeC td.sorting_3 {
-	background-color: #444444;
-}
-
-
-
