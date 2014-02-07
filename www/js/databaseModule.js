@@ -1458,6 +1458,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
      
      
 	//Update the DIV called Content Area with the HTML string
+     alert(myHTMLOutput);
 	document.getElementById("ContentFoodArea").innerHTML = myHTMLOutput;
  }
 

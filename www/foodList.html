@@ -31,11 +31,8 @@
 	}
 	
 	function onLoad() {		
-		alert("onload");
 		initiateDatabase();
-		alert("after db init");
 		sendUserAction(1, getNow(), "Application opened");
-		alert("after action send");
 		getFoodList();		
 	/*	getUserFoodList();		
 		getWasteInformation();
@@ -133,7 +130,7 @@
 			},
 			error : function(e) {
 				console.log(e + ' :Server connection failed while retrieveing food list!');
-				alert("Server connection failed while retrieveing food list");
+				
 			}
 		});
 		return false;
