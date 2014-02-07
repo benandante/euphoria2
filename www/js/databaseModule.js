@@ -69,9 +69,9 @@ function successCallbackSQLite() {
  }
  
  function fillPagesWithDbData() {
-	db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	
+	/*db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	
 	db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
-	db.transaction(queryWasteReasons, errorCallbackSQLite, successCallbackSQLite);
+	db.transaction(queryWasteReasons, errorCallbackSQLite, successCallbackSQLite);*/
 	//db.transaction(queryUsageReasons, errorCallbackSQLite, successCallbackSQLite);
 	
 	//getOfflineActions();
