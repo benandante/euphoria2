@@ -68,7 +68,7 @@ function successCallbackSQLite() {
  
  function fillPagesWithDbData() {
 	db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	
-	db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
+	//db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
 	db.transaction(queryWasteReasons, errorCallbackSQLite, successCallbackSQLite);
 	//db.transaction(queryUsageReasons, errorCallbackSQLite, successCallbackSQLite);
 	
@@ -1402,8 +1402,9 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   *  Query the database for all foods
   */
  function selectAllFoods(tx) {
-	 alert("select all foods");
+	
     tx.executeSql('SELECT * FROM TABLEFOODS', [], getAllFoodList, errorCallbackfood);
+    alert("select all foods");
  }
  
  
