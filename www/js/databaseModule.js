@@ -731,11 +731,8 @@ function deleteFromOfflineActions(actionNumber, id) {
   * @param data
   */
  function addFoodsToDatabase(data) {
-	 alert( window.localStorage.getItem("serverdata"));
-	 alert( data.length);
 	 if( window.localStorage.getItem("serverdata") != "loaded") {
 		 var count = data.length;
-		 alert(count);
 		 db.transaction( function(tx){ 
 			 tx.executeSql('DELETE FROM TABLEFOODS' );
 		 }, errorCallbackfood );
@@ -763,7 +760,7 @@ function deleteFromOfflineActions(actionNumber, id) {
 		 unit =  data[i].unit;
 		 tx.executeSql('INSERT INTO TABLEFOODS (foodID, foodName, foodIcon, foodUnit) VALUES ( ' +
 				 id + ', "' + name + '", "' + icon + '", "' + unit + '" )' );
-	 }, errorCallbackSQLite, successCallbackSQLite );
+	 }, errorCallbackfood, successCallbackSQLite );
  }
  
 
