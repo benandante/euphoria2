@@ -39,7 +39,7 @@ function successCallbackSQLite() {
 	db = window.openDatabase("EuphoriaDBDB", "1.0", "EUPHORIA LOCAL DATABASE", 200000);
 
 	//reset old data
-/*	db.transaction(function(tx) {
+	db.transaction(function(tx) {
 		 tx.executeSql('DELETE FROM TABLEUSAGE');
 		 tx.executeSql('DELETE FROM TABLEWASTE');
 		 tx.executeSql('DELETE FROM TABLEWASTETYPE');
@@ -55,7 +55,7 @@ function successCallbackSQLite() {
 		 tx.executeSql('DROP TABLE IF EXISTS TABLEFOODS');
 		 tx.executeSql('DROP TABLE IF EXISTS TABLESURVEY');
 		 tx.executeSql('DROP TABLE IF EXISTS TABLEOFFLINEACTIONS');
-	});*/
+	});
 	window.localStorage.setItem("serverdata", "unloaded");
 	db.transaction(populateDB, databaseInitError, fillPagesWithDbData);
 	
