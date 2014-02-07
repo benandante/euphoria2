@@ -40,7 +40,7 @@ function successCallbackSQLite() {
 	db = window.openDatabase("EuphoriaDB", "1.0", "EUPHORIA LOCAL DATABASE", 200000);
 	alert(db);
 	//reset old data
-	/*db.transaction(function(tx) {
+	db.transaction(function(tx) {
 		 tx.executeSql('DELETE FROM TABLEUSAGE');
 		 tx.executeSql('DELETE FROM TABLEWASTE');
 		 tx.executeSql('DELETE FROM TABLEWASTETYPE');
@@ -56,7 +56,7 @@ function successCallbackSQLite() {
 		 tx.executeSql('DROP TABLE IF EXISTS TABLEFOODS');
 		 tx.executeSql('DROP TABLE IF EXISTS TABLESURVEY');
 		 tx.executeSql('DROP TABLE IF EXISTS TABLEOFFLINEACTIONS');
-	});*/
+	});
 	window.localStorage.setItem("serverdata", "unloaded");
 	alert("database init");
 	db.transaction(populateDB, databaseInitError, fillPagesWithDbData);
@@ -70,8 +70,8 @@ function successCallbackSQLite() {
  
  function fillPagesWithDbData() {
 	//db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	
-	//db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
-	/*db.transaction(queryWasteReasons, errorCallbackSQLite, successCallbackSQLite);*/
+	db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
+	db.transaction(queryWasteReasons, errorCallbackSQLite, successCallbackSQLite);
 	//db.transaction(queryUsageReasons, errorCallbackSQLite, successCallbackSQLite);
 	
 	//getOfflineActions();
