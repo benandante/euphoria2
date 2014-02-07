@@ -744,12 +744,16 @@ function deleteFromOfflineActions(actionNumber, id) {
 	 }	
  }
  
+ function setAllFoodList() {
+	 db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
+ }
+ 
  /*
   *  Transaction error callback
   */
  function errorCallbackfood(tx, err) {
  	console.log("SQLStatementError " + err);
- 	alert(err);
+ 	
  }
  
  function addFoodInLoop(data, i) {
@@ -1407,6 +1411,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   */
  function getAllFoodList(tx, results) {
 	 var len = results.rows.length;
+	 alert(len);
 	 var imageFoodLen =  len;
 	 if (imageFoodLen > FOOD_NUMBER_ON_MAIN) imageFoodLen = FOOD_NUMBER_ON_MAIN;
 	
