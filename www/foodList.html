@@ -13,7 +13,7 @@
 <script type="text/javascript" src="js/userActionTracker.js"></script>
 </head>
 
-<body  onload="onLoad();">
+<body onload="onLoad();">
 	<div class="app">	
 	<div data-role="page" id="home" data-theme="a">
 
@@ -31,6 +31,7 @@
 	}
 	
 	function onLoad() {		
+		alert("onload");
 		initiateDatabase();
 		sendUserAction(1, getNow(), "Application opened");
 		getFoodList();		
