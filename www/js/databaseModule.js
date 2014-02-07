@@ -38,7 +38,7 @@ function successCallbackSQLite() {
 	
 	currentUser = window.localStorage.getItem("currentuser");	
 	db = window.openDatabase("EuphoriaDB", "1.0", "EUPHORIA LOCAL DATABASE", 200000);
-
+	alert(db);
 	//reset old data
 	/*db.transaction(function(tx) {
 		 tx.executeSql('DELETE FROM TABLEUSAGE');
@@ -70,7 +70,7 @@ function successCallbackSQLite() {
  
  function fillPagesWithDbData() {
 	//db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	
-	db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
+	//db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
 	/*db.transaction(queryWasteReasons, errorCallbackSQLite, successCallbackSQLite);*/
 	//db.transaction(queryUsageReasons, errorCallbackSQLite, successCallbackSQLite);
 	
@@ -1414,7 +1414,6 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   * update user food list page
   */
  function getAllFoodList(tx, results) {
-	 alert("aaa");
 	 
 	 var len = results.rows.length;
 	
@@ -1474,7 +1473,6 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
      
      
 	//Update the DIV called Content Area with the HTML string
-     alert(myHTMLOutput);
 	document.getElementById("ContentFoodArea").innerHTML = myHTMLOutput;
  }
 
