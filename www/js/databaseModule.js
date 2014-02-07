@@ -22,6 +22,7 @@ var mainPageFoods = new Array();
  */
 function errorCallbackSQLite(tx, err) {
 	console.log("SQLStatementError " + err);
+	alert(err);
 }
 
 /**
@@ -36,7 +37,7 @@ function successCallbackSQLite() {
  function initiateDatabase(){
 	
 	currentUser = window.localStorage.getItem("currentuser");	
-	db = window.openDatabase("EuphoriaDBDB", "1.0", "EUPHORIA LOCAL DATABASE", 200000);
+	db = window.openDatabase("EuphoriaDB", "1.0", "EUPHORIA LOCAL DATABASE", 200000);
 
 	//reset old data
 	db.transaction(function(tx) {

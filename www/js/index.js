@@ -36,7 +36,6 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-        alert("Hello");
     },
     
     // Update DOM on a Received Event
@@ -51,7 +50,7 @@ var app = {
         console.log('Received Event: ' + id);
     },
     
-    onOnline: function() {
+   /* onOnline: function() {
         console.log("onOnline");
         alert("online");
     },
@@ -59,6 +58,6 @@ var app = {
     onOffline: function() {
         console.log("onOffline");
         alert("offline");
-    }
+    }*/
 
 };
