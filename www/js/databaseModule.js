@@ -69,9 +69,9 @@ function successCallbackSQLite() {
  }
  
  function fillPagesWithDbData() {
-	/*db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	
+	//db.transaction(queryCurrentUser, errorCallbackSQLite, successCallbackSQLite);	
 	db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
-	db.transaction(queryWasteReasons, errorCallbackSQLite, successCallbackSQLite);*/
+	/*db.transaction(queryWasteReasons, errorCallbackSQLite, successCallbackSQLite);*/
 	//db.transaction(queryUsageReasons, errorCallbackSQLite, successCallbackSQLite);
 	
 	//getOfflineActions();
@@ -1418,6 +1418,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 	 
 	 var len = results.rows.length;
 	
+	 alert(len);
 	 
 	 var imageFoodLen =  len;
 	 if (imageFoodLen > FOOD_NUMBER_ON_MAIN) imageFoodLen = FOOD_NUMBER_ON_MAIN;
