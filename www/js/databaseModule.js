@@ -752,7 +752,7 @@ function deleteFromOfflineActions(actionNumber, id) {
   *  Transaction error callback
   */
  function errorCallbackfood(tx, err) {
- 	console.log("SQLStatementError " + err);
+ 	alert("food list error " + err);
  	
  }
  
