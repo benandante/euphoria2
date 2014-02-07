@@ -1413,8 +1413,10 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   * update user food list page
   */
  function getAllFoodList(tx, results) {
+	 alert("aaa");
+	 
 	 var len = results.rows.length;
-	 alert(len);
+	
 	 
 	 var imageFoodLen =  len;
 	 if (imageFoodLen > FOOD_NUMBER_ON_MAIN) imageFoodLen = FOOD_NUMBER_ON_MAIN;

@@ -68,7 +68,6 @@
         <gap:plugin name="org.apache.cordova.console" />
         <gap:plugin name="org.apache.cordova.file" />
         <gap:plugin name="org.apache.cordova.device" />
-        <gap:plugin name="org.apache.cordova.storage" />
 
     <!-- Define app icon for each platform. -->
     <icon src="icon.png" />
