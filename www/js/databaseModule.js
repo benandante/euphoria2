@@ -64,7 +64,7 @@ function successCallbackSQLite() {
  
  
  function databaseInitError(tx, err) {
-	 console.log("database could not be initialized: " + err);
+	 alert("database could not be initialized: " + err);
  }
  
  function fillPagesWithDbData() {
