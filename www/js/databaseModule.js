@@ -745,7 +745,7 @@ function deleteFromOfflineActions(actionNumber, id) {
  }
  
  function setAllFoodList() {
-	 db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
+	 db.transaction(selectAllFoods, errorCallbackfood, successCallbackSQLite);
  }
  
  /*
@@ -1402,7 +1402,8 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   *  Query the database for all foods
   */
  function selectAllFoods(tx) {
-    tx.executeSql('SELECT * FROM TABLEFOODS', [], getAllFoodList, errorCallbackSQLite);
+	 alert("select all foods");
+    tx.executeSql('SELECT * FROM TABLEFOODS', [], getAllFoodList, errorCallbackfood);
  }
  
  
