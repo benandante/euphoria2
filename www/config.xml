@@ -65,6 +65,10 @@
     -->
         <gap:plugin name="de.appplant.cordova.plugin.local-notification" version="0.6.3"/>
         <gap:plugin name="org.apache.cordova.dialogs" />
+        <gap:plugin name="org.apache.cordova.console" />
+        <gap:plugin name="org.apache.cordova.file" />
+        <gap:plugin name="org.apache.cordova.device" />
+        <gap:plugin name="org.apache.cordova.storage" />
 
     <!-- Define app icon for each platform. -->
     <icon src="icon.png" />
