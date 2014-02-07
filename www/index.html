@@ -29,11 +29,11 @@
     </head>
     <script>
     function onLoad() {
-            if (typeof navigator.device == "undefined"){
+        /*     if (typeof navigator.device == "undefined"){ */
             document.addEventListener("deviceready", onDeviceReady, false);
-       } else {
+     /*   } else {
                        onDeviceReady();
-       }
+       } */
         }
 
         // Cordova is loaded and it is now safe to make calls Cordova methods
@@ -42,7 +42,7 @@
                 
                 sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
                 //  navigator.notification.alert("before timer");
-               var now                  = new Date().getTime(),
+              /*  var now                  = new Date().getTime(),
                 _60_seconds_from_now = new Date(now + 6*1000);
                
                 window.plugin.notification.local.add({
@@ -54,7 +54,7 @@
                     foreground: 'foreground',
                     background: 'background'
                 }); 
- 
+  */
                 //navigator.notification.alert("after timer");
                 /* showAlert(); */
                 /* if(getSavedUserData()) {

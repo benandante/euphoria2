@@ -1,0 +1,138 @@
+<html>
+<head>
+
+<title>Title</title>
+
+<link rel="stylesheet" href="css/jquery.mobile-1.3.2.min.css" />
+<script src="js/jquery-1.9.1.min.js"></script>
+<script src="js/jquery.mobile-1.3.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<script type="text/javascript" src="js/databaseModule.js"></script>
+<script type="text/javascript" src="js/userActionTracker.js"></script>
+</head>
+<body>
+	<div class="app">
+		<div data-role="page" id="surveyPage" data-theme="a">
+			<!-- load user survey data -->
+			
+			<script>
+				loadUserSurvey();			
+				
+				function saveSurveyData() {
+					 navigator.notification.confirm(
+						        'The changes will be saved',  // message
+						        onConfirmSaveSurveyChanges,              // callback to invoke with index of button pressed
+						        'Confirmation',            // title
+						        'OK,Cancel'          // buttonLabels
+						    );
+				}
+				
+			    function onConfirmSaveSurveyChanges(button) { 
+			    	
+			    	if(button == 1) {
+			    		 $.ajax({
+						        type       : "GET",
+						        url        : "http://localhost:9001/survey?",
+						        crossDomain: false,
+						        beforeSend : function() {$.mobile.loading('show')},
+						        complete   : function() {$.mobile.loading('hide')},
+						        dataType   : 'json',
+						        data       : {token : sessionStorage.getItem("usertoken"), q1:  $('#slider-1').val(),  q2:  $('#slider-2').val(),  q3:  $('#slider-3').val(),  q4:  $('#slider-4').val()},
+						        success    : function(data) {
+						        	queryUpdateSurveyData(data.members);  
+						        	console.log('Survey data has been sent to the server successfully!');
+						        },
+						        error      : function(e) {
+						            saveSurveyOffline($('#slider-1').val(), $('#slider-2').val(), $('#slider-3').val(), $('#slider-4').val());
+						            console.log(e + ' : Survey data could not be sent to the server!');
+						        }
+						    }); 
+			    		 navigator.notification.alert("Changes are saved");
+						 return false;
+			    	}
+					
+				}
+			    if(newUsageNumber != 0) {
+					$('#badge-page9').html(newUsageNumber).fadeIn();	
+				}
+				if(newWasteNumber != 0) {
+					$('#badge-page10').html(newWasteNumber).fadeIn();
+				}
+				
+			</script>
+			<div data-role="header" data-position="fixed" data-id="nav"> 
+				<h1>Euphoria</h1>
+			<style type=text/css>
+				  div.ui-slider {
+				       margin-left: 5px;
+				       width: 96%;
+				   }
+				</style>
+			<div data-role="navbar" >
+				<ul>
+					<li><a href="foodList.html" id="shop" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="foodUsage.html" id="list" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="wastereason.html" id="bin" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page10" class="badge"></span></a></li>					
+					<li><a href="survey.html" id="survey2" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li>
+					</ul>
+			</div>
+			</div>
+			<!-- /navbar -->
+			<div data-role="content">
+				<p><i>I bought more than I eventually needed this week.</i></p>
+			    <fieldset class="ui-grid-a">
+					<div class="ui-block-a"><div align="left"><label><font size="2"><i>Disagree</i></font></label></div></div>
+					<div class="ui-block-b"><div align="right"><label><font size="2"><i>Agree</i></font></label></div></div>
+				</fieldset>
+					<input type="range" id="slider-1" value="5" min="0" max="10"  /><br><br>
+				
+		
+				<p><i>I have wasted too much in this week.</i></p>
+				<fieldset class="ui-grid-a">
+				<div class="ui-block-a">
+				       <div align="left"><label><font size="2"><i>Disagree</i></font></label></div>
+				</div>
+				<div class="ui-block-b">
+				        <div align="right"><label><font size="2"><i>Agree</i></font></label></div>
+				</div>
+				</fieldset>
+				<input type="range" name="slider-2" id="slider-2" value="5" min="0" max="10"/><br><br>
+		
+				<p><i>I could have done more to prevent wastage.</i></p>
+				<fieldset class="ui-grid-a">
+				<div class="ui-block-a">
+				       <div align="left"><label><font size="2"><i>Disagree</i></font></label></div>
+				</div>
+				<div class="ui-block-b">
+				       <div align="right"><label><font size="2"><i>Agree</i></font></label></div>
+				</div>
+				</fieldset>
+				
+				<input type="range" name="slider-3" id="slider-3" value="5" min="0" max="10"/><br><br>
+			
+				
+				<p><i>It was out of my control in wasting.</i></p>
+				<fieldset class="ui-grid-a">
+				<div class="ui-block-a">
+				       <div align="left"><label><font size="2"><i>Disagree</i></font></label></div>
+				</div>
+				<div class="ui-block-b">
+				       <div align="right"><label><font size="2"><i>Agree</i></font></label></div>
+				</div>
+				</fieldset> 
+				
+				<input type="range" name="slider-4" id="slider-4" value="5" min="0" max="10"/><br><br>
+				</div>
+				
+				<div align="right">
+					<input type="button" id="done" value="Done" data-inline="true" data-theme="a" data-mini="true" onclick="saveSurveyData();">
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript" src="cordova.js"></script>
+</body>
+</html>
+

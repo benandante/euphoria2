@@ -1,0 +1,141 @@
+<html>
+<head>
+
+<title>Title</title>
+
+<link rel="stylesheet" href="css/jquery.mobile-1.3.2.min.css" />
+<script src="js/jquery-1.9.1.min.js"></script>
+<script src="js/jquery.mobile-1.3.2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<script type="text/javascript" src="js/databaseModule.js"></script>
+<script type="text/javascript" src="js/date.format.js"></script>
+<script type="text/javascript" src="js/userActionTracker.js"></script>
+</head>
+
+<body>
+	<div class="app">
+		<div data-role="page" id="wastereason" data-theme="a">
+			<!-- load user food list -->
+			<script>
+				loadUserWasteList();
+				if(newUsageNumber != 0) {
+					$('#badge-page7').html(newUsageNumber).fadeIn();	
+				}
+				if(newWasteNumber != 0) {
+					$('#badge-page8').html(newWasteNumber).fadeIn();
+				}
+
+
+				/*
+				 * saves the reasons of food usage and updates tables
+				 */
+				function saveWasteReasonsToServer() {
+					 navigator.notification.confirm(
+						        'The changes will be saved',  // message
+						        onConfirmSaveWasteChanges,              // callback to invoke with index of button pressed
+						        'Confirmation',            // title
+						        'OK,Cancel'          // buttonLabels
+						    );
+					
+				}
+				
+				function onConfirmSaveWasteChanges(button) {
+					if(button == 1) {
+						for (var i=0; i < userFoodWasteInfo.length; i++) {
+							var id = userFoodWasteInfo[i][0];
+							var nameValue = "#" + id + "WasteType";
+							var vall = $(nameValue).val();
+							if(vall !=  userFoodWasteInfo[i][1] ) {						
+								sendWasteUpdate(vall, i);
+							}
+						}
+						newWasteNumber = 0;
+						//set waste events for bubble count
+						updateWasteBubbles();	
+						navigator.notification.alert("Changes are saved");
+					}
+					
+				}
+				function sendWasteUpdate(vall, i) {
+					 $.ajax({
+					        type       : "GET",
+					        url        : sessionStorage.getItem("serverDomain") + "/updateWasteInformation?",
+					        crossDomain: false,
+					        beforeSend : function() {$.mobile.loading('show')},
+					        complete   : function() {$.mobile.loading('hide')},
+					        dataType   : 'json',
+					        data       : {token : sessionStorage.getItem("usertoken"), foodId: userFoodWasteInfo[i][2], type : vall, purchaseDate : userFoodWasteInfo[i][3], wasteDate : userFoodWasteInfo[i][4]},
+					        success    : function(data) {					        	
+					        	updateFoodWasteReasons(data.members.wasteList, i);
+					        	console.log('Waste update has been sent to the server successfully!');
+					        },
+					        error      : function(e) {
+					        	updateFoodWasteReasonsOffline(vall, i);					            
+					            console.log(e + ' : Waste update could not be sent to the server!');
+					                   
+					        }
+					    });    
+					 return false;
+				}
+
+				function sendWasteDeletion(fId, dateOfPurchase, wasteId, rowNumber) {
+					 $.ajax({
+					        type       : "GET",
+					        url        : sessionStorage.getItem("serverDomain") + "/deleteWaste?",
+					        crossDomain: false,
+					        beforeSend : function() {$.mobile.loading('show')},
+					        complete   : function() {$.mobile.loading('hide')},
+					        dataType   : 'json',
+					        data       : {token : sessionStorage.getItem("usertoken"), foodId: fId, date: dateOfPurchase},
+					        success    : function(data) {
+					        	queryDeleteWaste(rowNumber, wasteId);	
+					        	console.log('Waste deletion has been sent to the server successfully!');
+					        	
+					        },
+					        error      : function(e) {
+					        	 console.log(e + ' : Waste deletion could not be sent to the server!');	
+					            deleteWasteOffline(rowNumber, wasteId);
+					        }
+					    });    
+					 return false;
+				}
+				
+				function deleteWasteItem(id) {
+					var wasteRow = findWasteInfoById(id);
+					if(wasteRow != -1) {
+						sendWasteDeletion(userFoodWasteInfo[wasteRow][2], userFoodWasteInfo[wasteRow][3], id, wasteRow);						
+					}
+				}
+				
+			</script>
+			<div data-role="header" data-position="fixed" data-id="nav"> 
+				<h1>Euphoria</h1>
+			
+			<div data-role="navbar" >
+				<ul>
+					<li><a href="foodList.html" id="shop" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="foodUsage.html" id="list" data-icon="custom" class="ui-badge-container"></a></li>
+					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page7" class="badge"></span></a></li> -->
+					<li><a href="wastereason.html" id="bin2" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page8" class="badge"></span></a></li>					
+					<li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li>
+					</ul>
+			</div>
+			</div>
+			<!-- /navbar -->
+			<div data-role="content">
+				<div id="wasteList"></div>
+				<div align="right">
+					<input type="button" id="done" value="Done" data-inline="true"
+						data-theme="a" data-mini="true" onclick="saveWasteReasonsToServer();">
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript" src="cordova.js"></script>
+
+</body>
+</html>
+

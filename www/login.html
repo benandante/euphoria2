@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=320, user-scalable=no" />
     <meta http-equiv="Content-type" content="text/html, charset=utf-8">
-    <title></title>
+    <title>EUPHORIA</title>
 
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,10 +12,13 @@
 <script src="js/jquery-1.9.1.min.js"></script>
 <script src="js/jquery.mobile-1.3.2.min.js"></script>
 
-
+<script src="js/databaseModule.js"></script>
+<script type="text/javascript" src="js/userActionTracker.js"></script>
 <link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
-
+<body>
+<div  class="app">
+<div id="loginPage" data-role="page" data-theme="a"  >
 <script type="text/javascript">
 
 	function sendData() {
@@ -30,11 +33,18 @@
 		        complete   : function() {$.mobile.loading('hide')},
 		        data       : {username : u, password : p},
 		        dataType   : 'json',
-		        success    : function(data) {
+		        success    : function(data) {		        	
 		        	sessionStorage.setItem("usertoken", data.members.token);
 		        	sessionStorage.setItem("currentUser", u);
+		        	sessionStorage.setItem("currentUserEmail", data.members.email);
+		        	sessionStorage.setItem("currentUserAddress", data.members.address);
+		        	sessionStorage.setItem("currentUserGender", data.members.gender);
+		        	sessionStorage.setItem("currentUserAge", data.members.age);
+		        	
+		        	//$.mobile.changePage("foodList.html", "slide", true, true);
 		        	window.location.replace('foodList.html');
 		        	console.log("login success!");
+		        
 		        },
 		        error      : function(e) {
 		        	// phonegap alerts
@@ -47,34 +57,10 @@
 	
 	
 </script>
-<body>
-<div  class="app">
-		<style>
-#email .ui-icon {
-	background: url("img/Toolbar1.png");
-	background-size: 35px 35px;
-}
-#pen .ui-icon {
-	background: url("img/Toolbar2.png");
-	background-size: 35px 35px;
-}
-#io .ui-icon {
-	background: url("img/Toolbar3.png");
-		background-size: 35px 35px;
-}
-#trash .ui-icon {
-	background: url("img/Toolbar4.png");
-		background-size: 35px 35px;
-}
-#friends .ui-icon {
-	background: url("img/Toolbar5.png");
-		background-size: 35px 35px;
-}
-</style>
-<div id="loginPage" data-role="page" data-theme="a">
+
 
     <div data-role="header">
-        <h1>Euphoria</h1>
+        <h1>EUPHORIA</h1>
     </div>
 
     <div data-role="content">    

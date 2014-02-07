@@ -10,8 +10,15 @@
 <link rel="stylesheet" type="text/css" href="css/main.css" />
 <script type="text/javascript" src="js/databaseModule.js"></script>
 <script type="text/javascript" src="js/date.format.js"></script>
+<script type="text/javascript" src="js/userActionTracker.js"></script>
 </head>
-<script type="text/javascript">
+
+<body  onload="onLoad();">
+	<div class="app">	
+	<div data-role="page" id="home" data-theme="a">
+
+	<script type="text/javascript">
+	
 	function selectFoodByImage(id) {
 		if (document.getElementById(id).value == "0") {
 			document.getElementById(id).style.border = "3px solid white";
@@ -24,11 +31,13 @@
 	}
 	
 	function onLoad() {		
-		onDeviceReady();
+		initiateDatabase();
+		sendUserAction(1, getNow(), "Application opened");
 		getFoodList();		
-		getUserFoodList();		
+	/*	getUserFoodList();		
 		getWasteInformation();
-		getSurveyDataFromServer();
+		getSurveyDataFromServer(); */
+		
 		
 		$( "#searchFoodlist" ).on( "listviewbeforefilter", function ( e, data ) {
 			var $ul = $( this ),
@@ -66,7 +75,9 @@
 			val = "#" + idVal;
 			//if image is selected, add them to user list
 			if ($(val).val() == 1) {
-				buyNewFood(idVal, 0, status);
+				document.getElementById(idVal).style.border = "0";
+				document.getElementById(idVal).value = "0";
+				buyNewFood(idVal, 0, status);				
 			}
 		}
 		/* var el = $('#selectFoods')[0];
@@ -257,79 +268,41 @@
 		return false;
 	}
 	
-	 
+	$(document).on("pageload",function(event,data){
+		
+		if(data.dataUrl.indexOf("foodUsage") != -1) {
+			sendUserAction(3, getNow(), "user list opened");
+		} else if(data.dataUrl.indexOf("wastereason") != -1) {
+			sendUserAction(4, getNow(), "waste list opened");
+		}  else if(data.dataUrl.indexOf("survey") != -1) {
+			sendUserAction(5, getNow(), "survey opened");
+		} else if(data.dataUrl.indexOf("userInfo") != -1)
+			sendUserAction(6, getNow(), "user info opened");
+		}
+		
+	);
 	
+	
+			if(newUsageNumber != 0) {
+				$('#badge-page1').html(newUsageNumber).fadeIn();	
+			}
+			if(newWasteNumber != 0) {
+				$('#badge-page2').html(newWasteNumber).fadeIn();
+			}	
+			
 </script>
-
-
-
-<body onload="onLoad();">
-	<div class="app">
-		<style>
-#shop .ui-icon {
-	background: url("img/icons/shoppingcar2.png");
-	background-size: 35px 35px;
-}
-#list .ui-icon {
-	background: url("img/icons/shoppingcar1.png");
-	background-size: 35px 35px;
-}
-#utensils .ui-icon {
-	background: url("img/icons/utensils.png");
-		background-size: 35px 35px;
-}
-#bin .ui-icon {
-	background: url("img/icons/bin.png");
-		background-size: 35px 35px;
-}
-#survey .ui-icon {
-	background: url("img/icons/pencil.png");
-	background-size: 35px 35px;
-}
-#shop2 .ui-icon {
-	background: url("img/icons/shoppingcar22.png");
-	background-size: 35px 35px;
-}
-#list2 .ui-icon {
-	background: url("img/icons/shoppingcar12.png");
-	background-size: 35px 35px;
-}
-#utensils2 .ui-icon {
-	background: url("img/icons/utensils2.png");
-		background-size: 35px 35px;
-}
-#bin2 .ui-icon {
-	background: url("img/icons/bin2.png");
-		background-size: 35px 35px;
-}
-#survey2 .ui-icon {
-	background: url("img/icons/pencil2.png");
-	background-size: 35px 35px;
-}
-</style>
-
-		<div data-role="page" id="home" data-theme="a">
-		<script>
-				if(newUsageNumber != 0) {
-					$('#badge-page1').html(newUsageNumber).fadeIn();	
-				}
-				if(newWasteNumber != 0) {
-					$('#badge-page2').html(newWasteNumber).fadeIn();
-				}
-				
-			</script>
 			<div data-role="header" data-position="fixed" data-id="nav"> 
 				<h1>Euphoria</h1>
-			
 			<div data-role="navbar" >
 				<ul>
-					<li><a href="foodList.html" id="shop2" data-icon="custom"></a></li>
+					<li><a href="foodList.html" id="shop2" data-icon="custom" class="ui-badge-container"></a></li>
 					<li><a href="foodUsage.html" id="list" data-icon="custom" class="ui-badge-container"></a></li>
 					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
 					<span id="badge-page1" class="badge"></span></a></li> -->
 					<li><a href="wastereason.html" id="bin" data-icon="custom" class="ui-badge-container">
 					<span id="badge-page2" class="badge"></span></a></li>					
 					<li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li>
 					</ul>
 			</div>
 			</div>
@@ -339,7 +312,7 @@
 				<ul data-role="listview" data-filter="true" data-filter-reveal="true" data-split-theme="a" data-inset="true" 
 				data-filter-theme="a"  data-filter-placeholder="Search food..." 
 				data-theme="a" data-mini="true" id="searchFoodlist"></ul>
-				<div id="ContentFoodArea"></div>
+				<div  id="ContentFoodArea"></div>
 			</div>
 			<div data-role="footer" class="ui-bar">
 				<div class="ui-grid-a">

@@ -52,6 +52,12 @@
 					console.log("failure!");
 				} else {
 					sessionStorage.setItem("usertoken", data.members.token);
+					sessionStorage.setItem("currentUser", data.members.username);
+		        	sessionStorage.setItem("currentUserEmail", data.members.email);
+		        	sessionStorage.setItem("currentUserAddress", data.members.address);
+		        	sessionStorage.setItem("currentUserGender", data.members.gender);
+		        	sessionStorage.setItem("currentUserAge", data.members.age);
+		        	
 					window.location.replace('foodList.html');
 				}
 				 console.log("register success!");
