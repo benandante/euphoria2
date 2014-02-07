@@ -1394,7 +1394,6 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   *  Query the database for all foods
   */
  function selectAllFoods(tx) {
-	 alert("before select all foods");
     tx.executeSql('SELECT * FROM TABLEFOODS', [], getAllFoodList, errorCallbackSQLite);
  }
  
@@ -1404,7 +1403,6 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   */
  function getAllFoodList(tx, results) {
 	 var len = results.rows.length;
-	alert(len);
 	 var imageFoodLen =  len;
 	 if (imageFoodLen > FOOD_NUMBER_ON_MAIN) imageFoodLen = FOOD_NUMBER_ON_MAIN;
 	
