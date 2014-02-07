@@ -731,11 +731,14 @@ function deleteFromOfflineActions(actionNumber, id) {
   * @param data
   */
  function addFoodsToDatabase(data) {
+	 alert( window.localStorage.getItem("serverdata"));
+	 alert( data.length);
 	 if( window.localStorage.getItem("serverdata") != "loaded") {
 		 var count = data.length;
+		 alert(count);
 		 db.transaction( function(tx){ 
 			 tx.executeSql('DELETE FROM TABLEFOODS' );
-		 }, errorCallbackSQLite );
+		 }, errorCallbackfood );
 		 for (var i=0; i< count; i++) {
 			 addFoodInLoop(data, i);
 		 }
@@ -744,8 +747,12 @@ function deleteFromOfflineActions(actionNumber, id) {
 	 }	
  }
  
- function setAllFoodList() {
-	 db.transaction(selectAllFoods, errorCallbackSQLite, successCallbackSQLite);
+ /*
+  *  Transaction error callback
+  */
+ function errorCallbackfood(tx, err) {
+ 	console.log("SQLStatementError " + err);
+ 	alert(err);
  }
  
  function addFoodInLoop(data, i) {
