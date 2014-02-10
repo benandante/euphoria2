@@ -1756,6 +1756,7 @@ function queryDeleteData(wasteList, rowNumber, purchaseId) {
 					 purchaseId + ',' + wasteList[0].amount + ', ' + wasteList[0].type +', "' + wasteList[0].date + '", 0, NULL)' );
 		 });
 		 newWasteNumber += 1;
+		 alert(newWasteNumber);
 		updateWasteBubbles();
 	 }
 	
