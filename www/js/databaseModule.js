@@ -1024,12 +1024,12 @@ function deleteFromOfflineActions(actionNumber, id) {
 	    	
 	    		 //if it is available list
 	    		 //add it as a row
-			 rowHtmlR += ' <tr style="padding-top: 0.5em !important;"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="30" height="30"></td>';
+			 rowHtmlR += ' <tr style="padding-top: 0.5em !important;"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
 		    	 
 			 rowHtmlR += '<td><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
 		    	 '</i></label></td>';
-			 rowHtmlR += '<td style="width: 60%"><form class="full-width-slider">';
+			 rowHtmlR += '<td style="width: 40%"><form class="full-width-slider">';
 			 rowHtmlR += '<input type="range" class="ui-hidden-accessible"  data-mini="true" id="sliderUsage' + currentId + '"';
 			 rowHtmlR += 'value="0" step="1" min="0" max="100" /></form></td>';
 			 rowHtmlR += '<td><div id="deleteAvailable' + currentId + '"><a href=""   style="width:10%" data-role="button" data-icon="delete" data-iconpos="notext" data-mini="true" data-inline="true"  onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
@@ -1114,12 +1114,12 @@ function deleteFromOfflineActions(actionNumber, id) {
 	    	 } else if (tableStatus == 1){
 	    		 //if it is available list
 	    		 //add it as a row
-				 resultHTML += ' <tr style="padding-top: 0.5em !important;"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="30" height="30"></td>';
+				 resultHTML += ' <tr style="padding-top: 0.5em !important;"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
 		    	 
 		    	 resultHTML += '<td><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
 		    	 '</i></label></td>';
-	    		 resultHTML += '<td style="width: 60%"><form class="full-width-slider">';
+	    		 resultHTML += '<td style="width: 40%"><form class="full-width-slider">';
 	    		 resultHTML += '<input type="range" class="ui-hidden-accessible" data-mini="true" id="sliderUsage' + currentId + '"';
 		    	 resultHTML += 'value="0" step="1" min="0" max="100" /></form></td>';
 		    	 resultHTML += '<td><div id="deleteAvailable' + currentId + '"><a href=""  data-role="button" data-icon="delete" data-iconpos="notext" data-mini="true" data-inline="true" onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
@@ -1756,7 +1756,6 @@ function queryDeleteData(wasteList, rowNumber, purchaseId) {
 					 purchaseId + ',' + wasteList[0].amount + ', ' + wasteList[0].type +', "' + wasteList[0].date + '", 0, NULL)' );
 		 });
 		 newWasteNumber += 1;
-		 alert(newWasteNumber);
 		updateWasteBubbles();
 	 }
 	
@@ -1857,5 +1856,6 @@ function saveUserActionOffline( type,  date,  data) {
 		 tx.executeSql('INSERT INTO TABLEUSERACTIONS (id, actionNumber, date, data) VALUES (NULL,' + type + ', "' +  date + '", "' + data + '")' );
 	 }, errorCallbackSQLite);		
 }
+
 
 

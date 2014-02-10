@@ -282,7 +282,14 @@
 		}
 		
 	);
-	
+	$(document).bind("mobileinit", function()
+			{
+			    if (navigator.userAgent.indexOf("Android") != -1)
+			    {
+			        $.mobile.defaultPageTransition = 'none';
+			        $.mobile.defaultDialogTransition = 'none';
+			    }
+			});
 	
 			if(newUsageNumber != 0) {
 				$('#badge-page1').html(newUsageNumber).fadeIn();	
