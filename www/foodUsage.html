@@ -35,12 +35,14 @@
 				 * updates current database values on local array
 				 */
 				function saveChangesToServer() {
-					 navigator.notification.confirm(
+					/*  navigator.notification.confirm(
 						        'The changes will be saved',  // message
 						        onConfirmSaveChanges,              // callback to invoke with index of button pressed
 						        'Confirmation',            // title
 						        'OK,Cancel'          // buttonLabels
-						    );
+						    ); */
+					 
+					 onConfirmSaveChanges(1);
 				 }
 				
 				function onConfirmSaveChanges(button) {

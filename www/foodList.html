@@ -13,7 +13,7 @@
 <script type="text/javascript" src="js/userActionTracker.js"></script>
 </head>
 
-<body onload="onLoad();">
+<body  onload="onLoad();">
 	<div class="app">	
 	<div data-role="page" id="home" data-theme="a">
 
@@ -32,7 +32,7 @@
 	
 	function onLoad() {		
 		initiateDatabase();
-	//	sendUserAction(1, getNow(), "Application opened");
+		sendUserAction(1, getNow(), "Application opened");
 		getFoodList();		
 	/*	getUserFoodList();		
 		getWasteInformation();
@@ -80,6 +80,7 @@
 				buyNewFood(idVal, 0, status);				
 			}
 		}
+		navigator.notification.alert("Foods are added");
 		/* var el = $('#selectFoods')[0];
 		selectedValues = getSelectValues(el);
 		length = selectedValues.length;
@@ -88,7 +89,7 @@
 		} */
 
 		//TODO do this for combobox items
-		$.mobile.changePage("foodUsage.html", "slide", true, true);
+		//$.mobile.changePage("foodUsage.html", "slide", true, true);
 	}
 	
 	function getSelectValues(select) {
@@ -129,7 +130,6 @@
 			},
 			error : function(e) {
 				console.log(e + ' :Server connection failed while retrieveing food list!');
-				
 			}
 		});
 		return false;
