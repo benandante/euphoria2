@@ -20,15 +20,13 @@ var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
-	},
-	
+    },
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
-      
     },
     // deviceready Event Handler
     //
@@ -37,7 +35,6 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
     },
-    
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
@@ -46,18 +43,8 @@ var app = {
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
-       
+
         console.log('Received Event: ' + id);
-    },
-    
-   /* onOnline: function() {
-        console.log("onOnline");
-        alert("online");
-    },
- 
-    onOffline: function() {
-        console.log("onOffline");
-        alert("offline");
-    }*/
+    }
 
 };

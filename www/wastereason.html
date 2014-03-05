@@ -30,13 +30,13 @@
 				 * saves the reasons of food usage and updates tables
 				 */
 				function saveWasteReasonsToServer() {
-					 navigator.notification.confirm(
+				/* 	 navigator.notification.confirm(
 						        'The changes will be saved',  // message
 						        onConfirmSaveWasteChanges,              // callback to invoke with index of button pressed
 						        'Confirmation',            // title
 						        'OK,Cancel'          // buttonLabels
-						    );
-					
+						    ); */
+					onConfirmSaveWasteChanges(1);
 				}
 				
 				function onConfirmSaveWasteChanges(button) {
@@ -107,32 +107,83 @@
 					}
 				}
 				
+				 function setSwipeActionsForWaste() {
+						$('.wasteRow').bind( 'swiperight', function( e ) {
+							var buttonValue =   e.currentTarget.id.replace("wasteRow","deleteWaste");
+							if(e.target.nodeName != 'SPAN') {
+								$('#' + buttonValue).show();
+							}
+							
+							 e.preventDefault();
+							e.stopImmediatePropagation();
+							return false;
+							} );
+						$('.wasteRow').bind( 'swipeleft', function( e ) {
+							var buttonValue =   e.currentTarget.id.replace("wasteRow","deleteWaste");
+							if(e.target.nodeName != 'SPAN') {
+								$('#' + buttonValue).hide();
+							}
+							e.stopImmediatePropagation();
+							return false;
+							} );
+				 }
+				 
+				 function setWasteReasonActions(currentId) {
+					 $('#' + currentId + 'WasteType').change(function(event) {
+							var vall = $(this).val();
+							var id = event.target.id.replace("WasteType","");
+							var wasteRow = -1;
+							for(j = 0; j < userFoodWasteInfo.length; j++ ) {
+								if(userFoodWasteInfo[j][0] == id) {
+									wasteRow = j;
+									break;
+								}
+							}
+							if(vall !=  userFoodWasteInfo[wasteRow][1] ) {						
+								sendWasteUpdate(vall, wasteRow);
+								undoWasteStack.push(new Array(userFoodWasteInfo[wasteRow][0], userFoodWasteInfo[wasteRow][1])); //id and old amount
+							}
+						});
+					 $('#' + "deleteWaste" + currentId).hide();
+				 }
+				
 			</script>
 			<div data-role="header" data-position="fixed" data-id="nav"> 
-				<h1>Euphoria</h1>
+				<h1>EUPHORIA</h1>
+			 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
 			
-			<div data-role="navbar" >
-				<ul>
-					<li><a href="foodList.html" id="shop" data-icon="custom" class="ui-badge-container"></a></li>
-					<li><a href="foodUsage.html" id="list" data-icon="custom" class="ui-badge-container"></a></li>
-					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page7" class="badge"></span></a></li> -->
-					<li><a href="wastereason.html" id="bin2" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page8" class="badge"></span></a></li>					
-					<li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li>
-					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li>
-					</ul>
-			</div>
 			</div>
 			<!-- /navbar -->
 			<div data-role="content">
 				<label class="table-title-label"><i>Reason</i></label>
 				<div id="wasteList"></div>
-				<div align="right">
-					<input type="button" id="done" value="Done" data-inline="true"
-						data-theme="a" data-mini="true" onclick="saveWasteReasonsToServer();">
-				</div>
 			</div>
+			<div data-role="footer" data-position="fixed">
+			<div data-role="navbar" >
+				<ul>
+					<li><a href="foodList.html"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
+					<li><a href="foodUsage.html" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
+					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page7" class="badge"></span></a></li> -->
+					<li><a href="wastereason.html" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
+					<span id="badge-page8" class="badge"></span></a></li>		
+					
+					<!-- <li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li> -->
+					<!-- <li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li> -->
+					</ul>
+			</div><!-- /navbar -->
+			</div>
+			<div data-role="panel" data-position-fixed="true" data-theme="a"
+				id="nav-panel">
+				<ul data-role="listview" data-theme="a" class="nav-search">
+					<li data-icon="delete"><a href="#" data-rel="close">Close
+							menu</a></li>
+					<li data-icon="edit" ><a href="survey.html" id="survey" >Survey</a></li>
+					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" >User Profile</a></li>
+
+				</ul>
+			</div>
+			<!-- /panel -->
 		</div>
 	</div>
 <script type="text/javascript" src="cordova.js"></script>

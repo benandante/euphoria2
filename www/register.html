@@ -117,12 +117,13 @@
 			   </select>
         </div>
 		  <div class="ui-grid-a">	
-				<div class="ui-block-a">
-		        	<input type="submit" value="Register" id="registerButton" onclick="register(); return false;">
-		        	
+			
+		        <div class="ui-block-a">
+		        	<input type="submit" value="Login" id="loginButton" data-corners="false" data-transition="slide" onclick="window.location.href = 'login.html'; return false;">
 		        </div>
-		        <div class="ui-block-b">
-		        	<input type="submit" value="Login" id="loginButton" onclick="window.location.href = 'login.html'; return false;">
+		        	<div class="ui-block-b">
+		        	<input type="submit" value="Register" id="registerButton" data-corners="false" onclick="register(); return false;">
+		        	
 		        </div>
 		        
         </div>
@@ -133,7 +134,7 @@
  <script type="text/javascript" src="cordova.js"></script>
  <script type="text/javascript">
 	selectAgeHTML = '<select name="selectAge" id="selectAge" data-mini="true" data-theme="a">';
-	for(i=5; i < 100; i++) {
+	for(i=18; i < 99; i++) {
 		selectAgeHTML += '<option value="' +  i + '">' + i + '</option>';
 	}
 	selectAgeHTML += '</select>';

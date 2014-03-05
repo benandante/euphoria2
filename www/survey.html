@@ -16,68 +16,73 @@
 			<!-- load user survey data -->
 			
 			<script>
-				loadUserSurvey();			
 				
-				function saveSurveyData() {
-					 navigator.notification.confirm(
-						        'The changes will be saved',  // message
-						        onConfirmSaveSurveyChanges,              // callback to invoke with index of button pressed
-						        'Confirmation',            // title
-						        'OK,Cancel'          // buttonLabels
-						    );
+				function sendSurveyData ( qNumber,  qValue) {
+					 $.ajax({
+					        type       : "GET",
+					        url        : sessionStorage.getItem("serverDomain") + "/survey?",
+					        crossDomain: false,
+					        beforeSend : function() {$.mobile.loading('show')},
+					        complete   : function() {$.mobile.loading('hide')},
+					        dataType   : 'json',
+					        data       : {
+					        	token : sessionStorage.getItem("usertoken"), 
+					        	q1: qNumber,  
+					        	q2: qValue,  
+					        	q3: 0,  
+					        	q4: 0},
+					        success    : function(data) {
+					        	queryUpdateSurveyData(data.members);  
+					        	console.log('Survey data has been sent to the server successfully!');
+					        },
+					        error      : function(e) {
+					            saveSurveyOffline(qNumber, qValue, 0, 0);
+					            console.log(e + ' : Survey data could not be sent to the server!');
+					        }
+					    }); 
+					 return false;
 				}
 				
-			    function onConfirmSaveSurveyChanges(button) { 
-			    	
-			    	if(button == 1) {
-			    		 $.ajax({
-						        type       : "GET",
-						        url        : "http://localhost:9001/survey?",
-						        crossDomain: false,
-						        beforeSend : function() {$.mobile.loading('show')},
-						        complete   : function() {$.mobile.loading('hide')},
-						        dataType   : 'json',
-						        data       : {token : sessionStorage.getItem("usertoken"), q1:  $('#slider-1').val(),  q2:  $('#slider-2').val(),  q3:  $('#slider-3').val(),  q4:  $('#slider-4').val()},
-						        success    : function(data) {
-						        	queryUpdateSurveyData(data.members);  
-						        	console.log('Survey data has been sent to the server successfully!');
-						        },
-						        error      : function(e) {
-						            saveSurveyOffline($('#slider-1').val(), $('#slider-2').val(), $('#slider-3').val(), $('#slider-4').val());
-						            console.log(e + ' : Survey data could not be sent to the server!');
-						        }
-						    }); 
-			    		 navigator.notification.alert("Changes are saved");
-						 return false;
-			    	}
-					
-				}
-			    if(newUsageNumber != 0) {
+				if(newUsageNumber != 0) {
 					$('#badge-page9').html(newUsageNumber).fadeIn();	
 				}
 				if(newWasteNumber != 0) {
 					$('#badge-page10').html(newWasteNumber).fadeIn();
 				}
 				
+				$(document).delegate('.ui-page', 'pageinit', function () {		
+				
+						$('#slider-1').unbind();
+						$('#slider-2').unbind();
+						$('#slider-3').unbind();
+						$('#slider-4').unbind();
+						
+						$('#slider-1').on('slidestop', function() {
+							sendSurveyData (1, $(this).val());
+						});
+						$('#slider-2').on('slidestop', function() {
+							sendSurveyData (2, $(this).val());
+						});
+						$('#slider-3').on('slidestop', function() {
+							sendSurveyData (3, $(this).val());				
+						});
+						$('#slider-4').on('slidestop', function() {
+							sendSurveyData (4, $(this).val());
+						});
+						
+					
+				});
 			</script>
 			<div data-role="header" data-position="fixed" data-id="nav"> 
-				<h1>Euphoria</h1>
+				<h1>EUPHORIA</h1>
+				 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
 			<style type=text/css>
 				  div.ui-slider {
 				       margin-left: 5px;
 				       width: 96%;
 				   }
 				</style>
-			<div data-role="navbar" >
-				<ul>
-					<li><a href="foodList.html" id="shop" data-icon="custom" class="ui-badge-container"></a></li>
-					<li><a href="foodUsage.html" id="list" data-icon="custom" class="ui-badge-container"></a></li>
-					<li><a href="wastereason.html" id="bin" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page10" class="badge"></span></a></li>					
-					<li><a href="survey.html" id="survey2" data-icon="custom" class="ui-badge-container"></a></li>
-					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li>
-					</ul>
-			</div>
+		
 			</div>
 			<!-- /navbar -->
 			<div data-role="content">
@@ -98,7 +103,7 @@
 				        <div align="right"><label><font size="2"><i>Agree</i></font></label></div>
 				</div>
 				</fieldset>
-				<input type="range" name="slider-2" id="slider-2" value="5" min="0" max="10"/><br><br>
+				<input type="range" name="slider-2" id="slider-2" value="5" min="0" max="10" onblur="alert(1);"/><br><br>
 		
 				<p><i>I could have done more to prevent wastage.</i></p>
 				<fieldset class="ui-grid-a">
@@ -125,14 +130,36 @@
 				
 				<input type="range" name="slider-4" id="slider-4" value="5" min="0" max="10"/><br><br>
 				</div>
-				
-				<div align="right">
+			<div data-role="footer"  data-position="fixed">
+				<div data-role="navbar" >
+				<ul>
+					<li><a href="foodList.html"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
+					<li><a href="foodUsage.html" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
+					<li><a href="wastereason.html" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
+					<span id="badge-page10" class="badge"></span></a></li>					
+					<!-- <li><a href="survey.html" id="survey2" data-icon="custom" class="ui-badge-container"></a></li>
+					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li> -->
+					</ul>
+			</div>	
+				<!-- <div align="right">
 					<input type="button" id="done" value="Done" data-inline="true" data-theme="a" data-mini="true" onclick="saveSurveyData();">
-				</div>
+				</div> -->
 			</div>
+			<div data-role="panel" data-position-fixed="true" data-theme="a"
+				id="nav-panel">
+				<ul data-role="listview" data-theme="a" class="nav-search">
+					<li data-icon="delete"><a href="#" data-rel="close">Close
+							menu</a></li>
+					<li data-icon="edit" ><a href="survey.html" id="survey" >Survey</a></li>
+					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" >User Profile</a></li>
+
+				</ul>
+			</div>
+			<!-- /panel -->
 		</div>
 	</div>
 <script type="text/javascript" src="cordova.js"></script>
+
 </body>
 </html>
 

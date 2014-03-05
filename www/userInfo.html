@@ -16,16 +16,16 @@
 		<div data-role="page" id="userInfoPage" data-theme="a">
 			<!-- display/edit user info -->
 			<script type="text/javascript">
-					$(document).bind("pageload", function() {
+			$(document).delegate('.ui-page', 'pageshow', function (){
 						$("#selectAge").selectmenu('disable');
 				    	$("#gender").selectmenu('disable');
-				    	selectAgeHTML = '<select name="selectAge" id="selectAge" data-mini="true" data-theme="a">';
-						for(i=5; i < 100; i++) {
-							selectAgeHTML += '<option value="' +  i + '">' + i + '</option>';
+				    	
+						for(i=15; i < 100; i++) {
+							$("#selectAge").append('<option value="' +  i + '">' + i + '</option>');
 						}
-						selectAgeHTML += '</select>';
-						 document.getElementById("selectAge").innerHTML = selectAgeHTML;
-						$("#selectAge").trigger("create"); 
+						$("#selectAge").selectmenu();
+						$("#selectAge").selectmenu('refresh', true);
+						
 					 	$("#username").val(sessionStorage.getItem("currentUser"));
 						$("#email").val(sessionStorage.getItem("currentUserEmail"));
 						$("#address").val(sessionStorage.getItem("currentUserAddress"));
@@ -42,7 +42,6 @@
 			}
 		
 				function edit() {
-					navigator.notification.alert("You can edit values to change your information");
 					$("#email").removeAttr('readonly');
 					$("#address").removeAttr('readonly');
 					$("#selectAge").selectmenu('enable');
@@ -74,11 +73,11 @@
 						        	sessionStorage.setItem("currentUserAddress", data.members.address);
 						        	sessionStorage.setItem("currentUserGender", data.members.gender);
 						        	sessionStorage.setItem("currentUserAge", data.members.age);
-					        		navigator.notification.alert("Changes are saved");
+					        		
 					        	}					        	
 					        },
 					        error      : function(e) {
-					        	navigator.notification.alert("Internet connection is not available");
+					        	navigator.notification.alert("Internet access problem");
 					        }
 					    }); 
 		    		
@@ -88,22 +87,8 @@
 			</script>
 			<div data-role="header" data-position="fixed" data-id="nav">
 				<h1>EUPHORIA</h1>
-				<div data-role="navbar">
-					<ul>
-						<li><a href="foodList.html" id="shop" data-icon="custom"
-							class="ui-badge-container"></a></li>
-						<li><a href="foodUsage.html" id="list" data-icon="custom"
-							class="ui-badge-container"></a></li>
-						<li><a href="wastereason.html" id="bin" data-icon="custom"
-							class="ui-badge-container"> <span id="badge-page12"
-								class="badge"></span></a></li>
-						<li><a href="survey.html" id="survey" data-icon="custom"
-							class="ui-badge-container"></a></li>
-							<li><a href="userInfo.html" id="userInfo2" data-icon="custom" class="ui-badge-container"></a></li>
-					</ul>
-				</div>
+				 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
 			</div>
-			<!-- /navbar -->
 			<div data-role="content">
 				<form id="editUserForm">
 					<div data-role="fieldcontain">
@@ -135,13 +120,13 @@
 					</div> 
 					<div class="ui-grid-b">
 						<div class="ui-block-a">
-							<a href="" data-role="button" data-mini="true" onclick="edit(); return false;">Edit</a>
+							<a href="" data-role="button" data-mini="true" data-corners="false" onclick="edit(); return false;">Edit</a>
 						</div>
 						<div class="ui-block-b">
-							<a href="" data-role="button" data-mini="true" onclick="save(); return false;">Save</a>
+							<a href="" data-role="button" data-mini="true" data-corners="false" onclick="save(); return false;">Save</a>
 						</div>
 							<div class="ui-block-c">
-							<a href="" data-role="button" data-mini="true" 
+							<a href="" data-role="button" data-mini="true" data-corners="false" 
 								onclick="window.location.href = 'login.html'; return false;">Logout</a>
 						</div>
 
@@ -149,6 +134,26 @@
 				
 				</form>
 			</div>
+		<div data-role="footer" data-position="fixed">
+		<div data-role="navbar">
+					<ul>
+					<li><a href="foodList.html"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
+					<li><a href="foodUsage.html" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
+					<li><a href="wastereason.html" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
+					<span id="badge-page12" class="badge"></span></a></li>		
+					</ul>
+				</div>
+		</div>
+		<div data-role="panel" data-position-fixed="true" data-theme="a"
+				id="nav-panel">
+				<ul data-role="listview" data-theme="a" class="nav-search">
+					<li data-icon="delete"><a href="#" data-rel="close">Close
+							menu</a></li>
+					<li data-icon="edit" ><a href="survey.html" id="survey" >Survey</a></li>
+					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" >User Profile</a></li>
+				</ul>
+			</div>
+			<!-- /panel -->
 		</div>
 	</div>
 	<script type="text/javascript" src="cordova.js"></script>

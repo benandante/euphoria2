@@ -33,7 +33,8 @@
 	function onLoad() {		
 		initiateDatabase();
 		sendUserAction(1, getNow(), "Application opened");
-		getFoodList();		
+		getFoodList();	
+		
 	/*	getUserFoodList();		
 		getWasteInformation();
 		getSurveyDataFromServer(); */
@@ -61,7 +62,7 @@
 	    });
 	}
 
-	
+
 	function updateOfflineData(results) {
 		alert(results.rows.length);
 	}
@@ -80,7 +81,7 @@
 				buyNewFood(idVal, 0, status);				
 			}
 		}
-		navigator.notification.alert("Foods are added");
+		//TODO change to local notification
 		/* var el = $('#selectFoods')[0];
 		selectedValues = getSelectValues(el);
 		length = selectedValues.length;
@@ -300,44 +301,53 @@
 			
 </script>
 			<div data-role="header" data-position="fixed" data-id="nav"> 
-				<h1>Euphoria</h1>
-			<div data-role="navbar" >
-				<ul>
-					<li><a href="foodList.html" id="shop2" data-icon="custom" class="ui-badge-container"></a></li>
-					<li><a href="foodUsage.html" id="list" data-icon="custom" class="ui-badge-container"></a></li>
-					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page1" class="badge"></span></a></li> -->
-					<li><a href="wastereason.html" id="bin" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page2" class="badge"></span></a></li>					
-					<li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li>
-					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li>
-					</ul>
+				<h1>EUPHORIA</h1>
+			 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
 			</div>
-			</div>
-			<!-- /navbar -->
+			
 			<div data-role="content">
 				<!-- <input type="search" name="search" id="searchfood" value="" /> -->
 				<ul data-role="listview" data-filter="true" data-filter-reveal="true" data-split-theme="a" data-inset="true" 
 				data-filter-theme="a"  data-filter-placeholder="Search food..." 
 				data-theme="a" data-mini="true" id="searchFoodlist"></ul>
 				<div  id="ContentFoodArea"></div>
+				
+			 <div class="ui-grid-a">	
+		<div class="ui-block-a">
+        	<a href="" data-role="button" data-corners="false" data-icon="plus"  data-mini="true" data-iconshadow="false"  class="ui-icon-nodisc"
+							onclick="addFoods(0);">I will buy</a>
+        </div>
+        <div class="ui-block-b">
+        	<a href="" data-role="button"  data-corners="false" data-icon="check" data-mini="true" data-iconshadow="false" class="ui-icon-nodisc"
+							onclick="addFoods(1);">I have</a>
+							</div>
+         </div>
+
+		</div>
+				<div data-role="footer" data-position="fixed">
+				<div data-role="navbar" >
+				<ul>
+					<li><a href="foodList.html"  data-icon="search" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
+					<li><a href="foodUsage.html" data-icon="home" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
+					<li><a href="wastereason.html" data-icon="info" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc">
+					<span id="badge-page2" class="badge"></span></a></li>		
+					
+					<!-- <li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li> -->
+					<!-- <li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li> -->
+					</ul>
+			</div><!-- /navbar -->
 			</div>
-			<div data-role="footer" class="ui-bar">
-				<div class="ui-grid-a">
-					<div class="ui-block-a">
-						<!-- <select name="selectFoods" id="selectFoods"
-							data-native-menu="false" multiple="multiple">
-							<option>More</option>
-						</select> -->
-						<a href="" data-role="button" data-icon="plus"
-							onclick="addFoods(1);">Available</a>
-					</div>
-					<div class="ui-block-b">
-						<a href="" data-role="button" data-icon="plus"
-							onclick="addFoods(0);">Shopping List</a>
-					</div>
-				</div>
+			<div data-role="panel" data-position-fixed="true" data-theme="a"
+				id="nav-panel">
+				<ul data-role="listview" data-theme="a" class="nav-search">
+					<li data-icon="delete"><a href="#" data-rel="close">Close
+							menu</a></li>
+					<li data-icon="edit" ><a href="survey.html" id="survey" >Survey</a></li>
+					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" >User Profile</a></li>
+
+				</ul>
 			</div>
+			<!-- /panel -->
 		</div>
 	</div>
 	
