@@ -1,3 +1,21 @@
+
+.ui-button {
+	data-corners : false;
+}
+
+
+/* .ui-icon {
+	background-image:url("images/icons-36-white.png");
+    data-inline: true;
+    data-iconshadow: false;
+}
+  */
+
+/* #more .ui-icon {
+    background-color: transparent;
+    width: 36px;
+    height: 36px;
+}
 #shop .ui-icon {
 	background: url("../img/icons/shoppingcar2.png");
 	background-size: 35px 35px;
@@ -23,35 +41,36 @@
 	background-size: 35px 35px;
 }
 #shop2 .ui-icon {
-	background: url("../img/icons/shoppingcar22.png");
+	background: url("../img/icons/shoppingcar2.png");
 	background-size: 35px 35px;
 }
 #list2 .ui-icon {
-	background: url("../img/icons/shoppingcar12.png");
+	background: url("../img/icons/shoppingcar1.png");
 	background-size: 35px 35px;
 }
 #utensils2 .ui-icon {
-	background: url("../img/icons/utensils2.png");
+	background: url("../img/icons/utensils.png");
 		background-size: 35px 35px;
 }
 #bin2 .ui-icon {
-	background: url("../img/icons/bin2.png");
+	background: url("../img/icons/bin.png");
 		background-size: 35px 35px;
 }
 #survey2 .ui-icon {
-	background: url("../img/icons/pencil2.png");
+	background: url("../img/icons/pencil.png");
 	background-size: 35px 35px;
 }
 #userInfo2 .ui-icon {
-	background: url("../img/icons/profile2.png");
+	background: url("../img/icons/profile.png");
 	background-size: 35px 35px;
 }
+ */
 
-.my-button {
+/* .my-button {
     background-image: url('img/Picture1.jpg') !important;
 }
 
-
+ */
 .ui-grid-b input {
     width  : 100%;
     height : 15%;
@@ -69,10 +88,6 @@
     width: 45% !important;    
 }
 
-	
-.custom-navbar ul li a {
-   
-}
 
 .select-class {
 	display: block;
@@ -104,7 +119,7 @@ div.ui-slider{
 
 .badge {
   display: none;
-  background: #BA070F;
+  background: #0B6138; /* #BA070F; */
   color: #fff;
   padding: 1px 7px;
   position: absolute;
@@ -119,24 +134,24 @@ div.ui-slider{
   position: relative;
 }
 
-.ui-icon-abc
+/* .ui-icon-abc
 {
     background: url(http://glyphish.com/images/demo.png) no-repeat rgba(0, 0, 0, 0.4) !important;
     background-size: 16px 16px;
-}
+} */
 
-#favorite .ui-icon { 
+/* #favorite .ui-icon { 
     background-image: url(http://glyphish.com/images/demo.png);
     background-position: -345px -112px;
     background-repeat: no-repeat;
 }
-
-
+ */
+/* 
 .ui-icon {
     background-color: transparent;
     width: 35px;
     height: 35px;
-}
+} */
 /* custom icons do not work!!!!*/
 
 
