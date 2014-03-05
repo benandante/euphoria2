@@ -51,7 +51,7 @@
 				function save() {
 					 $.ajax({
 					        type       : "GET",
-					        url        : "http://localhost:9001/editUserData?",
+					        url        : sessionStorage.getItem("serverDomain") + "/editUserData?",
 					        crossDomain: false,
 					        beforeSend : function() {$.mobile.loading('show')},
 					        complete   : function() {$.mobile.loading('hide')},
