@@ -1232,6 +1232,7 @@ function findPurchaseInfoById(id) {
  * updates bubbles that display new waste values
  */
 function updateWasteBubbles() {
+	alert(newWasteNumber);
 	if(newWasteNumber > 0) {
 		//set waste events for bubble count
 		for (var j=2; j<=10; j+=2) {
