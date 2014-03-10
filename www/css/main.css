@@ -126,7 +126,10 @@ div.ui-slider{
   right: 4px;
   top: -12px;
   z-index: 999;
-  border-radius: .8em;
+ border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+border-bottom-left-radius: 10px;
+border-bottom-right-radius: 10px;
   border: 2px solid #fff;
 }
 
