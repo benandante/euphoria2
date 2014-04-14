@@ -38,7 +38,7 @@
     <feature name="http://api.phonegap.com/2.0/network"/>
     <feature name="http://api.phonegap.com/2.0/notification"/>
 
-     <gap:platform name="android" />
+   <!--   <gap:platform name="android" /> -->
         
         
     <!-- Customize your app and platform with the preference element. -->
