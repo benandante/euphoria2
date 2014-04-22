@@ -1,3 +1,4 @@
+.ui-page { -webkit-backface-visibility: hidden; }
 
 .ui-button {
 	data-corners : false;
