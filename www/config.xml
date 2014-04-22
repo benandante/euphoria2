@@ -29,13 +29,13 @@
         permission on your app, which PhoneGap requires.
     -->
    <!--  <preference name="permissions"                value="none"/> -->
-    <feature name="http://api.phonegap.com/2.0/battery"/>
+   <!--  <feature name="http://api.phonegap.com/2.0/battery"/>
     <feature name="http://api.phonegap.com/2.0/camera"/>
     <feature name="http://api.phonegap.com/2.0/contacts"/>
     <feature name="http://api.phonegap.com/2.0/file"/>
     <feature name="http://api.phonegap.com/2.0/geolocation"/>
-    <feature name="http://api.phonegap.com/2.0/media"/>
-    <feature name="http://api.phonegap.com/2.0/network"/>
+    <feature name="http://api.phonegap.com/2.0/media"/>-->
+    <feature name="http://api.phonegap.com/2.0/network"/> 
     <feature name="http://api.phonegap.com/2.0/notification"/>
 
      <gap:platform name="android" />
