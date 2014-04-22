@@ -1,4 +1,4 @@
-<html>
+<!-- <html>
 <head>
 
 <title></title>
@@ -18,17 +18,30 @@
 	
 	<div class="app">
 		<div data-role="page" id="user" data-theme="a">
-			<!-- load user food list -->
+			load user food list
 	
 			<script>
-			loadUserList();					
-				if(newUsageNumber != 0) {
-					$('#badge-page3').html(newUsageNumber).fadeIn();	
-				}
-				if(newWasteNumber != 0) {
-					$('#badge-page4').html(newWasteNumber).fadeIn();
-				}
-		
+			function changeUserFoodInfoHTML(userFoodInfoHTML) {
+				//Update the DIV called Content Area with the HTML string
+				//$('#userFoodInfo').unbind();
+			//	$('#userFoodInfo').empty();
+				document.getElementById("userFoodInfo").innerHTML = userFoodInfoHTML;
+				 
+				//refresh divison
+				$('#userFoodInfo').trigger("create");
+			}
+			
+			function changeShoppingListHTML() {
+				//$('#userShoppingList').unbind();
+				$('#userShoppingList').empty();
+				//Update the DIV called Content Area with the HTML string
+				document.getElementById("userShoppingList").innerHTML = userShoppingListHTML;
+				 
+				
+				//refresh divison
+				$('#userShoppingList').trigger("create");
+			}
+			
 				function getSliderAmount(rowNumber, nameOfSlider) {
 					return userFoodUsageData[rowNumber][1] * $(nameOfSlider).val() / 100;
 				}
@@ -101,6 +114,7 @@
 				}
 				
 				function sendDeletion(fId, dateOfPurchase, purchaseId, rowNumber) {
+					
 					 $.ajax({
 					        type       : "GET",
 					        url        : sessionStorage.getItem("serverDomain") + "/deletePurchase?",
@@ -112,27 +126,24 @@
 					        success    : function(data) {
 					        	queryDeleteData(data.members.wasteList, rowNumber, purchaseId);	
 					        	console.log('Deletion has been sent to the server successfully!');
+					        	 toBeDeleted--; 
+								 if(toBeDeleted == 0) {
+									 loadUserList();
+								 }
 					        },
 					        error      : function(e) {
-					            console.error(e + 'Deletion could not be sent to the server!');					             
+					           console.error(e + 'Deletion could not be sent to the server!');					             
 					           deletePurchaseDataOffline(purchaseId, rowNumber);
+					           toBeDeleted--; 
+								 if(toBeDeleted == 0) {
+									 loadUserList();
+								 }
 					        }
-					    });    
+					    });
+					
 					 return false;
 				}
 				
-				function confirmDeletion() {
-					 $('#popupDialog' ).popup('open');
-				}
-				
-				function closePopup() {
-					 $('#popupDialog' ).popup('close');
-				}
-				
-				function showError() {
-					 $('#popupDialog' ).popup('close'); 
-					 $('#internetError' ).popup('open');
-				}
 	
 				function deleteUserFoodItem(id) {					
 					var purchaseRow = findPurchaseInfoById(id);
@@ -234,7 +245,8 @@
 						$(nameValue).trigger("change");
 					}
 				}
-				 function setSwipeActionsForFoodUsage() {
+				/*  function setSwipeActionsForFoodUsage() {
+					
 						$('.row').bind( 'swiperight', function( e ) {
 							var buttonValue =   e.currentTarget.id.replace("row","deleteItem");
 							if(e.target.nodeName != 'SPAN') {
@@ -253,7 +265,7 @@
 							e.stopImmediatePropagation();
 							return false;
 							} );
-				 }
+				 } */
 				function setUserFoodTableActions(currentId) {
 					$('#sliderUsage' + currentId).change(function(event, ui){
 					    var slider_value = $(this).val();
@@ -281,10 +293,71 @@
 						var row = findPurchaseInfoById(id);
 						sendUpdateAmount(userFoodUsageData[row][5], userFoodUsageData[row][4],  $(this).val(), userFoodUsageData[row][0], row);
 					});
-					$('#deleteItem' + currentId).hide();
 				}
 				
+				function highlightRow(currentId) {
+					if(document.getElementById("row" + currentId).dataset.value == "unselected") {
+						document.getElementById("row" + currentId).style.backgroundColor = '#6688BF';	
+						document.getElementById("row" + currentId).style.opacity = '0.5';	
+						document.getElementById("swipeImage" + currentId).border = "0";
+						document.getElementById("row" + currentId).dataset.value = "selected";
+						toBeDeleted++;
+					} else {
+						document.getElementById("row" + currentId).style.backgroundColor = '#2E2E2E';
+						document.getElementById("row" + currentId).dataset.value = "unselected";
+						document.getElementById("row" + currentId).style.opacity = '1';	
+						document.getElementById("swipeImage" + currentId).border = "0";
+						toBeDeleted--;
+					}	
+					if(toBeDeleted == 0) {
+						 $('#deleteSelected').addClass('ui-disabled');
+					} else {
+						 $('#deleteSelected').removeClass('ui-disabled');
+					}
+					$('#row' + currentId).trigger('refresh');
+					$('#swipeImage' + currentId).trigger('refresh');
+
+				}
 				
+				function deleteSelectedItems() {
+					 shTable = document.getElementById("shoppingListTable");
+					 if(shTable != null) {
+						 rows = shTable.getElementsByTagName('tr');
+						 for(i=0; i < rows.length; i++) {
+							 if(rows[i].dataset.value == "selected") {
+								 idOfItem = rows[i].id.replace("row", "");							 
+								 deleteUserFoodItem(idOfItem);
+								 
+							 }
+						 }
+					 }
+					
+					 avTable = document.getElementById("my-table");
+					 if(avTable != null) {
+						 rows = avTable.getElementsByTagName('tr');
+						 for(i=0; i < rows.length; i++) {
+							 if(rows[i].dataset.value == "selected") {
+								 idOfItem = rows[i].id.replace("row", "");							 
+								 deleteUserFoodItem(idOfItem);							 
+							 }
+						 }
+					 }
+					
+				}			
+				
+				//global variable to store the coun of items for deletion
+				var toBeDeleted = 0;
+			
+				loadUserList();
+
+				/* 	if(newUsageNumber != 0) {
+						$('#badge-page3').html(newUsageNumber).fadeIn();	
+					} */
+					if(newWasteNumber != 0) {
+						$('#badge-page4').html(newWasteNumber).fadeIn();
+					}
+					
+					
 			</script>
 			<div data-role="popup" id="popupDialog" data-overlay-theme="a">
                 <i>Are you sure you want to delete old data? <br> All related information will be lost. </i>
@@ -312,55 +385,66 @@
 			
 			<div data-role="content">				
 				
-				<label class="table-title-label"><i>I will buy</i></label>
+				<label class="table-title-label"><i><u>I will buy</u></i></label>
 				<div id="userShoppingList"></div>
-				
+				<p></p>
+				<label class="table-title-label"><i><u>I have</u></i></label>
 				<select name="sortBy" id="sortBy"  class="select-class ui-icon-nodisc"
 					 data-theme="a" value="Sort by Date" data-mini="true" data-inline="true" 
 					 data-corners="false" data-iconshadow="false"  onchange="sortUserFoodsByDate(this.value);">
 					<option value="ASC">Oldest</option>
 					<option value="DESC">Newest</option>
 				</select>
-				<label class="table-title-label"><i>I have</i></label>
 				
-				<div id="userFoodInfo"></div>				
-				<div align="right">
+				
+				<div id="userFoodInfo"></div>
+				<p></p>
+				 <div class="ui-grid-a">	
+				<div class="ui-block-a">
 					
-					<a href="" type="button" id="undo" data-inline="true" 
+					<a href="" type="button" id="deleteSelected" 
+						data-iconshadow="false" data-mini="true" class="ui-icon-nodisc ui-disabled" 
+						data-corners="false" data-icon="delete" data-iconpos="left" 
+						data-theme="a" onclick="deleteSelectedItems();"  >Delete</a>
+				</div>				
+				<div class="ui-block-b">
+					
+					<a href="" type="button" id="undo" 
 						data-iconshadow="false" data-mini="true" class="ui-icon-nodisc ui-disabled" 
 						data-corners="false" data-icon="back" data-iconpos="left" 
 						data-theme="a" onclick="undoChanges();"  >Undo</a>
+				</div>
 				</div>
 			</div>
 			<div data-role="footer" data-position="fixed">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="foodList.html"  data-icon="search" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
-					<li><a href="foodUsage.html" data-icon="home" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
-					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page3" class="badge"></span></a></li> -->
+					<li><a href="foodList.html"  id="foodList" data-icon="search" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+					<li><a href="foodUsage.html" data-icon="home" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc">My List</a></li>
+					<li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page3" class="badge"></span></a></li>
 					<li><a href="wastereason.html" data-icon="info" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc">
-					<span id="badge-page4" class=" ui-li-count"></span></a></li>					
+					<span id="badge-page4" class="badge"></span>My Bin</a></li>					
 				
-					<!-- <li><a href="survey.html" data-icon="edit" data-inline="true"></a></li>
-					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li> -->
+					<li><a href="survey.html" data-icon="edit" data-inline="true"></a></li>
+					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li>
 					</ul>
-			</div><!-- /navbar -->
+			</div>/navbar
 			</div>
 			<div data-role="panel" data-position-fixed="true" data-theme="a"
 				id="nav-panel">
 				<ul data-role="listview" data-theme="a" class="nav-search">
-					<li data-icon="delete"><a href="#" data-rel="close">Close
-							menu</a></li>
+					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
 					<li data-icon="edit" ><a href="survey.html" id="survey" data-transition="slide">Survey</a></li>
-					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">User Profile</a></li>
+					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">Me</a></li>
 
 				</ul>
 			</div>
-			<!-- /panel -->
+			/panel
 		</div>
 	</div>
 <script type="text/javascript" src="cordova.js"></script>
 </body>
 </html>
 
+ -->

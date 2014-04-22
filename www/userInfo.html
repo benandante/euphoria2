@@ -83,7 +83,13 @@
 		    		
 					 return false;
 				}
-				
+				if(newWasteNumber > 0) {
+					$("#wasteReason5").text("My Bin (" + newWasteNumber + ")");
+					$("#wasteReason5").css("color","green");
+				} else {
+					$("#wasteReason5").text("My Bin");
+					$("#wasteReason5").css("color","white");
+				}
 			</script>
 			<div data-role="header" data-position="fixed" data-id="nav">
 				<h1>EUPHORIA</h1>
@@ -137,20 +143,19 @@
 		<div data-role="footer" data-position="fixed">
 		<div data-role="navbar">
 					<ul>
-					<li><a href="foodList.html"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
-					<li><a href="foodUsage.html" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
-					<li><a href="wastereason.html" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
-					<span id="badge-page12" class="badge"></span></a></li>		
+					<li><a href="#home"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">My Lists</a></li>
+					<li><a href="wastereason.html" id="wasteReason5" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
+					<span id="badge-page12" class="badge"></span>My Bin</a></li>		
 					</ul>
 				</div>
 		</div>
 		<div data-role="panel" data-position-fixed="true" data-theme="a"
 				id="nav-panel">
 				<ul data-role="listview" data-theme="a" class="nav-search">
-					<li data-icon="delete"><a href="#" data-rel="close">Close
-							menu</a></li>
+					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
 					<li data-icon="edit" ><a href="survey.html" id="survey" data-transition="slide">Survey</a></li>
-					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">User Profile</a></li>
+					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">Me</a></li>
 
 				</ul>
 			</div>

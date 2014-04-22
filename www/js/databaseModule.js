@@ -1,12 +1,12 @@
 var currentUser;
 var db;
 var wasteReasons = new Array();
-var usageReasons = new Array();
+/*var usageReasons = new Array();*/
 var FOOD_NUMBER_ON_MAIN = 12;
-var userFoodUsageData = new Array();	// 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
-var newUsageNumber = 0;
+var userFoodUsageData = new Array();	// 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food,  6: status, 7: foodUnit
+/*var newUsageNumber = 0;*/
 var newWasteNumber = 0;
-var userFoodUsageInfo = new Array();	
+/*var userFoodUsageInfo = new Array();	*/
 var userFoodWasteInfo = new Array(); 	 //0: waste id, 1: reason, 2:foodId , 3:purchase date, 4: waste date
 var foodListSelectHtml;
 var mainPageFoods = new Array();
@@ -14,6 +14,10 @@ var undoStack = [];
 var UNDO_UPDATE_USAGE_AMOUNT = 1;
 var UNDO_ADD_CONSUMPTION = 2;
 var undoWasteStack = [];
+var userDataLoaded = 0;
+
+//TODO could not solve passing parameter to callback function problem and therefore using this global variable
+var g_idOfDeletedPurchase;
 
 //TODO calling queries directly inside the loop causes problems, so i need to first call a function which calls the inline query function
 //TODO primary key does not work db.executeSql(" PRAGMA foreign_keys = ON ");
@@ -59,7 +63,7 @@ function successCallbackSQLite() {
 		 tx.executeSql('DROP TABLE IF EXISTS TABLESURVEY');
 		 tx.executeSql('DROP TABLE IF EXISTS TABLEOFFLINEACTIONS');
 	});*/
-	window.localStorage.setItem("serverdata", "unloaded");
+	//window.localStorage.setItem("serverdata", "unloaded");
 	db.transaction(populateDB, databaseInitError, fillPagesWithDbData);
 	
  }
@@ -85,9 +89,12 @@ function successCallbackSQLite() {
  
  function fillUserFoodData(tx, results) {
 		//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food, 6: status
-	len = results.rows.length;	
+	var len = results.rows.length;	
+	userFoodUsageData.splice(0, userFoodUsageData.length);
 	 for (var i=0; i<len; i++){
-			userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID, results.rows.item(i).status );
+			userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, 
+					results.rows.item(i).usage, results.rows.item(i).waste, results.rows.item(i).date,  
+					results.rows.item(i).foodID, results.rows.item(i).status, results.rows.item(i).foodUnit );
 		}
 	 getOfflineActions();	
  }
@@ -141,6 +148,55 @@ function successCallbackSQLite() {
   */
  function loadUserList() {
 	 db.transaction(queryUserFoodDetails, errorCallbackSQLite, successCallbackSQLite);
+ }
+ 
+ /*
+  * loads user food list to the html file
+  */
+ function createUserList() {
+	 db.transaction( function(tx){ 
+			 tx.executeSql('SELECT TABLEFOODS.foodID, TABLEFOODS.foodIcon, TABLEFOODS.foodName, TABLEFOODS.foodUnit, TABLEUSERFOOD.id,  TABLEUSERFOOD.userID, TABLEUSERFOOD.amount, TABLEUSERFOOD.usage, TABLEUSERFOOD.waste, TABLEUSERFOOD.date, TABLEUSERFOOD.status FROM TABLEUSERFOOD INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '"', [], 
+			 displayFoodInfoForFirstTime, errorCallbackSQLite)}, 
+			 errorCallbackSQLite, successCallbackSQLite);
+ }
+ 
+ function displayFoodInfoForFirstTime(tx, results) {
+	 var len = results.rows.length;
+	 
+	 var myHTMLOutput = '';
+	 //create the table for displaying : food-icon, amount, usage selection
+	 if(len > 0) {
+		 myHTMLOutput = '<table id="my-table" style="width:100%" border=1 frame=void rules=rows>';
+		 myHTMLOutput += '<div class="scrollable" >';
+			
+		 //add table rows with the data retrieved from database to the available table list
+		var tableRows = addUserFoodsToTable(results, 1);
+		if(tableRows == '') {
+			 myHTMLOutput = '<p></p><label  class="unit-label">You do not have any items.</label>';
+		} else {
+			  myHTMLOutput += tableRows;
+			  myHTMLOutput += '</div></table>';
+		} 
+	    
+	}    
+    
+	changeUserFoodInfoHTML(myHTMLOutput);
+
+    userFoodUsageData.splice(userFoodUsageData, userFoodUsageData.length);
+	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food, 6: status
+	for (var i=0; i<len; i++){
+		userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, 
+				results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID, results.rows.item(i).status,
+				 results.rows.item(i).foodUnit);
+	}
+	
+	createShoppingListTable(results);
+
+	//set actions (usage slider information) (amount change actions)
+	var rows = results.rows;
+	for (var i=0; i<len; i++){
+		setUserFoodTableActions(rows.item(i).id);
+	}	
  }
  
  
@@ -241,7 +297,7 @@ function successCallbackSQLite() {
  
  function insertWasteTypes(tx, results) {
 	 if(results.rows.length == 0) {
-		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (0, "Not selected")');
+		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (0, "Select reason...")');
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (1, "Change of plans")');
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (2, "Did not like it")');
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (3, "It was unhealthy")');
@@ -249,7 +305,7 @@ function successCallbackSQLite() {
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (5, "Over-buying")');
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (6, "Special offer")');
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (7, "Use by date passed")');
-		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (8, "Visibility of stock is missing")');
+		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (8, "Stock invisibility")');
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (9, "Wrong storage")');		 
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (10, "Other")');
 		 tx.executeSql('INSERT INTO TABLEWASTETYPE (wasteTypeID, data) VALUES (11, "There is no waste")');
@@ -409,7 +465,7 @@ function deleteFromOfflineActions(actionNumber, id) {
 	 //0: waste id, 1: reason, 2:foodId , 3:purchase date, 4: waste date
 	 //get purchase info from waste info
 	 var rowNumber = 0;
-	 for(i=0; i < userFoodWasteInfo.length; i++ ) {
+	 for(i=0, len = userFoodWasteInfo.length; i < len; i++ ) {
 		 if(userFoodWasteInfo[i][0] == newItem.wasteID) {
 			 rowNumber = i;
 			 break;
@@ -461,7 +517,7 @@ function deleteFromOfflineActions(actionNumber, id) {
 	 //0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
 	 //get purchase info
 	 var rowNumber = 0;
-	 for(i=0; i < userFoodUsageData.length; i++ ) {
+	 for(var i=0, len= userFoodWasteInfo.length; i < len; i++ ) {
 		 if(userFoodUsageData[i][0] == newItem.id) {
 			 rowNumber = i;
 			 break;
@@ -493,6 +549,8 @@ function deleteFromOfflineActions(actionNumber, id) {
 			},
 			success : function(e) {
 				console.log(e + ' :Data sent to the server!');
+				g_idOfDeletedPurchase = nId;
+				deletePurchaseIfNoWaste(nId);
 				deleteFromOfflineActions(7, nId);
 			},
 			error : function(e) {
@@ -500,6 +558,20 @@ function deleteFromOfflineActions(actionNumber, id) {
 			}
 		});
 }
+ 
+ function deletePurchaseIfNoWaste(nId) {
+	 db.transaction( function(tx){
+		 tx.executeSql('SELECT * FROM TABLEWASTE WHERE userFoodID  = ' + nId, [], 
+				 processdeletePurchaseIfNoWaste, errorCallbackSQLite);
+	 }, errorCallbackSQLite);
+ }
+ 
+ function processdeletePurchaseIfNoWaste(tx, results) {
+	 var len = results.rows.length;
+	 if(len == 0) {
+		 tx.executeSql('DELETE FROM TABLEUSERFOOD WHERE id = ' + g_idOfDeletedPurchase);
+	 }
+ }
  
  function processSurvey(tx, results) {
 	 var len = results.rows.length;
@@ -806,7 +878,7 @@ function deleteFromOfflineActions(actionNumber, id) {
 			 data[i].id + ', "' + data[i].userID + '", ' + data[i].foodID + ', "' +   data[i].date + '" , ' + data[i].amount + ',' + data[i].used + ',' + data[i].wasted
 			 + ',' + data[i].status + ', NULL, NULL )');
 	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food
-	userFoodUsageData[userFoodUsageData.length] = new Array( data[i].id,  data[i].amount,  data[i].used,  data[i].wasted, data[i].date,  data[i].foodID);
+	userFoodUsageData[userFoodUsageData.length] = new Array( data[i].id,  data[i].amount,  data[i].used,  data[i].wasted, data[i].date,  data[i].foodID, data[i].status,  data[i].unit);
 	
  }
  
@@ -850,7 +922,7 @@ function deleteFromOfflineActions(actionNumber, id) {
   */
  function wasteFoodOffline(purchaseId, value, rowNumber,  date) {
 	 db.transaction( function(tx){ 
-		 newVal =  parseFloat(userFoodUsageData[rowNumber][3]);
+		 var newVal =  parseFloat(userFoodUsageData[rowNumber][3]);
 		 newVal += parseFloat(value);
 		 userFoodUsageData[rowNumber][3] = newVal;
 		 tx.executeSql( 'UPDATE TABLEUSERFOOD SET waste = ' + userFoodUsageData[rowNumber][3] +  ' WHERE id = ' + purchaseId);
@@ -984,12 +1056,12 @@ function deleteFromOfflineActions(actionNumber, id) {
   
  function addUserSurveyInLoop(data, i) {
 	 db.transaction( function(tx){ 
-		 id = data[i].id;
-		 q1 = data[i].q1;
-		 q2 = data[i].q2;
-		 q3 = data[i].q3;
-		 q4 = data[i].q4;
-		 date = data[i].date;
+		 var id = data[i].id;
+		 var q1 = data[i].q1;
+		 var q2 = data[i].q2;
+		 var q3 = data[i].q3;
+		 var q4 = data[i].q4;
+		 var vdate = data[i].date;
 		 tx.executeSql('INSERT INTO TABLESURVEY (surveyID, userID, q1, q2, q3, q4, date) VALUES ( ' + id + ', "' + currentUser + '",' +
 				 q1 + ',' +  q2 + ',' +  q3 + ',' + q4 + ', "' + date + '" )');
 	 }, errorCallbackSQLite );
@@ -1017,14 +1089,16 @@ function deleteFromOfflineActions(actionNumber, id) {
   * find the items user has purchased
   */
  function queryUserFoodDetails(tx) {
-	 tx.executeSql('SELECT TABLEFOODS.foodID, TABLEFOODS.foodIcon, TABLEFOODS.foodName, TABLEFOODS.foodUnit, TABLEUSERFOOD.id,  TABLEUSERFOOD.userID, TABLEUSERFOOD.amount, TABLEUSERFOOD.usage, TABLEUSERFOOD.waste, TABLEUSERFOOD.date, TABLEUSERFOOD.status FROM TABLEUSERFOOD INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '"', [], displayFoodInfo, errorCallbackSQLite);
+	 tx.executeSql('SELECT TABLEFOODS.foodID, TABLEFOODS.foodIcon, TABLEFOODS.foodName, TABLEFOODS.foodUnit, TABLEUSERFOOD.id,  TABLEUSERFOOD.userID, TABLEUSERFOOD.amount, TABLEUSERFOOD.usage, TABLEUSERFOOD.waste, TABLEUSERFOOD.date, TABLEUSERFOOD.status FROM TABLEUSERFOOD INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '"', [], 
+			 displayFoodInfo, errorCallbackSQLite);
  }
  
 /**
  * queries sorts the user food details by date
  */
  function queryUserFoodDetailsSortByDate(tx, sorting) {
-	  tx.executeSql('SELECT TABLEFOODS.foodIcon, TABLEFOODS.foodName, TABLEFOODS.foodUnit, TABLEUSERFOOD.id, TABLEUSERFOOD.userID, TABLEUSERFOOD.amount, TABLEUSERFOOD.usage, TABLEUSERFOOD.waste, TABLEUSERFOOD.date, TABLEUSERFOOD.status FROM TABLEUSERFOOD INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '" ORDER BY TABLEUSERFOOD.date ' + sorting, [], sortUserFoodTable, errorCallbackSQLite);
+	  tx.executeSql('SELECT TABLEFOODS.foodIcon, TABLEFOODS.foodName, TABLEFOODS.foodUnit, TABLEUSERFOOD.id, TABLEUSERFOOD.userID, TABLEUSERFOOD.amount, TABLEUSERFOOD.usage, TABLEUSERFOOD.waste, TABLEUSERFOOD.date, TABLEUSERFOOD.status FROM TABLEUSERFOOD INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '" ORDER BY TABLEUSERFOOD.date ' + sorting, [], 
+			  sortUserFoodTable, errorCallbackSQLite);
  }
  
  /**
@@ -1035,25 +1109,39 @@ function deleteFromOfflineActions(actionNumber, id) {
 	 var newRows = new Array();
 	 var len = results.rows.length;
 	 var newRowsIndex = 0;
+	 var currentRow;
+	 var currentId;
 	 //traverse all the foods of user and make a table with columns: food icon, amount, usage list, waste list
 	 for (var i=0; i<len; i++) {
 		 var rowHtmlR = '';
-		 currentId =  results.rows.item(i).id;
+		 currentRow = results.rows.item(i);
+		 currentId = currentRow.id;
+		 
 		 
 		//if the item is in the current list (available or shopping)
-		 if(results.rows.item(i).status == 1) {
+		 if(currentRow.status == 1) {
 	    	
 	    		 //if it is available list
 	    		 //add it as a row
-			 rowHtmlR += ' <tr class="row" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
-		    	 
-			 rowHtmlR += '<td><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-			 (results.rows.item(i).amount.toFixed(2) -  results.rows.item(i).usage) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
+			 rowHtmlR += ' <tr data-value="unselected" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'" id="swipeImage' + currentId + '" width="50" height="50" onclick="highlightRow(' + currentId + ');"></td>';
+	    	 if(currentRow.amount > 0) {
+	    		 rowHtmlR += '<td><input type="number"  disabled="true" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+		    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
 		    	 '</i></label></td>';
-			 rowHtmlR += '<td style="width: 40%"><form class="full-width-slider">';
-			 rowHtmlR += '<input type="range" class="ui-hidden-accessible"  data-mini="true" id="sliderUsage' + currentId + '"';
-			 rowHtmlR += 'value="0" step="1" min="0" max="100" /></form></td>';
-			 rowHtmlR += '<td><div id="deleteItem' + currentId + '"><a href="" data-role="button" data-icon="delete" data-iconpos="notext" data-corners="false" data-iconshadow="false" class="ui-icon-nodisc" data-mini="true" data-inline="true"  onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
+	    	 } else {
+	    		 rowHtmlR += '<td><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+		    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
+		    	 '</i></label></td>';
+	    	 }
+			
+			 rowHtmlR += '<td>';
+			 if( (currentRow.amount -  currentRow.usage).toFixed(2) > 0) {				
+				 rowHtmlR += '<input type="number"  step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage' + currentId + '"';
+			 } else {
+				 rowHtmlR += '<input type="number"  disabled="true" step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage' + currentId + '"';				
+			 }
+			 rowHtmlR += ' value="0" /><label font-style="italic" class="per-label"><i>Indicate consumption</i></label></td>';
+			 rowHtmlR += '</tr>';
 	    	 
 			 newRows[newRowsIndex] = rowHtmlR;
 			 newRowsIndex++;
@@ -1065,25 +1153,17 @@ function deleteFromOfflineActions(actionNumber, id) {
 	 for (var i = 0, row; i < tableLen; i++) {
 		 //iterate through rows
 		 row = table.rows[i];
-		 row.innerHTML = newRows[i];
+		 row.outerHTML = newRows[i];
 	 }
 	 
 	 
 	 //this is needed for refreshing html item
 	 $('#my-table').trigger("create");
-	 
-	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food, 6: status
-		/*for (var i=0; i<len; i++){
-			userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID, results.rows.item(i).status );
-		}*/
-		
-		//set actions (usage slider information) (amount change actions)
-		for (var i=0; i<len; i++){
-			setUserFoodTableActions(results.rows.item(i).id);
-		}	
-		
-		//set swipe actions
-		setSwipeActionsForFoodUsage();
+
+	//set actions (usage slider information) (amount change actions)
+	for (var i=0; i<len; i++){
+		setUserFoodTableActions(results.rows.item(i).id);
+	}	
 		
 		setSlidersToZero();
  }
@@ -1091,47 +1171,73 @@ function deleteFromOfflineActions(actionNumber, id) {
  
  
  function addUserFoodsToTable(results, tableStatus) {
+
 	 var len = results.rows.length;
 	//travserse the results and insert rows to the table	 
-	 resultHTML = '';
-	 for (var i=0; i<len; i++){
-		 currentId =  results.rows.item(i).id;
-		 
-		 //if the item is in the current list (available or shopping)
-		 if(results.rows.item(i).status == tableStatus) {
-	    	 if(tableStatus == 0) {
+	 var tableHTML = '';
+	 
+	 var currentRow;
+	 var currentId;
+	 
+	 if(tableStatus == 0) {
+		
+		 for (var i=0; i<len; i++){
+			 currentRow = results.rows.item(i);
+			 currentId = currentRow.id;
+			 
+			 //if the item is in the current list (available or shopping)
+			 if(currentRow.status == tableStatus) {
+		    	
 	    		 //if it is shopping list
 	    		 //add it as a row
-				 resultHTML += '<tr class="row" id="row' + currentId + '" ><td style="width:15%" ><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'"  id="swipeImage' + currentId + '" width="50" height="50"></td>';
+				 tableHTML += '<tr data-value="unselected" id="row' + currentId + '" ><td style="width:15%" ><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'"  id="swipeImage' + currentId + '" width="50" height="50" onclick="highlightRow(' + currentId + ');"></td>';
 		    	 
-		    	 resultHTML += '<td style="width:60%"><input type="number" step="1" min="0" maxlength="6" size="6" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-		    	 results.rows.item(i).amount.toFixed(2) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
+				 tableHTML += '<td style="width:60%"><input type="number" step="1" min="0" maxlength="6" size="6" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+		    	 currentRow.amount.toFixed(2) +  '" /><label  class="unit-label" font-style="italic"><i>' + currentRow.foodUnit + 
 		    	 '</i></label></td>';
-	    		 resultHTML += '<td style="width:20%"><a href="" type="button" id="shoppingConfirm' + currentId + '" value="Bought" data-icon="check" data-corners="false" data-iconshadow="false" class="ui-icon-nodisc" data-mini="true" data-theme="a" onclick="buyItemFromShoppingList(' + currentId +')">Bought<a></td>';
-	    		 resultHTML += '<td><div id="deleteItem' + currentId + '"><a href=""  data-role="button" data-icon="delete" data-iconpos="notext" data-corners="false" data-iconshadow="false" class="ui-icon-nodisc" data-mini="true" onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
-	    		
-	    		 
-	    	 } else if (tableStatus == 1){
-	    		 //if it is available list
-	    		 //add it as a row
-				 resultHTML += ' <tr class="row" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
-		    	 
-		    	 resultHTML += '<td><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-		    	 (results.rows.item(i).amount.toFixed(2) -  results.rows.item(i).usage) +  '" /><label font-style="italic"><i>' + results.rows.item(i).foodUnit + 
-		    	 '</i></label></td>';
-	    		 resultHTML += '<td style="width: 40%"><form class="full-width-slider">';
-	    		 resultHTML += '<input type="range" class="ui-hidden-accessible" data-mini="true" id="sliderUsage' + currentId + '"';
-		    	 resultHTML += 'value="0" step="1" min="0" max="100" /></form></td>';
-		    	 resultHTML += '<td><div id="deleteItem' + currentId + '"><a href=""  data-role="button" data-icon="delete" data-iconpos="notext" data-corners="false" data-iconshadow="false" class="ui-icon-nodisc" data-mini="true" data-inline="true" onclick="deleteUserFoodItem(' + currentId + ')"></div></td></tr>';
-		    	 
-	    	 } else {
-	    		 //do nothing since this means the item is deleted
-	    	 }
-		 } 	
+				 tableHTML += '<td style="width:20%"><a href="" type="button" id="shoppingConfirm' + currentId + '" value="Bought" data-icon="check" data-corners="false" data-iconshadow="false" class="ui-icon-nodisc" data-mini="true" data-theme="a" onclick="buyItemFromShoppingList(' + currentId +')">Bought<a></td>';
+				 tableHTML += '</tr>';
+			 } 	
+	     }
+	 }
+	 else {
+		 for (var i=0; i<len; i++){
+			 currentRow = results.rows.item(i);
+			 currentId = currentRow.id;
+			 
+			 //if the item is in the current list (available or shopping)
+			 if(currentRow.status == tableStatus) {
+		    	
+		    		 //if it is available list
+		    		 //add it as a row
+				 tableHTML += ' <tr data-value="unselected" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'" id="swipeImage' + currentId + '" width="50" height="50" onclick="highlightRow(' + currentId + ');"></td>';
+			     if(currentRow.amount > 0) {
+			    	 tableHTML += '<td><input type="number" disabled="true" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+			    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
+			    	 '</i></label></td>';
+			     }	 else {
+			    	 tableHTML += '<td><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+			    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
+			    	 '</i></label></td>';
+			     }
+				
+				 tableHTML += '<td>';
+				 if( (currentRow.amount -  currentRow.usage).toFixed(2) > 0) {				
+					 tableHTML += '<input type="number"  step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage' + currentId + '"';
+				 } else {
+					 tableHTML += '<input type="number"  disabled="true" step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage' + currentId + '"';				
+				 }
+				 tableHTML += ' value="0" /><label font-style="italic" class="per-label"><i>Indicate consumption</i></label></td>';
+ 				
+				 tableHTML += '</tr>';
+			    	 
+		    	
+			 } 	
+		 }
      }
-	 resultHTML += '</div></tbody></table>';
-	 return resultHTML;
+	 return tableHTML;
  }
+ 
  
  /**
   * update user food list page
@@ -1139,61 +1245,66 @@ function deleteFromOfflineActions(actionNumber, id) {
  function displayFoodInfo(tx, results) {
 	 var len = results.rows.length;
 	 
+	 var myHTMLOutput = '';
 	 //create the table for displaying : food-icon, amount, usage selection
-	 myHTMLOutput = '<table id="my-table" style="width:100%">';
-	 myHTMLOutput += '<div class="scrollable" >';
-		
-	 //add table rows with the data retrieved from database to the available table list
-	tableRows = addUserFoodsToTable(results, 1);
-    myHTMLOutput += tableRows;
+	 if(len > 0) {
+		 myHTMLOutput = '<table id="my-table" style="width:100%" border=1 frame=void rules=rows>';
+		 myHTMLOutput += '<div class="scrollable" >';
+			
+		 //add table rows with the data retrieved from database to the available table list
+		var tableRows = addUserFoodsToTable(results, 1);
+		if(tableRows == '') {
+			 myHTMLOutput = '<p></p><label  class="unit-label">You do not have any items.</label>';
+		} else {
+			  myHTMLOutput += tableRows;
+			  myHTMLOutput += '</div></table>';
+		} 
+	    
+	}    
     
-    
-	//Update the DIV called Content Area with the HTML string
-	document.getElementById("userFoodInfo").innerHTML = myHTMLOutput;
-	 
-	//refresh divison
-	$('#userFoodInfo').trigger("create");
-	
+	refreshUserFoodInfoHTML(myHTMLOutput);
+
+    userFoodUsageData.splice(userFoodUsageData, userFoodUsageData.length);
 	//set user data to memory 0: purchase ID , 1: total amount, 2: used amount, 3: wasted amount. 4: purchase date, 5: id of food, 6: status
 	for (var i=0; i<len; i++){
-		userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID, results.rows.item(i).status );
+		userFoodUsageData[i] = new Array(results.rows.item(i).id, results.rows.item(i).amount, results.rows.item(i).usage, 
+				results.rows.item(i).waste, results.rows.item(i).date,  results.rows.item(i).foodID, results.rows.item(i).status,
+				 results.rows.item(i).foodUnit);
 	}
 	
 	createShoppingListTable(results);
-	
+
 	//set actions (usage slider information) (amount change actions)
+	var rows = results.rows;
 	for (var i=0; i<len; i++){
-		setUserFoodTableActions(results.rows.item(i).id);
+		setUserFoodTableActions(rows.item(i).id);
 	}	
-	//set swipe actions
-	setSwipeActionsForFoodUsage();
  }
  
 
  
  function createShoppingListTable(results) {
     //create the table for displaying shopping list
-	 myShoppingList = '<table data-role="table" id="shoppingListTable">' +
-		  '<thead class="ui-widget-header"><th width="20%"></th><th width="30%"></th><th width="20%" ></th><th width="30%" ></th></thead><tbody>';
+	 var myShoppingList = '<table id="shoppingListTable" style="width:100%"  border=1 frame=void rules=rows>';
 	 myShoppingList += '<div class="scrollable" >';
 		
 	 //add table rows with the data retrieved from database to the available table list
-	shoppingRows = addUserFoodsToTable(results, 0);
-	myShoppingList += shoppingRows;
+	var shoppingRows = addUserFoodsToTable(results, 0);
+	if(shoppingRows == '') {
+		myShoppingList = '<p></p><label  class="unit-label">You do not have any items.</label>';
+	} else {
+		myShoppingList += shoppingRows;
+		myShoppingList += '</div></table>';
+	}
 	
-	//Update the DIV called Content Area with the HTML string
-	document.getElementById("userShoppingList").innerHTML = myShoppingList;
-	 
-	//refresh divison
-	$('#userShoppingList').trigger("create");
-	
-	
+	changeShoppingListHTML(myShoppingList);
+
  }
  
  function queryBuyFromShoppingList(purchase, rowNumber, purchaseId) {
 	 db.transaction( function(tx){ 
 		 tx.executeSql( 'UPDATE TABLEUSERFOOD SET status = 1, date = "' + purchase[0].date + '" WHERE id = ' + purchaseId);
-		 userFoodUsageData[rowNumber][userFoodUsageData] =  purchase[0].date;
+		 userFoodUsageData[rowNumber][4] =  purchase[0].date;
 		 }, 
      errorCallbackSQLite);	
 	 
@@ -1210,7 +1321,7 @@ function deleteFromOfflineActions(actionNumber, id) {
  }
  
 function findCurrentAmountById(id) {
-	for(var i=0; i < userFoodUsageData.length; i++) {
+	for(var i=0, len = userFoodUsageData.length; i < len; i++) {
 		if(userFoodUsageData[i][0] == id) {
 			return (userFoodUsageData[i][1] - userFoodUsageData[i][2]);
 		}
@@ -1219,32 +1330,12 @@ function findCurrentAmountById(id) {
 }
 
 function findPurchaseInfoById(id) {
-	for(var i=0; i < userFoodUsageData.length; i++) {
+	for(var i=0,  len = userFoodUsageData.length; i < len; i++) {
 		if(userFoodUsageData[i][0] == id) {
 			return i;
 		}
 	}
 	return -1;
-}
-
-
-/**
- * updates bubbles that display new waste values
- */
-function updateWasteBubbles() {
-	if(newWasteNumber > 0) {
-		//set waste events for bubble count
-		for (var j=2; j<=10; j+=2) {
-			//insert count bubbles on the icons
-			$('#badge-page' + j).html(newWasteNumber).fadeIn();
-		}	
-	} else {
-		//set waste events for bubble count
-		for (var j=2; j<=12; j+=2) {
-			//insert count bubbles on the icons
-			$('#badge-page' + j).html(newWasteNumber).fadeOut();
-		}	
-	}
 }
 
 
@@ -1317,15 +1408,15 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 	
 	 //add foods to the main page
 	 for (var i=0; i<imageFoodLen; i++){ 
-		 mainPageFoods[i] = new Array(results.rows.item(i).foodID, results.rows.item(i).foodIcon);
+		 mainPageFoods[i] = new Array(results.rows.item(i).foodID, results.rows.item(i).foodIcon, 0);
 	 }
 	 addFoodsToMainPage();
     
 	
 	//fill search food filter list
-	html = '';
+	var html = '';
 	for (var i=0; i<len; i++){
-		html += '<li food-id="' + results.rows.item(i).foodID + '" food-icon="' + results.rows.item(i).foodIcon + '"><a data-option-id=\"' + 
+		html += '<li data-icon="plus" food-id="' + results.rows.item(i).foodID + '" food-icon="' + results.rows.item(i).foodIcon + '"><a data-option-id=\"' + 
 		results.rows.item(i).foodID + '\">' + results.rows.item(i).foodName + '</a></li>';
 	}
 	
@@ -1333,41 +1424,6 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 	foodListSelectHtml = html;
  }
  
- function addFoodsToMainPage() {
-	 //add foods to the main page
-	 var imageFoodLen =  mainPageFoods.length;
-	 
-	 if (imageFoodLen > FOOD_NUMBER_ON_MAIN) imageFoodLen = FOOD_NUMBER_ON_MAIN;
-	 
-	 myHTMLOutput = '<div class="ui-grid-b" data-scroll="true" id="mainFoodList">';
-	 for (var i=0; i < imageFoodLen; ){		 
-    	 myHTMLOutput += '<div class="ui-block-a">';
-    	 myHTMLOutput += '<input type="image" src="' +  mainPageFoods[i][1] +
-    	 '" id="' +   mainPageFoods[i][0] + '" value="0" onclick="selectFoodByImage(' + mainPageFoods[i][0] + ')"> </a>'
-    	 myHTMLOutput += '</div>';
-    	 i++;
-    	 if(i < imageFoodLen) {
-    		 myHTMLOutput += '<div class="ui-block-b">';
-    		 myHTMLOutput += '<input type="image" src="' +  mainPageFoods[i][1] +
-        	 '" id="' +   mainPageFoods[i][0] + '" value="0" onclick="selectFoodByImage(' + mainPageFoods[i][0] + ')"> </a>'
-        	 myHTMLOutput += '</div>';
-    	 }
-    	 
-    	 i++;
-    	 if(i < imageFoodLen) {
-    		 myHTMLOutput += '<div class="ui-block-c">';
-    		 myHTMLOutput += '<input type="image" src="' +  mainPageFoods[i][1] +
-        	 '" id="' +   mainPageFoods[i][0] + '" value="0" onclick="selectFoodByImage(' + mainPageFoods[i][0] + ')"> </a>'
-        	 myHTMLOutput += '</div>';
-    	 }    	
-    	 i++;
-     }
-     myHTMLOutput += '</div>';
-     
-     
-	//Update the DIV called Content Area with the HTML string
-	document.getElementById("ContentFoodArea").innerHTML = myHTMLOutput;
- }
 
 
  /*
@@ -1454,7 +1510,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   * @param tx
   */
  function queryWasteWithReason(tx) {	 
-	 tx.executeSql('SELECT TABLEWASTE.wasteID, TABLEWASTE.userfoodID, TABLEWASTE.amount, TABLEWASTE.wasteType, TABLEWASTE.wasteDate, TABLEWASTE.wasteStatus, TABLEUSERFOOD.id, TABLEUSERFOOD.foodID, TABLEUSERFOOD.userID,  TABLEUSERFOOD.date, TABLEFOODS.foodID, TABLEFOODS.foodIcon, TABLEWASTETYPE.wasteTypeID, TABLEWASTETYPE.data FROM TABLEWASTETYPE INNER JOIN TABLEWASTE ON TABLEWASTETYPE.wasteTypeID = TABLEWASTE.wasteType INNER JOIN TABLEUSERFOOD ON TABLEUSERFOOD.id = TABLEWASTE.userfoodID INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '"', 
+	 tx.executeSql('SELECT TABLEWASTE.wasteID, TABLEWASTE.userfoodID, TABLEWASTE.amount, TABLEWASTE.wasteType, TABLEWASTE.wasteDate, TABLEWASTE.wasteStatus, TABLEUSERFOOD.id, TABLEUSERFOOD.foodID, TABLEUSERFOOD.userID,  TABLEUSERFOOD.date, TABLEFOODS.foodID, TABLEFOODS.foodIcon, TABLEFOODS.foodUnit, TABLEWASTETYPE.wasteTypeID, TABLEWASTETYPE.data FROM TABLEWASTETYPE INNER JOIN TABLEWASTE ON TABLEWASTETYPE.wasteTypeID = TABLEWASTE.wasteType INNER JOIN TABLEUSERFOOD ON TABLEUSERFOOD.id = TABLEWASTE.userfoodID INNER JOIN TABLEFOODS ON TABLEFOODS.foodID = TABLEUSERFOOD.foodID WHERE TABLEUSERFOOD.userID = "' + currentUser + '"', 
 			 [], getFoodWasteList, errorCallbackSQLite);
  }
  
@@ -1465,35 +1521,45 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 	 var len = results.rows.length;	
 	//set waste info to memory for further updates
 	 //0: waste id, 1: reason, 2:foodId , 3:purchase date, 4: waste date
-		for (var i=0; i<len; i++){
-			
+		for (var i=0; i<len; i++){			
 				userFoodWasteInfo[i] = new Array(results.rows.item(i).wasteID, results.rows.item(i).wasteType, 
 						results.rows.item(i).foodID, results.rows.item(i).date, results.rows.item(i).wasteDate );
-			
-			
 		}	
-		myHTMLOutput = '<table style="width:100%" id="waste-table">';
-		myHTMLOutput += '<div class="scrollable" >';
-		var wasteIdd;
-	    for (var i=0; i<len; i++){
-	    	if(results.rows.item(i).wasteStatus == 0) {
-	    		wasteIdd = results.rows.item(i).wasteID;
-		    	 myHTMLOutput += ' <tr class="wasteRow" id="wasteRow' + wasteIdd + '" style="padding-top: 0.5em !important;"><td><img src="' + results.rows.item(i).foodIcon + '" rel="' +  results.rows.item(i).foodName +'" id="swipeWaste' + wasteIdd + '" width="50" height="50"></td>';
-		    	 myHTMLOutput += '<td><label class="my-label" maxlength="5" size="5" >' + results.rows.item(i).amount.toFixed(2) + '</label></td>';
-		    	 myHTMLOutput += '<td style="width:25%"><select name="reason" id="' + wasteIdd + 'WasteType" data-native-menu="false" data-theme="a" data-mini="true" data-icon="false"  data-iconpos="notext" data-corners="false" data-inline="true" style="width:20px">'; 
-		    	 myHTMLOutput += getReasonsHTML(results.rows.item(i).wasteType, wasteReasons);
-		    	 myHTMLOutput += '</select></td>';
-		    	 myHTMLOutput += '<td style="width:15%"><div id="deleteWaste' + wasteIdd + '"><a href="" data-role="button" data-icon="delete" data-iconpos="notext"  data-iconpos="notext" data-corners="false" data-iconshadow="false" class="ui-icon-nodisc" data-mini="true" onclick="deleteWasteItem(' + wasteIdd + ')"></div></td></tr>';
+		
+		var myHTMLOutput = '';
+		var isTableEmpty = 1;
+		if(len > 0) {
+			var myHTMLOutput = '<table id="waste-table" style="width:100%"  border=1 frame=void rules=rows>';
+			myHTMLOutput += '<div class="scrollable">';
+			var wasteIdd;
+			var currentRow;
+		    for (var i=0; i<len; i++){
+		    	currentRow = results.rows.item(i);
+		    	if(currentRow.wasteStatus == 0) {
+		    		wasteIdd = currentRow.wasteID;
+		    		isTableEmpty = 0;
+			    	 myHTMLOutput += ' <tr data-value="unselected" id="wasteRow' + wasteIdd + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' + currentRow.foodName +'" id="swipeWaste' + wasteIdd + '" width="50" height="50" onclick="highlightWasteRow(' + wasteIdd + ');"></td>';
+			    	 myHTMLOutput += '<td><label  class="unit-label">' + currentRow.amount.toFixed(2) + "    " + currentRow.foodUnit + '</label></td>';
+			    	 myHTMLOutput += '<td style="width:80px"><form><div data-role="fieldcontain"><select name="reason" id="' + wasteIdd + 'WasteType" data-theme="a" data-mini="true" data-icon="false"  data-iconpos="notext" data-corners="false"  class="select-class ui-icon-nodisc">'; 
+			    	 myHTMLOutput += getReasonsHTML(currentRow.wasteType, wasteReasons);
+			    	 myHTMLOutput += '</select></div></form></td>';
+			    	 myHTMLOutput += '</tr>';
 
-	    	}
-	    }
-	     myHTMLOutput += '</div></table>';
+		    	}
+		    }		     
+		    myHTMLOutput += '</div></table>';
+		}
+    	 
+		
+		if(isTableEmpty == 1) {
+			myHTMLOutput = '<p></p><label  class="unit-label">Your bin is empty.</label>';
+		}
 		//Update the DIV called Content Area with the HTML string
 		document.getElementById("wasteList").innerHTML = myHTMLOutput;
 		$('#wasteList').trigger("create");
 	
 	//set swipe actions
-	setSwipeActionsForWaste();
+	//setSwipeActionsForWaste();
 	
 	//set waste reason selection actions
 	for (var i=0; i<len; i++){
@@ -1503,7 +1569,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
  
  
  function findWasteInfoById(id) {
-	 for(var i=0; i < userFoodWasteInfo.length; i++) {
+	 for(var i=0,  len = userFoodWasteInfo.length; i < len; i++) {
 		if(userFoodWasteInfo[i][0] == id) {
 				return i;
 		}
@@ -1521,7 +1587,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   */ 
  function getReasonsHTML(selectedValue, arrayP) {
 	 var len = arrayP.length;
-	 reasonsSelectHTML = '';
+	 var reasonsSelectHTML = '';
      if(len > 0) {
 	    for (var i=0; i<len; i++){
 	    	if(i == selectedValue) {
@@ -1548,7 +1614,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
   * @param results
   */
  function getSurveyData(tx, results) {
-	len = results.rows.length;
+	var len = results.rows.length;
 	
 	if(len > 0) {
 		$('#slider-1').val(results.rows.item(0).q1);
@@ -1582,27 +1648,38 @@ function queryUpdateSurveyData(data) {
   * delete given purchase from purchase table
   */
 function queryDeleteData(wasteList, rowNumber, purchaseId) {
-	 db.transaction( function(tx){
-		 tx.executeSql('UPDATE TABLEUSERFOOD SET status = 2 WHERE id = ' + purchaseId);
-	 }, errorCallbackSQLite);
-	 if(wasteList.length == 1) {
+	 if(wasteList.length == 0) {
+		 db.transaction( function(tx){		 
+			 tx.executeSql('DELETE FROM TABLEUSERFOOD WHERE id = ' + purchaseId);
+		 }, errorCallbackSQLite);
+	 }
+	 else {
 		 db.transaction( function(tx) {
+			 tx.executeSql('UPDATE TABLEUSERFOOD SET status = 2 WHERE id = ' + purchaseId);
 			 tx.executeSql('INSERT INTO TABLEWASTE (wasteID, userfoodID, amount, wasteType, wasteDate, wasteStatus, deletionDate) VALUES ( NULL ,' + 
 					 purchaseId + ',' + wasteList[0].amount + ', ' + wasteList[0].type +', "' + wasteList[0].date + '", 0, NULL)' );
 		 });
-		 newWasteNumber += 1;
+		 increaseWasteNumber();
 		updateWasteBubbles();
 	 }
 	
-	loadUserList();
+	//loadUserList();
 
 }	
  
+
+function increaseWasteNumber() {
+	 newWasteNumber += 1;
+}
+
 function queryDeleteWaste(rowNumber, wasteId) {
 	 db.transaction( function(tx){
+		//0: waste id, 1: reason, 2:foodId , 3:purchase date, 4: waste date
+		 tx.executeSql('DELETE FROM TABLEUSERFOOD WHERE foodID = ' + userFoodWasteInfo[rowNumber][2] + ' AND date = "' + 
+				 userFoodWasteInfo[rowNumber][3] + '" ' );
 		 tx.executeSql('DELETE FROM TABLEWASTE WHERE wasteID = ' + wasteId);
 	 }, errorCallbackSQLite);
-	 loadUserWasteList();
+	 /*loadUserWasteList();*/
 }
  
 /**
@@ -1625,7 +1702,7 @@ function updateFoodWasteReasonsOffline(reason, rowNumber) {
  */
 function deletePurchaseDataOffline(pId, rowNumber) {
 	var amount = 0;
-	for(i=0; i < userFoodUsageData.length; i++) {
+	for(i=0, len = userFoodWasteInfo; i < len; i++) {
 		if(userFoodUsageData[i][0] == pId) {
 			amount = userFoodUsageData[i][1];
 			break;
@@ -1634,7 +1711,7 @@ function deletePurchaseDataOffline(pId, rowNumber) {
 	var val = getNow();
 	if(amount > 0) {
 		wasteFoodOffline(pId, amount, rowNumber,  val);
-		newWasteNumber += 1;
+		increaseWasteNumber();
 		updateWasteBubbles();
 	}
 	
@@ -1644,7 +1721,7 @@ function deletePurchaseDataOffline(pId, rowNumber) {
 		 tx.executeSql('INSERT INTO TABLEOFFLINEACTIONS (offlineID, actionNum, tableNum, tableId) VALUES (NULL, 7, 0, ' + pId + ')' );	 
 	},
 	errorCallbackSQLite);	
-	loadUserList();
+	//loadUserList();
 	
 }
 
@@ -1662,7 +1739,7 @@ function deleteWasteOffline(rowNumber, wasteId) {
 		 tx.executeSql('INSERT INTO TABLEOFFLINEACTIONS (offlineID, actionNum, tableNum, tableId) VALUES (NULL, 8, 1, ' + wasteId + ')' );	 
 	}, 
 	errorCallbackSQLite);	
-	loadUserWasteList();
+	/*loadUserWasteList();*/
 }
 
 function saveSurveyOffline(q1, q2, q3, q4) {
@@ -1704,7 +1781,7 @@ function deleteConsumption(purchaseRow, amount, date) {
 		 userFoodUsageData[purchaseRow][2] = userFoodUsageData[purchaseRow][2] - amount;
 	}, errorCallbackSQLite);
 	
-	loadUserList();
+	//loadUserList();
 }
 
 

@@ -32,7 +32,7 @@
 					        	q3: 0,  
 					        	q4: 0},
 					        success    : function(data) {
-					        	queryUpdateSurveyData(data.members);  
+					        	//queryUpdateSurveyData(data.members);  
 					        	console.log('Survey data has been sent to the server successfully!');
 					        },
 					        error      : function(e) {
@@ -42,101 +42,96 @@
 					    }); 
 					 return false;
 				}
-				
-				if(newUsageNumber != 0) {
-					$('#badge-page9').html(newUsageNumber).fadeIn();	
+
+				if(newWasteNumber > 0) {
+					$("#wasteReason4").text("My Bin (" + newWasteNumber + ")");
+					$("#wasteReason4").css("color","green");
+				} else {
+					$("#wasteReason4").text("My Bin");
+					$("#wasteReason4").css("color","white");
 				}
-				if(newWasteNumber != 0) {
-					$('#badge-page10').html(newWasteNumber).fadeIn();
-				}
-				
-				$(document).delegate('.ui-page', 'pageinit', function () {		
-				
-						$('#slider-1').unbind();
-						$('#slider-2').unbind();
-						$('#slider-3').unbind();
-						$('#slider-4').unbind();
-						
-						$('#slider-1').on('slidestop', function() {
-							sendSurveyData (1, $(this).val());
-						});
-						$('#slider-2').on('slidestop', function() {
-							sendSurveyData (2, $(this).val());
-						});
-						$('#slider-3').on('slidestop', function() {
-							sendSurveyData (3, $(this).val());				
-						});
-						$('#slider-4').on('slidestop', function() {
-							sendSurveyData (4, $(this).val());
-						});
-						
-					
-				});
 			</script>
 			<div data-role="header" data-position="fixed" data-id="nav"> 
 				<h1>EUPHORIA</h1>
 				 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
-			<style type=text/css>
+		<!-- 	<style type=text/css>
 				  div.ui-slider {
 				       margin-left: 5px;
 				       width: 96%;
 				   }
-				</style>
+				</style> -->
 		
 			</div>
 			<!-- /navbar -->
-			<div data-role="content">
-				<p><i>I bought more than I eventually needed this week.</i></p>
-			    <fieldset class="ui-grid-a">
-					<div class="ui-block-a"><div align="left"><label><font size="2"><i>Disagree</i></font></label></div></div>
-					<div class="ui-block-b"><div align="right"><label><font size="2"><i>Agree</i></font></label></div></div>
-				</fieldset>
-					<input type="range" id="slider-1" value="5" min="0" max="10"  /><br><br>
+			<div data-role="content" class="surveyText">
+				<p><i>What is your overall amount of food purchases in comparison to other weeks?</i></p>
+			
+					<div data-role="fieldcontain">
+			<select name="select-choice-1" id="survey1" data-mini="true"  data-native-menu="false"  onchange="sendSurveyData(1, this.value);">
+				<option>Choose one</option>
+				<option value="1">1 (Much Less)</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4 (Same)</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7 (Much More)</option>
+			</select>
+			</div>
 				
-		
-				<p><i>I have wasted too much in this week.</i></p>
-				<fieldset class="ui-grid-a">
-				<div class="ui-block-a">
-				       <div align="left"><label><font size="2"><i>Disagree</i></font></label></div>
-				</div>
-				<div class="ui-block-b">
-				        <div align="right"><label><font size="2"><i>Agree</i></font></label></div>
-				</div>
-				</fieldset>
-				<input type="range" name="slider-2" id="slider-2" value="5" min="0" max="10" onblur="alert(1);"/><br><br>
-		
-				<p><i>I could have done more to prevent wastage.</i></p>
-				<fieldset class="ui-grid-a">
-				<div class="ui-block-a">
-				       <div align="left"><label><font size="2"><i>Disagree</i></font></label></div>
-				</div>
-				<div class="ui-block-b">
-				       <div align="right"><label><font size="2"><i>Agree</i></font></label></div>
-				</div>
-				</fieldset>
 				
-				<input type="range" name="slider-3" id="slider-3" value="5" min="0" max="10"/><br><br>
+	
+				<p><i>What is your overall amount of disposals (edible or once edible food) in comparison to other weeks?</i></p>
+				<div data-role="fieldcontain">
+			<select name="select-choice-1" id="survey2" data-mini="true"  data-native-menu="false"  onchange="sendSurveyData(2, this.value);">
+				<option>Choose one</option>
+				<option value="1">1 (Much Less)</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4 (Same)</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7 (Much More)</option>
+			</select>
+			</div>
+		
+				<p><i>Indicate your overall feeling of control in purchasing food?</i></p>
+				<div data-role="fieldcontain">
+			<select name="select-choice-1" id="survey3" data-mini="true"  data-native-menu="false"  onchange="sendSurveyData(3, this.value);">
+				<option>Choose one</option>
+				<option value="1">1 (Low)</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7 (High)</option>
+			</select>
+			</div>
 			
 				
-				<p><i>It was out of my control in wasting.</i></p>
-				<fieldset class="ui-grid-a">
-				<div class="ui-block-a">
-				       <div align="left"><label><font size="2"><i>Disagree</i></font></label></div>
-				</div>
-				<div class="ui-block-b">
-				       <div align="right"><label><font size="2"><i>Agree</i></font></label></div>
-				</div>
-				</fieldset> 
-				
-				<input type="range" name="slider-4" id="slider-4" value="5" min="0" max="10"/><br><br>
-				</div>
+				<p><i>Indicate your overall feeling of control in disposing food (edible or once edible)?</i></p>
+				<div data-role="fieldcontain">
+			<select name="select-choice-1" id="survey4" data-mini="true"  data-native-menu="false"  onchange="sendSurveyData(4, this.value);">
+				<option>Choose one</option>
+				<option value="1">1 (Low)</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7 (High)</option>
+			</select>
+			</div>
+			
+			</div>
 			<div data-role="footer"  data-position="fixed">
 				<div data-role="navbar" >
 				<ul>
-					<li><a href="foodList.html"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
-					<li><a href="foodUsage.html" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc"></a></li>
-					<li><a href="wastereason.html" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
-					<span id="badge-page10" class="badge"></span></a></li>					
+					<li><a href="#home"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">My Lists</a></li>
+					<li><a href="wastereason.html" id="wasteReason4" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
+					<span id="badge-page10" class="badge"></span>My Bin</a></li>					
 					<!-- <li><a href="survey.html" id="survey2" data-icon="custom" class="ui-badge-container"></a></li>
 					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li> -->
 					</ul>
@@ -148,10 +143,9 @@
 			<div data-role="panel" data-position-fixed="true" data-theme="a"
 				id="nav-panel">
 				<ul data-role="listview" data-theme="a" class="nav-search">
-					<li data-icon="delete"><a href="#" data-rel="close">Close
-							menu</a></li>
+					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
 					<li data-icon="edit" ><a href="survey.html" id="survey" data-transition="slide">Survey</a></li>
-					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">User Profile</a></li>
+					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">Me</a></li>
 
 
 				</ul>

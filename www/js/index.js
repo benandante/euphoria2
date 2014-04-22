@@ -34,6 +34,20 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+        
+      
+       
+      /*  var now                  = new Date().getTime(),
+	    _60_seconds_from_now = new Date(now + 60*1000);
+
+		window.plugin.notification.local.add({
+		    id:      1,
+		    title:   'Reminder',
+		    message: 'Dont forget to buy some flowers.',
+		    repeat:  'minutely',
+		    date:    _60_seconds_from_now
+		});*/
+
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -47,4 +61,6 @@ var app = {
         console.log('Received Event: ' + id);
     }
 
+  
+    
 };

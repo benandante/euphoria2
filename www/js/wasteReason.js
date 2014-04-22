@@ -1,39 +1,4 @@
-<html>
-<head>
-
-<title>Title</title>
-<meta name="viewport" content="width=device-width, user-scalable=no">
-<link rel="stylesheet" href="css/jquery.mobile-1.3.2.min.css" />
-<script src="js/jquery-1.9.1.min.js"></script>
-<script src="js/jquery.mobile-1.3.2.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/main.css" />
-<script type="text/javascript" src="js/databaseModule.js"></script>
-<script type="text/javascript" src="js/date.format.js"></script>
-<script type="text/javascript" src="js/userActionTracker.js"></script>
-</head>
-
-<body>
-	<div class="app">
-		<div data-role="page" id="www" data-theme="a">
-			<!-- load user food list -->
-			<script>
-				loadUserWasteList();
-				/* if(newUsageNumber != 0) {
-					$('#badge-page7').html(newUsageNumber).fadeIn();	
-				} */
-				if(newWasteNumber > 0) {
-					$("#wasteReason3").text("My Bin (" + newWasteNumber + ")");
-					$("#wasteReason3").css("color","green");
-				} else {
-					$("#wasteReason3").text("My Bin");
-					$("#wasteReason3").css("color","white");
-				}
-				
-				//whenever this page is opened reset waste info assuming that user has seen the generated waste data
-				newWasteNumber = 0;
-				updateWasteBubbles();
-				
-				/*
+/*
 				 * saves the reasons of food usage and updates tables
 				 */
 				function saveWasteReasonsToServer() {
@@ -120,8 +85,6 @@
 						sendWasteDeletion(userFoodWasteInfo[wasteRow][2], userFoodWasteInfo[wasteRow][3], id, wasteRow);						
 					}
 				}
-				
-			
 				 
 				 function setWasteReasonActions(currentId) {
 					 $('#' + currentId + 'WasteType').change(function(event) {
@@ -178,57 +141,3 @@
 					 }
 				 }
 				 
-				 
-				 var toBeDeletedWaste = 0;
-			</script>
-			<div data-role="header" data-position="fixed" data-id="nav"> 
-				<h1>EUPHORIA</h1>
-			 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
-			
-			</div>
-			<!-- /navbar -->
-			<div data-role="content">
-				<label class="table-title-label"><i><u>Reasons of Disposal</u></i></label><p></p>
-				<div id="wasteList"></div>
-				<p></p>
-				<div align="right">
-					
-					<a href="" type="button" id="deleteSelectedWaste" 
-						data-iconshadow="false" data-mini="true" class="ui-icon-nodisc ui-disabled" 
-						data-corners="false" data-icon="delete" data-iconpos="left" 
-						data-theme="a"  onclick="deleteSelectedData();" >Delete</a>
-				</div>
-			</div>
-			<div data-role="footer" data-position="fixed">
-			<div data-role="navbar" >
-				<ul>
-					<li><a href="#home"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
-					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">My Lists</a></li>
-					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page7" class="badge"></span></a></li> -->
-					<li><a href="wastereason.html"  id="wasteReason3" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
-					<span id="badge-page8" class="badge"></span>My Bin</a></li>		
-					
-					<!-- <li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li> -->
-					<!-- <li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li> -->
-					</ul>
-			</div><!-- /navbar -->
-			</div>
-			<div data-role="panel" data-position-fixed="true" data-theme="a"
-				id="nav-panel">
-				<ul data-role="listview" data-theme="a" class="nav-search">
-					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
-					<li data-icon="edit" ><a href="survey.html" id="survey" data-transition="slide">Survey</a></li>
-					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">Me</a></li>
-
-
-				</ul>
-			</div>
-			<!-- /panel -->
-		</div>
-	</div>
-<script type="text/javascript" src="cordova.js"></script>
-
-</body>
-</html>
-

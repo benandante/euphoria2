@@ -4,73 +4,6 @@
 }
 
 
-/* .ui-icon {
-	background-image:url("images/icons-36-white.png");
-    data-inline: true;
-    data-iconshadow: false;
-}
-  */
-
-/* #more .ui-icon {
-    background-color: transparent;
-    width: 36px;
-    height: 36px;
-}
-#shop .ui-icon {
-	background: url("../img/icons/shoppingcar2.png");
-	background-size: 35px 35px;
-}
-#list .ui-icon {
-	background: url("../img/icons/shoppingcar1.png");
-	background-size: 35px 35px;
-}
-#utensils .ui-icon {
-	background: url("../img/icons/utensils.png");
-		background-size: 35px 35px;
-}
-#bin .ui-icon {
-	background: url("../img/icons/bin.png");
-		background-size: 35px 35px;
-}
-#survey .ui-icon {
-	background: url("../img/icons/pencil.png");
-	background-size: 35px 35px;
-}
-#userInfo .ui-icon {
-	background: url("../img/icons/profile.png");
-	background-size: 35px 35px;
-}
-#shop2 .ui-icon {
-	background: url("../img/icons/shoppingcar2.png");
-	background-size: 35px 35px;
-}
-#list2 .ui-icon {
-	background: url("../img/icons/shoppingcar1.png");
-	background-size: 35px 35px;
-}
-#utensils2 .ui-icon {
-	background: url("../img/icons/utensils.png");
-		background-size: 35px 35px;
-}
-#bin2 .ui-icon {
-	background: url("../img/icons/bin.png");
-		background-size: 35px 35px;
-}
-#survey2 .ui-icon {
-	background: url("../img/icons/pencil.png");
-	background-size: 35px 35px;
-}
-#userInfo2 .ui-icon {
-	background: url("../img/icons/profile.png");
-	background-size: 35px 35px;
-}
- */
-
-/* .my-button {
-    background-image: url('img/Picture1.jpg') !important;
-}
-
- */
 .ui-grid-b input {
     width  : 100%;
     height : 15%;
@@ -134,26 +67,6 @@ div.ui-slider{
   position: relative;
 }
 
-/* .ui-icon-abc
-{
-    background: url(http://glyphish.com/images/demo.png) no-repeat rgba(0, 0, 0, 0.4) !important;
-    background-size: 16px 16px;
-} */
-
-/* #favorite .ui-icon { 
-    background-image: url(http://glyphish.com/images/demo.png);
-    background-position: -345px -112px;
-    background-repeat: no-repeat;
-}
- */
-/* 
-.ui-icon {
-    background-color: transparent;
-    width: 35px;
-    height: 35px;
-} */
-/* custom icons do not work!!!!*/
-
 
 .ui-widget-header
 {
@@ -176,6 +89,7 @@ div.ui-slider{
 	width :  100%;
 }
 
+
  .scrollable {
             overflow-y: scroll;
             -webkit-overflow-scrolling: touch;
@@ -187,9 +101,28 @@ div.ui-slider{
 	background-color:#444444;
 	color:white;
 	font-size:18px;
-	width:70px;
+	width:50px;
 	text-align:center;
 }
+
+.unit-label
+{
+	color:white;
+	font-size:12px;
+}
+
+.per-label
+{
+	color:white;
+	font-size:10px;
+}
+
+.surveyText
+{
+	font-size:12px;
+}
+
+.ui-controlgroup-controls {width: 100%;}
 
 .ui-hidden-accessible {
     display : none !important;
