@@ -21,10 +21,8 @@
 	<div data-role="page" id="home" data-theme="a">
 
 	<script type="text/javascript">	
-	
-	
-	$(document).on("pageload",function(event,data){
 		
+	$(document).on("pageload",function(event,data){		
 		if(data.dataUrl.indexOf("foodUsage") != -1) {
 			sendUserAction(3, getNow(), "user list opened");
 		} else if(data.dataUrl.indexOf("wastereason") != -1) {
@@ -34,53 +32,52 @@
 		} else if(data.dataUrl.indexOf("userInfo") != -1)
 			sendUserAction(6, getNow(), "user info opened");
 		}
-		
-	
-	//comment
-	
 	);
-
 	
 	$(document).on("pagebeforeshow","#user",function(){ 
 		sendUserAction(3, getNow(), "user list opened");
-		});
+	});
 	
 	$(document).on("pagebeforeshow","#home",function(){ // When entering pagetwo
 		sendUserAction(1, getNow(), "app opened");
-		});
+	});
 	
 	//do not change this paheinit event.. mobile init doesn't work
-	$(document).bind("pageinit", function()
-			{
-		
-		 $.mobile.defaultPageTransition ='none';
-	      $.mobile.defaultDialogTransition = 'none';
-		  $.mobile.buttonMarkup.hoverDelay = 0;
+	$(document).bind("pageinit", function() {
+		$.mobile.defaultPageTransition ='none';
+	    $.mobile.defaultDialogTransition = 'none';
+		$.mobile.buttonMarkup.hoverDelay = 0;
 		  
-		  $("#willBuy").bind("touchstart", willBuyHandler);
-			$("#ihave").bind("touchstart", iHaveHandler);
-			
-			   /*  if (navigator.userAgent.indexOf("Android") != -1)
-			    {
-			        $.mobile.defaultPageTransition = 'none';
-			        $.mobile.defaultDialogTransition = 'none';
-			    } */
-			});
-	
+		$("#willBuy").bind("touchstart", willBuyHandler);
+		$("#ihave").bind("touchstart", iHaveHandler);
+		$('#homeButton').bind('touchstart', function(e) {
+		    $.mobile.changePage("#home");
+		});
+		$('#userButton').bind('touchstart', function(e) {
+		    $.mobile.changePage("#user");
+		});
+		$('#wasteButton').bind('touchstart', function(e) {
+		    $.mobile.changePage("wasteReason.html");
+		});
+		
+	});
 
 	function willBuyHandler(event) {
 		addFoods(0);
 	}
+	
 	function iHaveHandler(event) {
 		addFoods(1);
 	}
+	
+	
 </script>
 			<div data-role="header" data-position="fixed" data-id="nav"> 
 				<h1>EUPHORIA</h1>
 			 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
 			</div>
 			
-			<div data-role="content" style="height: 100%;">
+			<div data-role="content" >
 		
 				<!-- <input type="search" name="search" id="searchfood" value="" /> -->
 				<ul data-role="listview" data-filter="true" data-filter-reveal="true" data-split-theme="a" data-inset="true" 
@@ -104,9 +101,9 @@
 				<div data-role="footer" data-position="fixed">
 				<div data-role="navbar" >
 				<ul>
-					<li><a href="#home"  data-icon="search" data-iconshadow="false"  class="ui-btn ui-icon-nodisc" >Items</a></li>
-					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc" >My Lists</a></li>
-					<li><a href="wastereason.html"  id="wasteReason1" data-icon="info" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc">
+					<li><a data-icon="search" data-iconshadow="false"  class="ui-btn ui-icon-nodisc" id="homeButton">Items</a></li>
+					<li><a data-icon="home" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc"  id="userButton">My Lists</a></li>
+					<li><a id="wasteReason1" data-icon="info" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc"  id="wasteButton"> 
 					<span id="badge-page2" class="ui-li-count ui-btn-corner-all badge"></span>My Bin</a></li>		
 					
 					<!-- <li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li> -->
