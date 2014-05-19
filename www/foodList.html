@@ -54,6 +54,10 @@
 		 $.mobile.defaultPageTransition ='none';
 	      $.mobile.defaultDialogTransition = 'none';
 		  $.mobile.buttonMarkup.hoverDelay = 0;
+		  
+		  $("#willBuy").bind("tap", willBuyHandler);
+			$("#ihave").bind("tap", iHaveHandler);
+			
 			   /*  if (navigator.userAgent.indexOf("Android") != -1)
 			    {
 			        $.mobile.defaultPageTransition = 'none';
@@ -61,7 +65,13 @@
 			    } */
 			});
 	
-			
+
+	function willBuyHandler(event) {
+		addFoods(0);
+	}
+	function iHaveHandler(event) {
+		addFoods(1);
+	}
 </script>
 			<div data-role="header" data-position="fixed" data-id="nav"> 
 				<h1>EUPHORIA</h1>
@@ -80,11 +90,11 @@
 			 <div class="ui-grid-a">	
 		<div class="ui-block-a">
         	<a href="" data-role="button" data-corners="false" data-icon="plus"  data-mini="true" data-iconshadow="false"  class="ui-icon-nodisc"
-							onclick="addFoods(0);">I will buy</a>
+							id="willBuy">I will buy</a>
         </div>
         <div class="ui-block-b">
         	<a href="" data-role="button"  data-corners="false" data-icon="check" data-mini="true" data-iconshadow="false" class="ui-icon-nodisc"
-							onclick="addFoods(1);">I have</a>
+							id="ihave">I have</a>
 							</div>
          </div>
 
