@@ -35,8 +35,11 @@
 			sendUserAction(6, getNow(), "user info opened");
 		}
 		
+	
+		
 	);
-
+	
+	 
 	
 	$(document).on("pagebeforeshow","#user",function(){ 
 		sendUserAction(3, getNow(), "user list opened");
@@ -46,20 +49,24 @@
 		sendUserAction(1, getNow(), "app opened");
 		});
 	
-	$(document).bind("mobileinit", function()
-			{
-		 $.mobile.defaultPageTransition ='none';
-	      $.mobile.defaultDialogTransition = 'none';
-		  $.mobile.buttonMarkup.hoverDelay = 0;
-			   /*  if (navigator.userAgent.indexOf("Android") != -1)
-			    {
-			        $.mobile.defaultPageTransition = 'none';
-			        $.mobile.defaultDialogTransition = 'none';
-			    } */
-			});
-	
-			
-</script>
+
+		$(document).bind("pageinit", function() {
+			if (navigator.userAgent.indexOf("Android") != -1) {
+				$.mobile.defaultPageTransition = 'none';
+				$.mobile.defaultDialogTransition = 'none';
+			}
+			$("#willBuy").bind("tap", willBuyHandler);
+			$("#ihave").bind("tap", iHaveHandler);
+		});
+
+		function willBuyHandler(event) {
+			addFoods(0);
+		}
+		function iHaveHandler(event) {
+			addFoods(1);
+		}
+		
+	</script>
 			<div data-role="header" data-position="fixed" data-id="nav"> 
 				<h1>EUPHORIA</h1>
 			 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
@@ -77,11 +84,11 @@
 			 <div class="ui-grid-a">	
 		<div class="ui-block-a">
         	<a href="" data-role="button" data-corners="false" data-icon="plus"  data-mini="true" data-iconshadow="false"  class="ui-icon-nodisc"
-							onclick="addFoods(0);">I will buy</a>
+							id="willBuy">I will buy</a>
         </div>
         <div class="ui-block-b">
         	<a href="" data-role="button"  data-corners="false" data-icon="check" data-mini="true" data-iconshadow="false" class="ui-icon-nodisc"
-							onclick="addFoods(1);">I have</a>
+							id="ihave">I have</a>
 							</div>
          </div>
 
@@ -89,9 +96,9 @@
 				<div data-role="footer" data-position="fixed">
 				<div data-role="navbar" >
 				<ul>
-					<li><a href="#home"  data-icon="search" data-iconshadow="false"  class="ui-btn ui-icon-nodisc" >Items</a></li>
-					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc" >My Lists</a></li>
-					<li><a href="wastereason.html"  id="wasteReason1" data-icon="info" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc">
+					<li><a href="#home"  data-icon="search" data-iconshadow="false" data-transition="slide" class="ui-btn ui-icon-nodisc" >Items</a></li>
+					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc" >My Lists</a></li>
+					<li><a href="wastereason.html"  id="wasteReason1" data-icon="info" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc">
 					<span id="badge-page2" class="ui-li-count ui-btn-corner-all badge"></span>My Bin</a></li>		
 					
 					<!-- <li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li> -->
@@ -174,11 +181,11 @@
 			<div data-role="footer" data-position="fixed">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home"  id="foodList" data-icon="search" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc">Items</a></li>
-					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc">My Lists</a></li>
+					<li><a href="#home"  id="foodList" data-icon="search" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc">My Lists</a></li>
 					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
 					<span id="badge-page3" class="badge"></span></a></li> -->
-					<li><a href="wastereason.html" id="wasteReason2" data-icon="info" data-iconshadow="false" data-inline="true" class="ui-btn ui-icon-nodisc">
+					<li><a href="wastereason.html" id="wasteReason2" data-icon="info" data-iconshadow="false" data-inline="true" data-transition="slide" class="ui-btn ui-icon-nodisc">
 					<span id="badge-page4" class="badge"></span>My Bin</a></li>					
 				
 					<!-- <li><a href="survey.html" data-icon="edit" data-inline="true"></a></li>
