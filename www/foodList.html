@@ -49,9 +49,9 @@
 		sendUserAction(1, getNow(), "app opened");
 		});
 	
-	$(document).bind("mobileinit", function()
+	$(document).bind("pageinit", function()
 			{
-		alert("mobil init");
+		alert("pageinit");
 		 $.mobile.defaultPageTransition ='none';
 	      $.mobile.defaultDialogTransition = 'none';
 		  $.mobile.buttonMarkup.hoverDelay = 0;
