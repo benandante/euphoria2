@@ -49,11 +49,7 @@
 	//
 	function onDeviceReady() {
 		sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
-		$("a").on("tap",function(e){
-            $(this).trigger("click");
-            e.preventDefault();
-            return false;
-            });
+	
 
 	window.plugin.notification.local.add({
 	    id:      1,
