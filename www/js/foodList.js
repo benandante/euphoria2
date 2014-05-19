@@ -94,7 +94,7 @@ function selectFoodByImage(id) {
 	    		 stl = "border:2px solid white;margin:2px;";
 	    	 } 
 	    	 myHTMLOutput += '<input type="image" style="' + stl + '" src="' +  mainPageFoods[i][1] +
-	    	 '" id="' +   mainPageFoods[i][0] + '" value="'+ mainPageFoods[i][2] + '" onclick="selectFoodByImage(' + mainPageFoods[i][0] + ')">'
+	    	 '" id="' +   mainPageFoods[i][0] + '" value="'+ mainPageFoods[i][2] + '" >'
 	    	 myHTMLOutput += '</div>';
 	    	 
 	    	 i++;	    	 
@@ -105,7 +105,7 @@ function selectFoodByImage(id) {
 		    	 } 
 	    		 myHTMLOutput += '<div class="ui-block-b">';
 	    		 myHTMLOutput += '<input type="image"  style="' + stl + '" src="' +  mainPageFoods[i][1] +
-	        	 '" id="' +   mainPageFoods[i][0] + '"  value="'+ mainPageFoods[i][2] + '" onclick="selectFoodByImage(' + mainPageFoods[i][0] + ')">'
+	        	 '" id="' +   mainPageFoods[i][0] + '"  value="'+ mainPageFoods[i][2] + '" >'
 	        	 myHTMLOutput += '</div>';
 	    	 }
 	    	 
@@ -117,7 +117,7 @@ function selectFoodByImage(id) {
 		    	 } 
 	    		 myHTMLOutput += '<div class="ui-block-c">';
 	    		 myHTMLOutput += '<input type="image" style="' + stl + '" src="' +  mainPageFoods[i][1] +
-	        	 '" id="' +   mainPageFoods[i][0] + '" value="'+ mainPageFoods[i][2] + '"  onclick="selectFoodByImage(' + mainPageFoods[i][0] + ')">'
+	        	 '" id="' +   mainPageFoods[i][0] + '" value="'+ mainPageFoods[i][2] + '" >'
 	        	 myHTMLOutput += '</div>';
 	    	 }    	
 	    	 i++;
@@ -127,6 +127,15 @@ function selectFoodByImage(id) {
 	     
 		//Update the DIV called Content Area with the HTML string
 		document.getElementById("ContentFoodArea").innerHTML = myHTMLOutput;
+		
+		 for (var i=0; i < imageFoodLen; i++) {
+			 $("#" +  mainPageFoods[i][0]).bind("tap", mainPageFoodHandler);
+		 }
+		
+	 }
+	 
+	 function mainPageFoodHandler(event) {
+		 selectFoodByImage(parseInt(event.currentTarget.id));
 	 }
 
 	
@@ -134,20 +143,23 @@ function selectFoodByImage(id) {
 		var div = document.getElementById("mainFoodList");
 		var i;
 		var idVal;
-		for (i = 0; i < div.childNodes.length; i++) {
-			idVal = div.childNodes[i].childNodes[0].id;
-			val = "#" + idVal;
-			//if image is selected, add them to user list
-			if ($(val).val() == 1) {
-				document.getElementById(idVal).style.border = "2px solid #2E2E2E";
-				document.getElementById(idVal).value = "0";
-				buyNewFood(idVal, 0, status);				
+		if(div != null) {
+			for (i = 0; i < div.childNodes.length; i++) {
+				idVal = div.childNodes[i].childNodes[0].id;
+				val = "#" + idVal;
+				//if image is selected, add them to user list
+				if ($(val).val() == 1) {
+					document.getElementById(idVal).style.border = "2px solid #2E2E2E";
+					document.getElementById(idVal).value = "0";
+					buyNewFood(idVal, 0, status);				
+				}
 			}
-		}
-		//set selection value in the global array
-		leng = mainPageFoods.length;			
-		for(i=0; i < leng; i++) {
-			mainPageFoods[i][2] = 0;
+			//set selection value in the global array
+			leng = mainPageFoods.length;			
+			for(i=0; i < leng; i++) {
+				mainPageFoods[i][2] = 0;
+			}
+			
 		}
 		
 		//$.mobile.changePage("foodUsage.html", "slide", true, true);
