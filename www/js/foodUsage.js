@@ -14,7 +14,10 @@ function changeUserFoodInfoHTML(userFoodInfoHTML) {
 				document.getElementById("userFoodInfo").innerHTML = userFoodInfoHTML;
 				
 				$('#userFoodInfo').trigger("create");
+				
 			}
+			
+			
 			
 			
 			function changeShoppingListHTML(newList) {
@@ -400,6 +403,14 @@ function changeUserFoodInfoHTML(userFoodInfoHTML) {
 							$('#' + amountVal).val((parseFloat($('#' + amountVal).val()) - sliderAmount).toFixed(2));
 						}	
 					});
+					
+					$("#row" + currentId).bind("tap", highlightTapEvent);
+				}
+				
+				function highlightTapEvent(event) {
+					id = parseInt(event.currentTarget.id.replace("row", ""));
+					highlightRow(id);
+					
 				}
 				
 				function highlightRow(currentId) {

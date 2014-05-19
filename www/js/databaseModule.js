@@ -1123,7 +1123,7 @@ function deleteFromOfflineActions(actionNumber, id) {
 	    	
 	    		 //if it is available list
 	    		 //add it as a row
-			 rowHtmlR += ' <tr data-value="unselected" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'" id="swipeImage' + currentId + '" width="50" height="50" onclick="highlightRow(' + currentId + ');"></td>';
+			 rowHtmlR += ' <tr data-value="unselected" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'" id="swipeImage' + currentId + '" width="50" height="50" ></td>';
 	    	 if(currentRow.amount > 0) {
 	    		 rowHtmlR += '<td><input type="number"  disabled="true" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
@@ -1190,7 +1190,7 @@ function deleteFromOfflineActions(actionNumber, id) {
 		    	
 	    		 //if it is shopping list
 	    		 //add it as a row
-				 tableHTML += '<tr data-value="unselected" id="row' + currentId + '" ><td style="width:15%" ><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'"  id="swipeImage' + currentId + '" width="50" height="50" onclick="highlightRow(' + currentId + ');"></td>';
+				 tableHTML += '<tr data-value="unselected" id="row' + currentId + '" ><td style="width:15%" ><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'"  id="swipeImage' + currentId + '" width="50" height="50" ;"></td>';
 		    	 
 				 tableHTML += '<td style="width:60%"><input type="number" step="1" min="0" maxlength="6" size="6" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 currentRow.amount.toFixed(2) +  '" /><label  class="unit-label" font-style="italic"><i>' + currentRow.foodUnit + 
@@ -1210,7 +1210,7 @@ function deleteFromOfflineActions(actionNumber, id) {
 		    	
 		    		 //if it is available list
 		    		 //add it as a row
-				 tableHTML += ' <tr data-value="unselected" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'" id="swipeImage' + currentId + '" width="50" height="50" onclick="highlightRow(' + currentId + ');"></td>';
+				 tableHTML += ' <tr data-value="unselected" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
 			     if(currentRow.amount > 0) {
 			    	 tableHTML += '<td><input type="number" disabled="true" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 			    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
@@ -1538,7 +1538,7 @@ function queryUpdateFoodWasteReason(tx, id, val, i) {
 		    	if(currentRow.wasteStatus == 0) {
 		    		wasteIdd = currentRow.wasteID;
 		    		isTableEmpty = 0;
-			    	 myHTMLOutput += ' <tr data-value="unselected" id="wasteRow' + wasteIdd + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' + currentRow.foodName +'" id="swipeWaste' + wasteIdd + '" width="50" height="50" onclick="highlightWasteRow(' + wasteIdd + ');"></td>';
+			    	 myHTMLOutput += ' <tr data-value="unselected" id="wasteRow' + wasteIdd + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' + currentRow.foodName +'" id="swipeWaste' + wasteIdd + '" width="50" height="50" ></td>';
 			    	 myHTMLOutput += '<td><label  class="unit-label">' + currentRow.amount.toFixed(2) + "    " + currentRow.foodUnit + '</label></td>';
 			    	 myHTMLOutput += '<td style="width:80px"><form><div data-role="fieldcontain"><select name="reason" id="' + wasteIdd + 'WasteType" data-theme="a" data-mini="true" data-icon="false"  data-iconpos="notext" data-corners="false"  class="select-class ui-icon-nodisc">'; 
 			    	 myHTMLOutput += getReasonsHTML(currentRow.wasteType, wasteReasons);

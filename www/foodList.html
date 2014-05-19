@@ -49,9 +49,10 @@
 		sendUserAction(1, getNow(), "app opened");
 		});
 	
+	//do not change this paheinit event.. mobile init doesn't work
 	$(document).bind("pageinit", function()
 			{
-		alert("pageinit");
+		
 		 $.mobile.defaultPageTransition ='none';
 	      $.mobile.defaultDialogTransition = 'none';
 		  $.mobile.buttonMarkup.hoverDelay = 0;
