@@ -178,7 +178,16 @@
 						 }
 					 }
 				 }
-				 
+				 $(document).bind("pageinit", function() {
+						
+					$('#homeBtn').bind('touchstart', function(e) {
+					    $.mobile.changePage("#home");
+					});
+					$('#userBtn').bind('touchstart', function(e) {
+					    $.mobile.changePage("#user");
+					});
+								
+				});
 				 
 				 var toBeDeletedWaste = 0;
 			</script>
@@ -203,11 +212,11 @@
 			<div data-role="footer" data-position="fixed">
 			<div data-role="navbar" >
 				<ul>
-					<li><a href="#home"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
-					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">My Lists</a></li>
+					<li><a id="homeBtn" data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+					<li><a id="userBtn" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">My Lists</a></li>
 					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
 					<span id="badge-page7" class="badge"></span></a></li> -->
-					<li><a href="wastereason.html"  id="wasteReason3" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
+					<li><a href=""  id="wasteReason3" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
 					<span id="badge-page8" class="badge"></span>My Bin</a></li>		
 					
 					<!-- <li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li> -->
