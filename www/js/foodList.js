@@ -129,7 +129,7 @@ function selectFoodByImage(id) {
 		document.getElementById("ContentFoodArea").innerHTML = myHTMLOutput;
 		
 		 for (var i=0; i < imageFoodLen; i++) {
-			 $("#" +  mainPageFoods[i][0]).bind("tap", mainPageFoodHandler);
+			 $("#" +  mainPageFoods[i][0]).bind("touchstart", mainPageFoodHandler);
 		 }
 		
 	 }
