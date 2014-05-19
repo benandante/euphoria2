@@ -139,7 +139,7 @@
 								undoWasteStack.push(new Array(userFoodWasteInfo[wasteRow][0], userFoodWasteInfo[wasteRow][1])); //id and old amount
 							}
 						});
-					 $("#wasteRow" + currentId).bind("tap", highlightWasteTapEvent);
+					 $("#wasteRow" + currentId).bind("touchstart", highlightWasteTapEvent);
 				 }
 				 
 				 function highlightWasteTapEvent(event) {

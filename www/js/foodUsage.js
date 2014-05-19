@@ -404,7 +404,7 @@ function changeUserFoodInfoHTML(userFoodInfoHTML) {
 						}	
 					});
 					
-					$("#row" + currentId).bind("tap", highlightTapEvent);
+					$("#row" + currentId).bind("touchstart", highlightTapEvent);
 				}
 				
 				function highlightTapEvent(event) {
