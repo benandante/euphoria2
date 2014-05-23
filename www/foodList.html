@@ -14,273 +14,610 @@
 <script type="text/javascript" src="js/foodList.js"></script>
 <script type="text/javascript" src="js/foodUsage.js"></script>
 <script type="text/javascript" src="js/wasteReason.js"></script>
+<script type="text/javascript" src="js/survey.js"></script>
+<script type="text/javascript" src="js/userInfo.js"></script>
 </head>
 
-<body  onload="onLoad();">
-	<div class="app">	
-	<div data-role="page" id="home" data-theme="a">
+<body onload="onLoad();">
+	<div class="app">
 
-	<script type="text/javascript">	
-		
-	$(document).on("pageload",function(event,data){		
-		if(data.dataUrl.indexOf("foodUsage") != -1) {
-			sendUserAction(3, getNow(), "user list opened");
-		} else if(data.dataUrl.indexOf("wastereason") != -1) {
-			sendUserAction(4, getNow(), "waste list opened");
-		}  else if(data.dataUrl.indexOf("survey") != -1) {
-			sendUserAction(5, getNow(), "survey opened");
-		} else if(data.dataUrl.indexOf("userInfo") != -1)
-			sendUserAction(6, getNow(), "user info opened");
-		}
-	);
-	
-	$(document).on("pagebeforeshow","#user",function(){ 
-		sendUserAction(3, getNow(), "user list opened");
-	});
-	
-	$(document).on("pagebeforeshow","#home",function(){ // When entering pagetwo
-		sendUserAction(1, getNow(), "app opened");
-	});
-	
-	//do not change this paheinit event.. mobile init doesn't work
-	$(document).bind("pageinit", function() {
-		$.mobile.defaultPageTransition ='none';
-	    $.mobile.defaultDialogTransition = 'none';
-		$.mobile.buttonMarkup.hoverDelay = 0;
-		  
-		$("#willBuy").bind("touchstart", willBuyHandler);
-		$("#ihave").bind("touchstart", iHaveHandler);
-	
-		$('#userButton').bind('touchstart', function(e) {
-		    $.mobile.changePage("#user");
-		});
-		$('#homeButton2').bind('touchstart', function(e) {
-		    $.mobile.changePage("#home");
-		});
-	
-		$('#wasteReason1').bind('touchstart', function(e) {
-		    $.mobile.changePage("wastereason.html");
-		});
-		$('#wasteReason2').bind('touchstart', function(e) {
-		    $.mobile.changePage("wastereason.html");
-		});
-		
-	});
 
-	function willBuyHandler(event) {
-		addFoods(0);
-	}
-	
-	function iHaveHandler(event) {
-		addFoods(1);
-	}
-	
-	
-</script>
-			<div data-role="header" data-position="fixed" data-id="nav"> 
-				<h1>EUPHORIA</h1>
-			 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
-			</div>
-			
-			<div data-role="content" >
-		
-				<!-- <input type="search" name="search" id="searchfood" value="" /> -->
-				<ul data-role="listview" data-filter="true" data-filter-reveal="true" data-split-theme="a" data-inset="true" 
-				data-filter-theme="a"  data-filter-placeholder="Search food or select below..." 
-				data-theme="a" data-mini="true" id="searchFoodlist"></ul><p></p>
-					<label class="table-title-label"><i>What did you buy or would like to buy?</i></label>
-				<div  id="ContentFoodArea"></div>
+		<!----------------------------------------------- Main  Page -------------------------------------------------->
+		<div data-role="page" id="homePage" data-theme="a">
+
+			<script type="text/javascript">
+				$(document).on("pagebeforeshow", "#user", function() {
+					sendUserAction(3, getNow(), "user list opened");
+				});
+
+				$(document).on("pagebeforeshow", "#homePage", function() { // When entering pagetwo
+					sendUserAction(1, getNow(), "app opened");
+				});
+
+				$(document).on("pagebeforeshow", "#waste", function() { // When entering pagetwo
+					sendUserAction(4, getNow(), "waste page opened");
+				});
+
+				$(document).on("pagebeforeshow", "#surveyPage", function() { // When entering pagetwo
+					sendUserAction(5, getNow(), "survey page opened");
+				});
 				
-			 <div class="ui-grid-a">	
-		<div class="ui-block-a">
-        	<a href="" data-role="button" data-corners="false" data-icon="plus"  data-mini="true" data-iconshadow="false"  class="ui-icon-nodisc"
-							id="willBuy">I will buy</a>
-        </div>
-        <div class="ui-block-b">
-        	<a href="" data-role="button"  data-corners="false" data-icon="check" data-mini="true" data-iconshadow="false" class="ui-icon-nodisc"
-							id="ihave">I have</a>
-							</div>
-         </div>
+				$(document).on("pagebeforeshow", "#userInfoPage", function() { // When entering pagetwo
+					sendUserAction(6, getNow(), "profile page opened");
+				});
 
-		</div>
-				<div data-role="footer" data-position="fixed">
-				<div data-role="navbar" >
-				<ul>
-					<li><a data-icon="search" data-iconshadow="false"  class="ui-btn ui-icon-nodisc" id="homeButton">Items</a></li>
-					<li><a data-icon="home" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc"  id="userButton">My Lists</a></li>
-					<li><a id="wasteReason1" data-icon="info" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc" > 
-					<span id="badge-page2" class="ui-li-count ui-btn-corner-all badge"></span>My Bin</a></li>		
+				//do not change this pageinit event.. mobile init doesn't work
+				$(document).bind("pageinit", function() {
+					$.mobile.defaultPageTransition = 'none';
+					$.mobile.defaultDialogTransition = 'none';
+					$.mobile.buttonMarkup.hoverDelay = 0;
+					//TODO rebind everything
+
+					$("#willBuy").unbind();
+					$("#ihave").unbind();
+
+					$('#homeBtn1').unbind();
+					$('#userBtn1').unbind();
+					$('#wasteBtn1').unbind();
+					$('#surveyBtn1').unbind();
+					$('#userInfoBtn1').unbind();
+
+					$('#homeBtn2').unbind();
+					$('#userBtn2').unbind();
+					$('#wasteBtn2').unbind();
+					$('#surveyBtn2').unbind();
+					$('#userInfoBtn2').unbind();
+
+					$('#homeBtn3').unbind();
+					$('#userBtn3').unbind();
+					$('#surveyBtn3').unbind();
+					$('#userInfoBtn3').unbind();
+
+					$('#homeBtn4').unbind();
+					$('#userBtn4').unbind();
+					$('#wasteBtn4').unbind();
+					$('#userInfoBtn4').unbind();
 					
-					<!-- <li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li> -->
-					<!-- <li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li> -->
-					</ul>
-			</div><!-- /navbar -->
+					$('#homeBtn5').unbind();
+					$('#userBtn5').unbind();
+					$('#wasteBtn5').unbind();
+					$('#surveyBtn5').unbind();
+					$('#userInfoBtn5').unbind();
+
+					$("#willBuy").bind("touchstart", willBuyHandler);
+					$("#ihave").bind("touchstart", iHaveHandler);
+					$('#homeBtn1').bind('touchstart', function(e) {
+						openHomePage();
+					});
+					$('#userBtn1').bind('touchstart', function(e) {
+						openUserPage();
+					});
+					$('#wasteBtn1').bind('touchstart', function(e) {
+						openWastePage();
+					});
+					$('#surveyBtn1').bind('touchstart', function(e) {
+						openSurveyPage();
+					});
+					$('#userInfoBtn1').bind('touchstart', function(e) {
+						openProfilePage();
+					});
+
+					$('#homeBtn2').bind('touchstart', function(e) {
+						openHomePage();
+					});
+					$('#userBtn2').bind('touchstart', function(e) {
+						openUserPage();
+					});
+
+					$('#wasteBtn2').bind('touchstart', function(e) {
+						openWastePage();
+					});
+					$('#surveyBtn2').bind('touchstart', function(e) {
+						openSurveyPage();
+					});
+					$('#userInfoBtn2').bind('touchstart', function(e) {
+						openProfilePage();
+					});
+					
+
+					$('#homeBtn3').bind('touchstart', function(e) {
+						openHomePage();
+					});
+					$('#userBtn3').bind('touchstart', function(e) {
+						openUserPage();
+					});
+					$('#surveyBtn3').bind('touchstart', function(e) {
+						openSurveyPage();
+					});
+					$('#userInfoBtn3').bind('touchstart', function(e) {
+						openProfilePage();
+					});
+					
+
+					$('#homeBtn4').bind('touchstart', function(e) {
+						openHomePage();
+					});
+					$('#userBtn4').bind('touchstart', function(e) {
+						openUserPage();
+					});
+
+					$('#wasteBtn4').bind('touchstart', function(e) {
+						openWastePage();
+					});
+					$('#userInfoBtn4').bind('touchstart', function(e) {
+						openProfilePage();
+					});
+					
+					
+					$('#homeBtn5').bind('touchstart', function(e) {
+						openHomePage();
+					});
+					$('#userBtn5').bind('touchstart', function(e) {
+						openUserPage();
+					});
+
+					$('#wasteBtn5').bind('touchstart', function(e) {
+						openWastePage();
+					});
+					$('#surveyBtn5').bind('touchstart', function(e) {
+						openSurveyPage();
+					});
+					
+				});
+				
+			</script>
+			<div data-role="header" data-position="fixed" data-id="nav">
+				<h1>EUPHORIA</h1>
+				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
+					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
 			</div>
-			
+
+			<div data-role="content">
+
+				<!-- <input type="search" name="search" id="searchfood" value="" /> -->
+				<ul data-role="listview" data-filter="true"
+					data-filter-reveal="true" data-split-theme="a" data-inset="true"
+					data-filter-theme="a"
+					data-filter-placeholder="Search food or select below..."
+					data-theme="a" data-mini="true" id="searchFoodlist"></ul>
+				<p></p>
+				<label class="table-title-label"><i>What did you buy or
+						would like to buy?</i></label>
+				<div id="ContentFoodArea"></div>
+
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<a href="" data-role="button" data-corners="false"
+							data-icon="plus" data-mini="true" data-iconshadow="false"
+							class="ui-icon-nodisc" id="willBuy">I will buy</a>
+					</div>
+					<div class="ui-block-b">
+						<a href="" data-role="button" data-corners="false"
+							data-icon="check" data-mini="true" data-iconshadow="false"
+							class="ui-icon-nodisc" id="ihave">I have</a>
+					</div>
+				</div>
+
+			</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a data-icon="search" data-iconshadow="false"
+							class="ui-btn ui-icon-nodisc" id="homeBtn1">Items</a></li>
+						<li><a data-icon="home" data-iconshadow="false"
+							data-inline="true" class="ui-btn ui-icon-nodisc" id="userBtn1">My
+								Lists</a></li>
+						<li><a id="wasteBtn1" data-icon="info"
+							data-iconshadow="false" data-inline="true"
+							class="ui-btn ui-icon-nodisc"> <span id="badge-page2"
+								class="ui-li-count ui-btn-corner-all badge"></span>My Bin
+						</a></li>
+
+					</ul>
+				</div>
+				<!-- /navbar -->
+			</div>
+
 			<div data-role="panel" data-position-fixed="true" data-theme="a"
 				id="nav-panel">
 				<ul data-role="listview" data-theme="a" class="nav-search">
 					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
-					<li data-icon="edit" ><a href="survey.html" id="survey" data-transition="slide">Survey</a></li>
-					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">Me</a></li>
+					<li data-icon="edit"><a id="surveyBtn1"
+						data-transition="slide">Survey</a></li>
+					<li data-icon="gear"><a id="userInfoBtn1" 
+						data-transition="slide">Me</a></li>
 
 				</ul>
 			</div>
 			<!-- /panel -->
 		</div>
-		
-		
-		
-		
-				<div data-role="page" id="user" data-theme="a">
+
+		<!----------------------------------------------- Main  Page -------------------------------------------------->
+
+
+
+		<!----------------------------------------------- User  Page -------------------------------------------------->
+		<div data-role="page" id="userPage" data-theme="a">
 			<!-- load user food list -->
-	
+
 			<script>
-			
-				//global variable to store the coun of items for deletion
+				//global variable to store the count of items for deletion
 				var toBeDeleted = 0;
 				var toBeDeletedArray = new Array();
 				var toBeDelFromShopping = new Array();
-			
-				//loadUserList();
 
-					
+				//loadUserList();
 			</script>
-			
- 	
-			<div data-role="header" data-position="fixed" data-id="nav"> 
+
+
+			<div data-role="header" data-position="fixed" data-id="nav">
 				<h1>EUPHORIA</h1>
-			 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
-			
+				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
+					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
+
 			</div>
-			
-			<div data-role="content">				
-				
+
+			<div data-role="content">
+
 				<label class="table-title-label"><i><u>I will buy</u></i></label>
 				<div id="userShoppingList"></div>
-				
+
 				<p></p>
-				<label class="table-title-label"><i><u>I have</u></i></label>
-				<select name="sortBy" id="sortBy"  class="select-class ui-icon-nodisc"
-					 data-theme="a" value="Sort by Date" data-mini="true" data-inline="true" 
-					 data-corners="false" data-iconshadow="false"  onchange="sortUserFoodsByDate(this.value);">
+				<label class="table-title-label"><i><u>I have</u></i></label> <select
+					name="sortBy" id="sortBy" class="select-class ui-icon-nodisc"
+					data-theme="a" value="Sort by Date" data-mini="true"
+					data-inline="true" data-corners="false" data-iconshadow="false"
+					onchange="sortUserFoodsByDate(this.value);">
 					<option value="ASC">Oldest</option>
 					<option value="DESC">Newest</option>
 				</select>
-				
-				
+
+
 				<div id="userFoodInfo"></div>
 				<p></p>
-				 <div class="ui-grid-a">	
-				<div class="ui-block-a">
-					
-					<a href="" type="button" id="deleteSelected" 
-						data-iconshadow="false" data-mini="true" class="ui-icon-nodisc ui-disabled" 
-						data-corners="false" data-icon="delete" data-iconpos="left" 
-						data-theme="a" onclick="deleteSelectedItems();"  >Delete</a>
-				</div>				
-				<div class="ui-block-b">
-					
-					<a href="" type="button" id="undo" 
-						data-iconshadow="false" data-mini="true" class="ui-icon-nodisc ui-disabled" 
-						data-corners="false" data-icon="back" data-iconpos="left" 
-						data-theme="a" onclick="undoChanges();"  >Undo</a>
-				</div>
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+
+						<a href="" type="button" id="deleteSelected"
+							data-iconshadow="false" data-mini="true"
+							class="ui-icon-nodisc ui-disabled" data-corners="false"
+							data-icon="delete" data-iconpos="left" data-theme="a"
+							onclick="deleteSelectedItems();">Delete</a>
+					</div>
+					<div class="ui-block-b">
+
+						<a href="" type="button" id="undo" data-iconshadow="false"
+							data-mini="true" class="ui-icon-nodisc ui-disabled"
+							data-corners="false" data-icon="back" data-iconpos="left"
+							data-theme="a" onclick="undoChanges();">Undo</a>
+					</div>
 				</div>
 			</div>
 			<div data-role="footer" data-position="fixed">
-			<div data-role="navbar">
-				<ul>
-					<li><a id="homeButton2" data-icon="search" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc">Items</a></li>
-					<li><a  id="userButton2" data-icon="home" data-iconshadow="false" data-inline="true"  class="ui-btn ui-icon-nodisc">My Lists</a></li>
-					<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page3" class="badge"></span></a></li> -->
-					<li><a id="wasteReason2" data-icon="info" data-iconshadow="false" data-inline="true" class="ui-btn ui-icon-nodisc">
-					<span id="badge-page4" class="badge"></span>My Bin</a></li>					
-				
-					<!-- <li><a href="survey.html" data-icon="edit" data-inline="true"></a></li>
-					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li> -->
+				<div data-role="navbar">
+					<ul>
+						<li><a id="homeBtn2" data-icon="search"
+							data-iconshadow="false" data-inline="true"
+							class="ui-btn ui-icon-nodisc">Items</a></li>
+						<li><a id="userBtn2" data-icon="home" data-iconshadow="false"
+							data-inline="true" class="ui-btn ui-icon-nodisc">My Lists</a></li>
+						<li><a id="wasteBtn2" data-icon="info"
+							data-iconshadow="false" data-inline="true"
+							class="ui-btn ui-icon-nodisc"> <span id="badge-page4"
+								class="badge"></span>My Bin
+						</a></li>
+
 					</ul>
-			</div><!-- /navbar -->
+				</div>
+				<!-- /navbar -->
 			</div>
 			<div data-role="panel" data-position-fixed="true" data-theme="a"
 				id="nav-panel">
 				<ul data-role="listview" data-theme="a" class="nav-search">
 					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
-					<li data-icon="edit" ><a href="survey.html" id="survey" data-transition="slide">Survey</a></li>
-					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">Me</a></li>
+					<li data-icon="edit"><a id="surveyBtn2"
+						data-transition="slide">Survey</a></li>
+					<li data-icon="gear"><a href="userInfoBtn2" 
+						data-transition="slide">Me</a></li>
 
 				</ul>
 			</div>
 			<!-- /panel -->
 		</div>
-		
-		
-				<!-- <div data-role="page" id="wastereason" data-theme="a">
-			load user food list
-			<script>
-				
-				/* if(newUsageNumber != 0) {
-					$('#badge-page7').html(newUsageNumber).fadeIn();	
-				} */
-				if(newWasteNumber != 0) {
-					$('#badge-page8').html(newWasteNumber).fadeIn();
-				}
-				 
-				 var toBeDeletedWaste = 0;
-			</script>
-			<div data-role="header" data-position="fixed" data-id="nav"> 
+		<!----------------------------------------------- User  Page -------------------------------------------------->
+
+
+
+
+
+		<!----------------------------------------------- Waste Page -------------------------------------------------->
+		<div data-role="page" id="wastePage" data-theme="a">
+			<!-- load user food list -->
+
+			<div data-role="header" data-position="fixed" data-id="nav">
 				<h1>EUPHORIA</h1>
-			 <a href="#nav-panel" data-icon="bars" data-iconpos="notext"  data-iconshadow="false"  class="ui-icon-nodisc">Menu</a>
-			
+				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
+					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
+
 			</div>
-			/navbar
+			<!-- /navbar -->
 			<div data-role="content">
-				<label class="table-title-label"><i><u>Reasons of Disposal</u></i></label><p></p>
+				<label class="table-title-label"><i><u>Reasons of
+							Disposal</u></i></label>
+				<p></p>
 				<div id="wasteList"></div>
 				<p></p>
 				<div align="right">
-					
-					<a href="" type="button" id="deleteSelectedWaste" 
-						data-iconshadow="false" data-mini="true" class="ui-icon-nodisc ui-disabled" 
-						data-corners="false" data-icon="delete" data-iconpos="left" 
-						data-theme="a"  onclick="deleteSelectedData();" >Delete</a>
+
+					<a href="" type="button" id="deleteSelectedWaste"
+						data-iconshadow="false" data-mini="true"
+						class="ui-icon-nodisc ui-disabled" data-corners="false"
+						data-icon="delete" data-iconpos="left" data-theme="a"
+						onclick="deleteSelectedData();">Delete</a>
 				</div>
 			</div>
 			<div data-role="footer" data-position="fixed">
-			<div data-role="navbar" >
-				<ul>
-					<li><a href="foodList.html"  data-icon="search" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
-					<li><a href="#user" data-icon="home" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">My Lists</a></li>
-					<li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
-					<span id="badge-page7" class="badge"></span></a></li>
-					<li><a href="#wastereason" data-icon="info" data-iconshadow="false" data-inline="true"  data-transition="slide" class="ui-btn ui-icon-nodisc">
-					<span id="badge-page8" class="badge"></span>My Bin</a></li>		
-					
-					<li><a href="survey.html" id="survey" data-icon="custom" class="ui-badge-container"></a></li>
-					<li><a href="userInfo.html" id="userInfo" data-icon="custom" class="ui-badge-container"></a></li>
+				<div data-role="navbar">
+					<ul>
+						<li><a id="homeBtn3" data-icon="search"
+							data-iconshadow="false" data-inline="true"
+							class="ui-btn ui-icon-nodisc">Items</a></li>
+						<li><a id="userBtn3" data-icon="home" data-iconshadow="false"
+							data-inline="true" class="ui-btn ui-icon-nodisc">My Lists</a></li>
+						<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
+					<span id="badge-page7" class="badge"></span></a></li> -->
+						<li><a href="#" id="wasteBtn3" data-icon="info"
+							data-iconshadow="false" data-inline="true"
+							data-transition="slide" class="ui-btn ui-icon-nodisc"> <span
+								id="badge-page8" class="badge"></span>My Bin
+						</a></li>
 					</ul>
-			</div>/navbar
+				</div>
+				<!-- /navbar -->
 			</div>
 			<div data-role="panel" data-position-fixed="true" data-theme="a"
 				id="nav-panel">
 				<ul data-role="listview" data-theme="a" class="nav-search">
 					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
-					<li data-icon="edit" ><a href="survey.html" id="survey" data-transition="slide">Survey</a></li>
-					<li data-icon="gear" ><a href="userInfo.html" id="userInfo" data-transition="slide">Me</a></li>
+					<li data-icon="edit"><a id="surveyBtn3"
+						data-transition="slide">Survey</a></li>
+					<li data-icon="gear"><a id="userInfoBtn3"
+						data-transition="slide">Me</a></li>
 
 
 				</ul>
 			</div>
-			/panel
+			<!-- /panel -->
 		</div>
-		
-		 -->
-		
-		
-		
+		<!----------------------------------------------- Waste Page -------------------------------------------------->
+
+
+
+
+		<!----------------------------------------------- Survey Page -------------------------------------------------->
+		<div data-role="page" id="surveyPage" data-theme="a">
+			<!-- load user survey data -->
+
+			<div data-role="header" data-position="fixed" data-id="nav">
+				<h1>EUPHORIA</h1>
+				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
+					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
+				<!-- 	<style type=text/css>
+				  div.ui-slider {
+				       margin-left: 5px;
+				       width: 96%;
+				   }
+				</style> -->
+
+			</div>
+			<!-- /navbar -->
+			<div data-role="content" class="surveyText">
+				<p>
+					<i>What is your overall amount of food purchases in comparison
+						to other weeks?</i>
+				</p>
+
+				<div data-role="fieldcontain">
+					<select name="select-choice-1" id="survey1" data-mini="true"
+						data-native-menu="false" onchange="sendSurveyData(1, this.value);">
+						<option>Choose one</option>
+						<option value="1">1 (Much Less)</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4 (Same)</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7 (Much More)</option>
+					</select>
+				</div>
+
+
+
+				<p>
+					<i>What is your overall amount of disposals (edible or once
+						edible food) in comparison to other weeks?</i>
+				</p>
+				<div data-role="fieldcontain">
+					<select name="select-choice-1" id="survey2" data-mini="true"
+						data-native-menu="false" onchange="sendSurveyData(2, this.value);">
+						<option>Choose one</option>
+						<option value="1">1 (Much Less)</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4 (Same)</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7 (Much More)</option>
+					</select>
+				</div>
+
+				<p>
+					<i>Indicate your overall feeling of control in purchasing food?</i>
+				</p>
+				<div data-role="fieldcontain">
+					<select name="select-choice-1" id="survey3" data-mini="true"
+						data-native-menu="false" onchange="sendSurveyData(3, this.value);">
+						<option>Choose one</option>
+						<option value="1">1 (Low)</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7 (High)</option>
+					</select>
+				</div>
+
+
+				<p>
+					<i>Indicate your overall feeling of control in disposing food
+						(edible or once edible)?</i>
+				</p>
+				<div data-role="fieldcontain">
+					<select name="select-choice-1" id="survey4" data-mini="true"
+						data-native-menu="false" onchange="sendSurveyData(4, this.value);">
+						<option>Choose one</option>
+						<option value="1">1 (Low)</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7 (High)</option>
+					</select>
+				</div>
+
+			</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a id="homeBtn4" data-icon="search"
+							data-iconshadow="false" data-inline="true"
+							data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+						<li><a id="userBtn4" data-icon="home" data-iconshadow="false"
+							data-inline="true" data-transition="slide"
+							class="ui-btn ui-icon-nodisc">My Lists</a></li>
+						<li><a id="wasteBtn4" data-icon="info"
+							data-iconshadow="false" data-inline="true"
+							data-transition="slide" class="ui-btn ui-icon-nodisc"> <span
+								id="badge-page10" class="badge"></span>My Bin
+						</a></li>
+
+					</ul>
+				</div>
+
+			</div>
+			<div data-role="panel" data-position-fixed="true" data-theme="a"
+				id="nav-panel">
+				<ul data-role="listview" data-theme="a" class="nav-search">
+					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
+					<li data-icon="edit"><a href="#" data-transition="slide">Survey</a></li>
+					<li data-icon="gear"><a id="userInfoBtn4"
+						data-transition="slide">Me</a></li>
+
+
+				</ul>
+			</div>
+			<!-- /panel -->
+		</div>
+		<!----------------------------------------------- Survey Page -------------------------------------------------->
+
+
+
+		<!----------------------------------------------- User Info Page -------------------------------------------------->
+		<div data-role="page" id="userInfoPage" data-theme="a">
+			<!-- display/edit user info -->
+			
+			
+			<div data-role="header" data-position="fixed" data-id="nav">
+				<h1>EUPHORIA</h1>
+				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
+					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
+			</div>
+			<div data-role="content">
+				<form id="editUserForm">
+					<div data-role="fieldcontain">
+						<label for="username">Username:</label> <input type="text"
+							name="username" id="username" value="" placeholder="Username"
+							readonly="readonly" />
+					</div>
+					<div data-role="fieldcontain">
+						<label for="email">E-mail:</label> <input type="text" name="email"
+							id="email" value="" placeholder="E-mail" readonly="readonly" />
+					</div>
+					<div data-role="fieldcontain">
+						<label for="address">Postal Code</label> <input type="text"
+							name="address" id="address" value=""
+							placeholder="Postal code without blanks" readonly="readonly" />
+					</div>
+					<div data-role="fieldcontain">
+						<label for="age">Age</label> <select name="selectAge"
+							id="selectAge" data-mini="true" data-theme="a">
+
+						</select>
+					</div>
+					<div data-role="fieldcontain">
+						<label for="selectGender">Gender</label> <select name="gender"
+							id="gender" data-mini="true" data-theme="a">
+							<option value="0">Gender</option>
+							<option value="1">Female</option>
+							<option value="2">Male</option>
+						</select>
+					</div>
+					<div class="ui-grid-b">
+						<div class="ui-block-a">
+							<a href="" data-role="button" data-mini="true"
+								data-corners="false" onclick="edit(); return false;">Edit</a>
+						</div>
+						<div class="ui-block-b">
+							<a href="" data-role="button" data-mini="true"
+								data-corners="false" onclick="save(); return false;">Save</a>
+						</div>
+						<div class="ui-block-c">
+							<a href="" data-role="button" data-mini="true"
+								data-corners="false"
+								onclick="window.location.href = 'login.html'; return false;">Logout</a>
+						</div>
+
+					</div>
+
+				</form>
+			</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a id="homeBtn5" data-icon="search"
+							data-iconshadow="false" data-inline="true"
+							data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+						<li><a id="userBtn5" data-icon="home" data-iconshadow="false"
+							data-inline="true" data-transition="slide"
+							class="ui-btn ui-icon-nodisc">My Lists</a></li>
+						<li><a id="wasteBtn5" id="wasteReason5"
+							data-icon="info" data-iconshadow="false" data-inline="true"
+							data-transition="slide" class="ui-btn ui-icon-nodisc"> <span
+								id="badge-page12" class="badge"></span>My Bin
+						</a></li>
+					</ul>
+				</div>
+			</div>
+			<div data-role="panel" data-position-fixed="true" data-theme="a"
+				id="nav-panel">
+				<ul data-role="listview" data-theme="a" class="nav-search">
+					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
+					<li data-icon="edit"><a id="surveyBtn5"
+						data-transition="slide">Survey</a></li>
+					<li data-icon="gear"><a id="userInfoBtn5"
+						data-transition="slide">Me</a></li>
+
+				</ul>
+			</div>
+			<!-- /panel -->
+		</div>
+
+		<!----------------------------------------------- User Info Page -------------------------------------------------->
+
 	</div>
-	
+
 	<script type="text/javascript" src="cordova.js"></script>
 </body>
 </html>
