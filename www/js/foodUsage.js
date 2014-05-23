@@ -523,7 +523,7 @@ function setUserFoodTableActions(currentId) {
 						}
 					});
 
-	$("#row" + currentId).bind("touchstart", highlightTapEvent);
+	$("#row" + currentId).bind("tap", highlightTapEvent);
 }
 
 function highlightTapEvent(event) {
@@ -533,7 +533,6 @@ function highlightTapEvent(event) {
 }
 
 function highlightRow(currentId) {
-	console.log(currentId);
 	if (document.getElementById("row" + currentId).dataset.value == "unselected") {
 		document.getElementById("row" + currentId).style.backgroundColor = '#6688BF';
 		document.getElementById("row" + currentId).style.opacity = '0.5';
