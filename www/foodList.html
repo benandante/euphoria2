@@ -26,6 +26,9 @@
 		<div data-role="page" id="homePage" data-theme="a">
 
 			<script type="text/javascript">
+				$(document).on('pageshow', '[data-role=page]', function () {					
+					 $(window).resize();
+				});
 				$(document).on("pagebeforeshow", "#user", function() {
 					sendUserAction(3, getNow(), "user list opened");
 				});
