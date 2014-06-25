@@ -47,6 +47,7 @@
 			dataType : 'json',
 			success : function(data) {
 				if (data.members.value != 'ok') {
+					//navigator alerts do not work
 					alert(data.members.value);
 					console.log("failure!");
 				} else {
