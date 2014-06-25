@@ -47,7 +47,7 @@
 			dataType : 'json',
 			success : function(data) {
 				if (data.members.value != 'ok') {
-					navigator.notification.alert(data.members.value);
+					alert(data.members.value);
 					console.log("failure!");
 				} else {
 					sessionStorage.setItem("usertoken", data.members.token);
