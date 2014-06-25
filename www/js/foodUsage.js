@@ -547,11 +547,11 @@ function highlightRow(currentId) {
 		document.getElementById("swipeImage" + currentId).border = "0";
 		toBeDeleted--;
 	}
-	if (toBeDeleted == 0) {
+	/*if (toBeDeleted == 0) {
 		$('#deleteSelected').addClass('ui-disabled');
 	} else {
 		$('#deleteSelected').removeClass('ui-disabled');
-	}
+	}*/
 	$('#row' + currentId).trigger('refresh');
 	$('#swipeImage' + currentId).trigger('refresh');
 
