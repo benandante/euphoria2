@@ -1702,7 +1702,7 @@ function updateFoodWasteReasonsOffline(reason, rowNumber) {
  */
 function deletePurchaseDataOffline(pId, rowNumber) {
 	var amount = 0;
-	for(i=0, len = userFoodWasteInfo; i < len; i++) {
+	for(i=0, len = userFoodUsageData.length; i < len; i++) {
 		if(userFoodUsageData[i][0] == pId) {
 			amount = userFoodUsageData[i][1];
 			break;

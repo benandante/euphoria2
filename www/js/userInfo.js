@@ -1,5 +1,6 @@
 function openProfilePage() {
 					$.mobile.changePage("#userInfoPage");
+					sendUserAction(6, getNow(), "profile page opened");
 					updateWasteBubbles();
 					$("#selectAge").selectmenu('disable');
 					$("#gender").selectmenu('disable');

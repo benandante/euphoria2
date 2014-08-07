@@ -2,7 +2,7 @@ var toBeDeletedWaste = 0;
 
 function openWastePage() {
 	$.mobile.changePage("#wastePage");
-
+	sendUserAction(4, getNow(), "waste page opened");
 	newWasteNumber = 0;
 	loadUserWasteList();
 	updateWasteBubbles();

@@ -1,5 +1,6 @@
 function openUserPage() {
 					$.mobile.changePage("#userPage");
+					sendUserAction(3, getNow(), "user list opened");
 					updateWasteBubbles();
 				}
 

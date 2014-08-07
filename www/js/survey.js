@@ -1,5 +1,6 @@
 function openSurveyPage() {
 	$.mobile.changePage("#surveyPage");
+	sendUserAction(5, getNow(), "survey page opened");
 	updateWasteBubbles();
 }
 
