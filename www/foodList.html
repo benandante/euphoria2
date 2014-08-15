@@ -167,34 +167,36 @@
 				
 			</script>
 			<div data-role="header" data-position="fixed" data-id="nav">
-				<h1>EUPHORIA</h1>
+				<h1>Euphoria</h1>
 				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
 					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
 			</div>
 
 			<div data-role="content">
 
+			<label class="table-title-label"><i>What would you like to buy or
+						did you buy?</i></label>
+							<p></p>
 				<!-- <input type="search" name="search" id="searchfood" value="" /> -->
 				<ul data-role="listview" data-filter="true"
 					data-filter-reveal="true" data-split-theme="a" data-inset="true"
 					data-filter-theme="a"
 					data-filter-placeholder="Search food or select below..."
 					data-theme="a" data-mini="true" id="searchFoodlist"></ul>
-				<p></p>
-				<label class="table-title-label"><i>What did you buy or
-						would like to buy?</i></label>
+			
+			
 				<div id="ContentFoodArea"></div>
-
+				<p><p/>
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
 						<a href="" data-role="button" data-corners="false"
 							data-icon="plus" data-mini="true" data-iconshadow="false"
-							class="ui-icon-nodisc" id="willBuy">I will buy</a>
+							class="ui-icon-nodisc" id="willBuy">To wishlist</a>
 					</div>
 					<div class="ui-block-b">
 						<a href="" data-role="button" data-corners="false"
 							data-icon="check" data-mini="true" data-iconshadow="false"
-							class="ui-icon-nodisc" id="ihave">I have</a>
+							class="ui-icon-nodisc" id="ihave">To stocklist</a>
 					</div>
 				</div>
 
@@ -203,10 +205,9 @@
 				<div data-role="navbar">
 					<ul>
 						<li><a data-icon="search" data-iconshadow="false"
-							class="ui-btn ui-icon-nodisc" id="homeBtn1">Items</a></li>
+							class="ui-btn ui-icon-nodisc" id="homeBtn1">Add items</a></li>
 						<li><a data-icon="home" data-iconshadow="false"
-							data-inline="true" class="ui-btn ui-icon-nodisc" id="userBtn1">My
-								Lists</a></li>
+							data-inline="true" class="ui-btn ui-icon-nodisc" id="userBtn1">My lists</a></li>
 						<li><a id="wasteBtn1" data-icon="info"
 							data-iconshadow="false" data-inline="true"
 							class="ui-btn ui-icon-nodisc"> <span id="badge-page2"
@@ -225,7 +226,7 @@
 					<li data-icon="edit"><a id="surveyBtn1"
 						data-transition="slide">Survey</a></li>
 					<li data-icon="gear"><a id="userInfoBtn1" 
-						data-transition="slide">Me</a></li>
+						data-transition="slide">My profile</a></li>
 
 				</ul>
 			</div>
@@ -251,7 +252,7 @@
 
 
 			<div data-role="header" data-position="fixed" data-id="nav">
-				<h1>EUPHORIA</h1>
+				<h1>Euphoria</h1>
 				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
 					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
 
@@ -259,11 +260,15 @@
 
 			<div data-role="content">
 
-				<label class="table-title-label"><i><u>I will buy</u></i></label>
+				<hr>
+				<label class="table-title-label"><i>My wishlist</i></label>
+				<hr>
 				<div id="userShoppingList"></div>
-
 				<p></p>
-				<label class="table-title-label"><i><u>I have</u></i></label> <select
+				<hr>
+				<label class="table-title-label"><i>My stocklist</i></label> 
+				<hr>
+				<select
 					name="sortBy" id="sortBy" class="select-class ui-icon-nodisc"
 					data-theme="a" value="Sort by Date" data-mini="true"
 					data-inline="true" data-corners="false" data-iconshadow="false"
@@ -272,7 +277,7 @@
 					<option value="DESC">Newest</option>
 				</select>
 
-
+				<p><p/>
 				<div id="userFoodInfo"></div>
 				<p></p>
 				<div class="ui-grid-a">
@@ -298,9 +303,9 @@
 					<ul>
 						<li><a id="homeBtn2" data-icon="search"
 							data-iconshadow="false" data-inline="true"
-							class="ui-btn ui-icon-nodisc">Items</a></li>
+							class="ui-btn ui-icon-nodisc">Add items</a></li>
 						<li><a id="userBtn2" data-icon="home" data-iconshadow="false"
-							data-inline="true" class="ui-btn ui-icon-nodisc">My Lists</a></li>
+							data-inline="true" class="ui-btn ui-icon-nodisc">My lists</a></li>
 						<li><a id="wasteBtn2" data-icon="info"
 							data-iconshadow="false" data-inline="true"
 							class="ui-btn ui-icon-nodisc"> <span id="badge-page4"
@@ -318,7 +323,7 @@
 					<li data-icon="edit"><a id="surveyBtn2"
 						data-transition="slide">Survey</a></li>
 					<li data-icon="gear"><a href="userInfoBtn2" 
-						data-transition="slide">Me</a></li>
+						data-transition="slide">My profile</a></li>
 
 				</ul>
 			</div>
@@ -335,15 +340,14 @@
 			<!-- load user food list -->
 
 			<div data-role="header" data-position="fixed" data-id="nav">
-				<h1>EUPHORIA</h1>
+				<h1>Euphoria</h1>
 				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
 					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
 
 			</div>
 			<!-- /navbar -->
 			<div data-role="content">
-				<label class="table-title-label"><i><u>Reasons of
-							Disposal</u></i></label>
+				<label class="table-title-label"><i>What were the reasons for wasting these items?</i></label>
 				<p></p>
 				<div id="wasteList"></div>
 				<p></p>
@@ -361,9 +365,9 @@
 					<ul>
 						<li><a id="homeBtn3" data-icon="search"
 							data-iconshadow="false" data-inline="true"
-							class="ui-btn ui-icon-nodisc">Items</a></li>
+							class="ui-btn ui-icon-nodisc">Add items</a></li>
 						<li><a id="userBtn3" data-icon="home" data-iconshadow="false"
-							data-inline="true" class="ui-btn ui-icon-nodisc">My Lists</a></li>
+							data-inline="true" class="ui-btn ui-icon-nodisc">My lists</a></li>
 						<!-- <li><a href="usagereason.html" id="utensils" data-icon="custom" class="ui-badge-container">
 					<span id="badge-page7" class="badge"></span></a></li> -->
 						<li><a href="#" id="wasteBtn3" data-icon="info"
@@ -382,7 +386,7 @@
 					<li data-icon="edit"><a id="surveyBtn3"
 						data-transition="slide">Survey</a></li>
 					<li data-icon="gear"><a id="userInfoBtn3"
-						data-transition="slide">Me</a></li>
+						data-transition="slide">My profile</a></li>
 
 
 				</ul>
@@ -399,7 +403,7 @@
 			<!-- load user survey data -->
 
 			<div data-role="header" data-position="fixed" data-id="nav">
-				<h1>EUPHORIA</h1>
+				<h1>Euphoria</h1>
 				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
 					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
 				<!-- 	<style type=text/css>
@@ -434,7 +438,7 @@
 
 
 				<p>
-					<i>What is your overall amount of disposals (edible or once
+					<i>What is your overall amount of food waste (edible or once
 						edible food) in comparison to other weeks?</i>
 				</p>
 				<div data-role="fieldcontain">
@@ -470,7 +474,7 @@
 
 
 				<p>
-					<i>Indicate your overall feeling of control in disposing food
+					<i>Indicate your overall feeling of control in wasting food
 						(edible or once edible)?</i>
 				</p>
 				<div data-role="fieldcontain">
@@ -493,10 +497,10 @@
 					<ul>
 						<li><a id="homeBtn4" data-icon="search"
 							data-iconshadow="false" data-inline="true"
-							data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+							data-transition="slide" class="ui-btn ui-icon-nodisc">Add items</a></li>
 						<li><a id="userBtn4" data-icon="home" data-iconshadow="false"
 							data-inline="true" data-transition="slide"
-							class="ui-btn ui-icon-nodisc">My Lists</a></li>
+							class="ui-btn ui-icon-nodisc">My lists</a></li>
 						<li><a id="wasteBtn4" data-icon="info"
 							data-iconshadow="false" data-inline="true"
 							data-transition="slide" class="ui-btn ui-icon-nodisc"> <span
@@ -513,7 +517,7 @@
 					<li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
 					<li data-icon="edit"><a href="#" data-transition="slide">Survey</a></li>
 					<li data-icon="gear"><a id="userInfoBtn4"
-						data-transition="slide">Me</a></li>
+						data-transition="slide">My profile</a></li>
 
 
 				</ul>
@@ -530,7 +534,7 @@
 			
 			
 			<div data-role="header" data-position="fixed" data-id="nav">
-				<h1>EUPHORIA</h1>
+				<h1>Euphoria</h1>
 				<a href="#nav-panel" data-icon="bars" data-iconpos="notext"
 					data-iconshadow="false" class="ui-icon-nodisc">Menu</a>
 			</div>
@@ -551,13 +555,15 @@
 							placeholder="Postal code without blanks" readonly="readonly" />
 					</div>
 					<div data-role="fieldcontain">
-						<label for="age">Age</label> <select name="selectAge"
+						<label for="age">Age</label>    <p><p/>
+						<select name="selectAge"
 							id="selectAge" data-mini="true" data-theme="a">
 
 						</select>
 					</div>
 					<div data-role="fieldcontain">
-						<label for="selectGender">Gender</label> <select name="gender"
+						<label for="selectGender">Gender</label>    <p><p/>
+						<select name="gender"
 							id="gender" data-mini="true" data-theme="a">
 							<option value="0">Gender</option>
 							<option value="1">Female</option>
@@ -588,10 +594,10 @@
 					<ul>
 						<li><a id="homeBtn5" data-icon="search"
 							data-iconshadow="false" data-inline="true"
-							data-transition="slide" class="ui-btn ui-icon-nodisc">Items</a></li>
+							data-transition="slide" class="ui-btn ui-icon-nodisc">Add items</a></li>
 						<li><a id="userBtn5" data-icon="home" data-iconshadow="false"
 							data-inline="true" data-transition="slide"
-							class="ui-btn ui-icon-nodisc">My Lists</a></li>
+							class="ui-btn ui-icon-nodisc">My lists</a></li>
 						<li><a id="wasteBtn5" id="wasteReason5"
 							data-icon="info" data-iconshadow="false" data-inline="true"
 							data-transition="slide" class="ui-btn ui-icon-nodisc"> <span
@@ -607,7 +613,7 @@
 					<li data-icon="edit"><a id="surveyBtn5"
 						data-transition="slide">Survey</a></li>
 					<li data-icon="gear"><a id="userInfoBtn5"
-						data-transition="slide">Me</a></li>
+						data-transition="slide">My profile</a></li>
 
 				</ul>
 			</div>

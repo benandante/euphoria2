@@ -1192,7 +1192,7 @@ function deleteFromOfflineActions(actionNumber, id) {
 	    		 //add it as a row
 				 tableHTML += '<tr data-value="unselected" id="row' + currentId + '" ><td style="width:15%" ><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'"  id="swipeImage' + currentId + '" width="50" height="50" ;"></td>';
 		    	 
-				 tableHTML += '<td style="width:60%"><input type="number" step="1" min="0" maxlength="6" size="6" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+				 tableHTML += '<td style="width:20%"><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
 		    	 currentRow.amount.toFixed(2) +  '" /><label  class="unit-label" font-style="italic"><i>' + currentRow.foodUnit + 
 		    	 '</i></label></td>';
 				 tableHTML += '<td style="width:20%"><a href="" type="button" id="shoppingConfirm' + currentId + '" value="Bought" data-icon="check" data-corners="false" data-iconshadow="false" class="ui-icon-nodisc" data-mini="true" data-theme="a" onclick="buyItemFromShoppingList(' + currentId +')">Bought<a></td>';

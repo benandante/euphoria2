@@ -28,7 +28,7 @@ function selectFoodByImage(id) {
 	} else {
 
 		//set border gray to indicate deselection
-		document.getElementById(id).style.border = "2px solid #2E2E2E";
+		document.getElementById(id).style.border = "2px solid #7E7E7E";
 		document.getElementById(id).value = "0";
 
 		//set selection value in the global array
@@ -110,9 +110,9 @@ function addFoodsToMainPage() {
 
 	for (var i = 0; i < imageFoodLen;) {
 		myHTMLOutput += '<div class="ui-block-a">';
-		stl = "border:2px solid #2E2E2E;margin:2px;";
+		stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;";
 		if (mainPageFoods[i][2] == 1) {
-			stl = "border:2px solid white;margin:2px;";
+			stl = "border:2px solid white;margin:2px;max-width:91%;";
 		}
 		myHTMLOutput += '<input type="image" style="' + stl + '" src="'
 				+ mainPageFoods[i][1] + '" id="' + mainPageFoods[i][0]
@@ -121,9 +121,9 @@ function addFoodsToMainPage() {
 
 		i++;
 		if (i < imageFoodLen) {
-			stl = "border:2px solid #2E2E2E;margin:2px;";
+			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;";
 			if (mainPageFoods[i][2] == 1) {
-				stl = "border:2px solid white;margin:2px;";
+				stl = "border:2px solid white;margin:2px;max-width:91%;";
 			}
 			myHTMLOutput += '<div class="ui-block-b">';
 			myHTMLOutput += '<input type="image"  style="' + stl + '" src="'
@@ -134,9 +134,9 @@ function addFoodsToMainPage() {
 
 		i++;
 		if (i < imageFoodLen) {
-			stl = "border:2px solid #2E2E2E;margin:2px;";
+			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;";
 			if (mainPageFoods[i][2] == 1) {
-				stl = "border:2px solid white;margin:2px;";
+				stl = "border:2px solid white;margin:2px;max-width:91%;";
 			}
 			myHTMLOutput += '<div class="ui-block-c">';
 			myHTMLOutput += '<input type="image" style="' + stl + '" src="'
@@ -171,7 +171,7 @@ function addFoods(status) {
 			val = "#" + idVal;
 			//if image is selected, add them to user list
 			if ($(val).val() == 1) {
-				document.getElementById(idVal).style.border = "2px solid #2E2E2E";
+				document.getElementById(idVal).style.border = "2px solid #7E7E7E";
 				document.getElementById(idVal).value = "0";
 				buyNewFood(idVal, 0, status);
 			}
