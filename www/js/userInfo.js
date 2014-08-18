@@ -84,3 +84,12 @@ function save() {
 
 	return false;
 }
+
+
+function logout () {
+	window.localStorage.removeItem("currentuser"); 
+	window.location.href = 'login.html'; 
+	
+}
+
+

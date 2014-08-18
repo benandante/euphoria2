@@ -280,14 +280,22 @@ function addRowToAvTable(rowID) {
 
 			var tableHTML;
 
-			if (parseFloat(userFoodUsageData[purchaseField][1]).toFixed(2) > 0) {
+			filteredAmount = parseFloat(userFoodUsageData[purchaseField][1]).toFixed(1);
+			 if(filteredAmount > 0) {
+				 if(userFoodUsageData[purchaseField][7] == "g" || userFoodUsageData[purchaseField][7] == "ml") {
+					 filteredAmount =  parseInt(userFoodUsageData[purchaseField][1]);
+				 }
+			 } else {
+				 filteredAmount = 0;
+			 }
+			 
+			if (filteredAmount > 0) {
 				tableHTML = '<td><input type="number" disabled="true" step="1" min="0" maxlength="5" size="5" name="amount'
 						+ rowID
 						+ '" id="amount'
 						+ rowID
 						+ '" data-mini="true" value="'
-						+ parseFloat(userFoodUsageData[purchaseField][1])
-								.toFixed(2)
+						+ filteredAmount
 						+ '" /><label font-style="italic" class="unit-label"><i>'
 						+ userFoodUsageData[purchaseField][7]
 						+ '</i></label></td>';
@@ -297,8 +305,7 @@ function addRowToAvTable(rowID) {
 						+ '" id="amount'
 						+ rowID
 						+ '" data-mini="true" value="'
-						+ parseFloat(userFoodUsageData[purchaseField][1])
-								.toFixed(2)
+						+ filteredAmount
 						+ '" /><label font-style="italic" class="unit-label"><i>'
 						+ userFoodUsageData[purchaseField][7]
 						+ '</i></label></td>';
@@ -307,7 +314,7 @@ function addRowToAvTable(rowID) {
 			row.cells[1].outerHTML = tableHTML;
 
 			tableHTML = '<td>';
-			if (parseFloat(userFoodUsageData[purchaseField][1]).toFixed(2) > 0) {
+			if (filteredAmount > 0) {
 				tableHTML += '<input type="number"  step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage'
 						+ rowID + '"';
 			} else {
@@ -499,30 +506,34 @@ function setUserFoodTableActions(currentId) {
 	});*/
 	//$('#sliderUsage' + currentId).trigger("create");
 	$('#sliderUsage' + currentId)
-			.focusout(
-					function() {
-						var id = event.target.id.replace("sliderUsage", "");
-						var row = findPurchaseInfoById(id);
-						var sliderAmount = parseFloat($(this).val());
-						var totalAmount = parseFloat($('#amount' + id).val());
-						if (sliderAmount > 0) {
-							if (sliderAmount > totalAmount) {
-								$(this).val(totalAmount);
-								sliderAmount = parseFloat($(this).val());
-							}
-							sendUsage(userFoodUsageData[row][5],
-									userFoodUsageData[row][4],
-									userFoodUsageData[row][0], sliderAmount,
-									row);
-							var amountVal = event.target.id.replace(
-									"sliderUsage", "amount");
-							$('#' + amountVal)
-									.val(
-											(parseFloat($('#' + amountVal)
-													.val()) - sliderAmount)
-													.toFixed(2));
+	.focusout(
+			function() {
+				var id = event.target.id.replace("sliderUsage", "");
+				var row = findPurchaseInfoById(id);
+				var sliderAmount = parseFloat($(this).val()).toFixed(1);
+				var totalAmount = parseFloat($('#amount' + id).val());
+				if (sliderAmount > 0) {
+					if (sliderAmount > totalAmount) {
+						$(this).val(totalAmount);
+						sliderAmount = parseFloat($(this).val());
+					}
+					sendUsage(userFoodUsageData[row][5],
+							userFoodUsageData[row][4],
+							userFoodUsageData[row][0], sliderAmount,
+							row);
+					var amountVal = event.target.id.replace(
+							"sliderUsage", "amount");
+					var newValue = (parseFloat($('#' + amountVal).val()) - sliderAmount).toFixed(1);
+					if(newValue > 0) {
+						if(userFoodUsageData[row][7] == "g" || userFoodUsageData[row][7] == "ml") {
+							newValue = parseInt(newValue);
 						}
-					});
+					} else {
+						newValue = 0;
+					}
+					$('#' + amountVal).val(newValue);
+				}
+			});
 
 	$("#row" + currentId).bind("tap", highlightTapEvent);
 }

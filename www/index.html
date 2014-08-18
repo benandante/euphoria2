@@ -32,6 +32,7 @@
         <title>Euphoriaaaa</title>
     </head>
     <script>
+    
     function onLoad() {
     	/* if (typeof navigator.device == "undefined"){
             document.addEventListener("deviceready", onDeviceReady, false);
@@ -70,14 +71,12 @@
 	});
 	
 	
-		/* showAlert(); */
-		/* if(getSavedUserData()) {
-	    	window.location.replace('foodList.html');
-	    } else {  */
-	    	//$.mobile.changePage("login.html", "slide", true, true);
-	    	window.location.replace('login.html');
-	    
-	    //}  
+	if(getSavedUserData() != null) {
+    	window.location.replace('foodList.html');
+    } else {  
+    	window.location.replace('login.html');
+    
+    }   
 	}
 
 

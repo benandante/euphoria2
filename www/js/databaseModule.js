@@ -1124,18 +1124,27 @@ function deleteFromOfflineActions(actionNumber, id) {
 	    		 //if it is available list
 	    		 //add it as a row
 			 rowHtmlR += ' <tr data-value="unselected" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'" id="swipeImage' + currentId + '" width="50" height="50" ></td>';
-	    	 if(currentRow.amount > 0) {
+			 filteredAmount =  (currentRow.amount -  currentRow.usage).toFixed(1);
+			 if(filteredAmount > 0) {
+				 if(currentRow.foodUnit == "g" || currentRow.foodUnit == "ml") {
+					 filteredAmount =  (currentRow.amount -  currentRow.usage).toFixed(0);
+				 }
+			 } else {
+				 filteredAmount = 0;
+			 }
+			 
+			 if(currentRow.amount > 0) {
 	    		 rowHtmlR += '<td><input type="number"  disabled="true" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-		    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
+	    		 filteredAmount +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
 		    	 '</i></label></td>';
 	    	 } else {
 	    		 rowHtmlR += '<td><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-		    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
+	    		 filteredAmount +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
 		    	 '</i></label></td>';
 	    	 }
 			
 			 rowHtmlR += '<td>';
-			 if( (currentRow.amount -  currentRow.usage).toFixed(2) > 0) {				
+			 if( filteredAmount > 0) {				
 				 rowHtmlR += '<input type="number"  step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage' + currentId + '"';
 			 } else {
 				 rowHtmlR += '<input type="number"  disabled="true" step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage' + currentId + '"';				
@@ -1192,8 +1201,17 @@ function deleteFromOfflineActions(actionNumber, id) {
 	    		 //add it as a row
 				 tableHTML += '<tr data-value="unselected" id="row' + currentId + '" ><td style="width:15%" ><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'"  id="swipeImage' + currentId + '" width="50" height="50" ;"></td>';
 		    	 
-				 tableHTML += '<td style="width:20%"><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-		    	 currentRow.amount.toFixed(2) +  '" /><label  class="unit-label" font-style="italic"><i>' + currentRow.foodUnit + 
+				 filteredAmount =  currentRow.amount.toFixed(1);
+				 if(filteredAmount > 0) {
+					 if(currentRow.foodUnit == "g" || currentRow.foodUnit == "ml") {
+						 filteredAmount =  currentRow.amount.toFixed(0);
+					 }
+				 } else {
+					 filteredAmount = 0;
+				 }
+				 
+				 tableHTML += '<td style="width:60%"><input type="number" step="1" min="0" maxlength="6" size="6" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
+				 filteredAmount +  '" /><label  class="unit-label" font-style="italic"><i>' + currentRow.foodUnit + 
 		    	 '</i></label></td>';
 				 tableHTML += '<td style="width:20%"><a href="" type="button" id="shoppingConfirm' + currentId + '" value="Bought" data-icon="check" data-corners="false" data-iconshadow="false" class="ui-icon-nodisc" data-mini="true" data-theme="a" onclick="buyItemFromShoppingList(' + currentId +')">Bought<a></td>';
 				 tableHTML += '</tr>';
@@ -1207,22 +1225,29 @@ function deleteFromOfflineActions(actionNumber, id) {
 			 
 			 //if the item is in the current list (available or shopping)
 			 if(currentRow.status == tableStatus) {
-		    	
+				 filteredAmount =  (currentRow.amount -  currentRow.usage).toFixed(1);
+				 if(filteredAmount > 0) {
+					 if(currentRow.foodUnit == "g" || currentRow.foodUnit == "ml") {
+						 filteredAmount =  (currentRow.amount -  currentRow.usage).toFixed(0);
+					 }
+				 } else {
+					 filteredAmount = 0;
+				 }
 		    		 //if it is available list
 		    		 //add it as a row
 				 tableHTML += ' <tr data-value="unselected" id="row' + currentId + '" style="padding-top: 0.5em !important;"><td><input type="image" src="' + currentRow.foodIcon + '" rel="' +  currentRow.foodName +'" id="swipeImage' + currentId + '" width="50" height="50"></td>';
 			     if(currentRow.amount > 0) {
 			    	 tableHTML += '<td><input type="number" disabled="true" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-			    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
+			    	 filteredAmount +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
 			    	 '</i></label></td>';
 			     }	 else {
 			    	 tableHTML += '<td><input type="number" step="1" min="0" maxlength="5" size="5" name="amount' + currentId +  '" id="amount' + currentId + '" data-mini="true" value="' + 
-			    	 (currentRow.amount -  currentRow.usage).toFixed(2) +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
+			    	 filteredAmount +  '" /><label font-style="italic" class="unit-label"><i>' + currentRow.foodUnit + 
 			    	 '</i></label></td>';
 			     }
 				
 				 tableHTML += '<td>';
-				 if( (currentRow.amount -  currentRow.usage).toFixed(2) > 0) {				
+				 if(filteredAmount > 0) {				
 					 tableHTML += '<input type="number"  step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage' + currentId + '"';
 				 } else {
 					 tableHTML += '<input type="number"  disabled="true" step="1" min="0" maxlength="5" size="5" data-mini="true" id="sliderUsage' + currentId + '"';				
