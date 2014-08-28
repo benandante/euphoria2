@@ -29,7 +29,7 @@
 <script type="text/javascript" src="js/userActionTracker.js"></script>
 <script type="text/javascript" src="js/date.format.js"></script>
         
-        <title>Euphoriaaaa</title>
+        <title>Euphoria</title>
     </head>
     <script>
     
@@ -72,11 +72,38 @@
 	
 	
 	if(getSavedUserData() != null) {
-    	window.location.replace('foodList.html');
+		var u = getSavedUserData();
+		 $.ajax({
+		        type       : "GET",
+		        url        :  sessionStorage.getItem("serverDomain") + "/defaultLogin?",
+		        crossDomain: false,
+		        beforeSend : function() {$.mobile.loading('show')},
+		        complete   : function() {$.mobile.loading('hide')},
+		        data       : {username : u},
+		        dataType   : 'json',
+		        success    : function(data) {		        	
+		        	sessionStorage.setItem("usertoken", data.members.token);
+		        	sessionStorage.setItem("currentUser", u);
+		        	sessionStorage.setItem("currentUserEmail", data.members.email);
+		        	sessionStorage.setItem("currentUserAddress", data.members.address);
+		        	sessionStorage.setItem("currentUserGender", data.members.gender);
+		        	sessionStorage.setItem("currentUserAge", data.members.age);
+		        	
+		        	//$.mobile.changePage("foodList.html", "slide", true, true);
+		        	window.location.replace('foodList.html');
+		        	console.log("login success!");
+		        
+		        },
+		        error      : function(e) {
+		        	// phonegap alerts
+		           console.log("login failure!"); 
+		        }
+		    });    
+		 return false;
     } else {  
     	window.location.replace('login.html');
     
-    }   
+    }  
 	}
 
 
