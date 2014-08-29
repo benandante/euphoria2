@@ -51,27 +51,10 @@
 	function onDeviceReady() {
 		sessionStorage.setItem("serverDomain", "http://diserver.id.tue.nl:8080/EServer");
 	
-
-	//the notification plugin do not work with the emualator. 
-	//so these lines should not exist in the test project
-	window.plugin.notification.local.add({
-	    id:      1,
-	    title:   'Reminder',
-	    message: 'Dont forget to add your foods',
-	    repeat:  'daily',
-	 
-	});
-	
-	window.plugin.notification.local.add({
-	    id:      2,
-	    title:   'Survey Reminder',
-	    message: 'Could you please fill our survey?',
-	    repeat:  'weekly',
-	 
-	});
-	
 	
 	if(getSavedUserData() != null) {
+	
+		
 		var u = getSavedUserData();
 		 $.ajax({
 		        type       : "GET",
@@ -101,6 +84,24 @@
 		    });    
 		 return false;
     } else {  
+    	//the notification plugin do not work with the emulator. 
+		//so these lines should not exist in the test project
+		window.plugin.notification.local.add({
+		    id:      1,
+		    title:   'Reminder',
+		    message: 'Dont forget to add your foods',
+		    repeat:  'daily',
+		 
+		});
+		
+		window.plugin.notification.local.add({
+		    id:      2,
+		    title:   'Survey Reminder',
+		    message: 'Could you please fill our survey?',
+		    repeat:  'weekly',
+		 
+		});
+		
     	window.location.replace('login.html');
     
     }  
