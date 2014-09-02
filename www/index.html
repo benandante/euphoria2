@@ -86,7 +86,9 @@
     } else {  
     	//the notification plugin do not work with the emulator. 
 		//so these lines should not exist in the test project
-		window.plugin.notification.local.add({
+		
+		//notification plugin do not work properly
+		/*window.plugin.notification.local.add({
 		    id:      1,
 		    title:   'Reminder',
 		    message: 'Dont forget to add your foods',
@@ -100,7 +102,7 @@
 		    message: 'Could you please fill our survey?',
 		    repeat:  'weekly',
 		 
-		});
+		});*/
 		
     	window.location.replace('login.html');
     
