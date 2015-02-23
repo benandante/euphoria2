@@ -39,7 +39,7 @@
     <feature name="http://api.phonegap.com/2.0/notification"/>
 
      <gap:platform name="android" />
-        
+         <gap:platform name="ios" />
         
     <!-- Customize your app and platform with the preference element. -->
     <preference name="phonegap-version"           value="3.3.0" />          <!-- all: current version of PhoneGap -->
