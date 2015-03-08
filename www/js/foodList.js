@@ -106,13 +106,13 @@ function addFoodsToMainPage() {
 	var imageFoodLen = mainPageFoods.length;
 
 	// if (imageFoodLen > FOOD_NUMBER_ON_MAIN) imageFoodLen = FOOD_NUMBER_ON_MAIN;
-	myHTMLOutput = '<div class="ui-grid-b" data-scroll="true" id="mainFoodList">';
+	myHTMLOutput = '<div class="ui-grid-b" data-scroll="true" id="mainFoodList" style="height: 900px">';
 
 	for (var i = 0; i < imageFoodLen;) {
 		myHTMLOutput += '<div class="ui-block-a">';
-		stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
+		stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;";
 		if (mainPageFoods[i][2] == 1) {
-			stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
+			stl = "border:2px solid white;margin:2px;max-width:91%;";
 		}
 		myHTMLOutput += '<input type="image" style="' + stl + '" src="'
 				+ mainPageFoods[i][1] + '" id="' + mainPageFoods[i][0]
@@ -121,9 +121,9 @@ function addFoodsToMainPage() {
 
 		i++;
 		if (i < imageFoodLen) {
-			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
+			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;";
 			if (mainPageFoods[i][2] == 1) {
-				stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
+				stl = "border:2px solid white;margin:2px;max-width:91%;";
 			}
 			myHTMLOutput += '<div class="ui-block-b">';
 			myHTMLOutput += '<input type="image"  style="' + stl + '" src="'
@@ -134,9 +134,9 @@ function addFoodsToMainPage() {
 
 		i++;
 		if (i < imageFoodLen) {
-			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
+			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;";
 			if (mainPageFoods[i][2] == 1) {
-				stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
+				stl = "border:2px solid white;margin:2px;max-width:91%;";
 			}
 			myHTMLOutput += '<div class="ui-block-c">';
 			myHTMLOutput += '<input type="image" style="' + stl + '" src="'
