@@ -110,9 +110,9 @@ function addFoodsToMainPage() {
 
 	for (var i = 0; i < imageFoodLen;) {
 		myHTMLOutput += '<div class="ui-block-a">';
-		stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height: 20%;";
+		stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
 		if (mainPageFoods[i][2] == 1) {
-			stl = "border:2px solid white;margin:2px;max-width:91%;max-height: 20%;";
+			stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
 		}
 		myHTMLOutput += '<input type="image" style="' + stl + '" src="'
 				+ mainPageFoods[i][1] + '" id="' + mainPageFoods[i][0]
@@ -121,9 +121,9 @@ function addFoodsToMainPage() {
 
 		i++;
 		if (i < imageFoodLen) {
-			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height: 20%;";
+			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
 			if (mainPageFoods[i][2] == 1) {
-				stl = "border:2px solid white;margin:2px;max-width:91%;max-height: 20%;";
+				stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
 			}
 			myHTMLOutput += '<div class="ui-block-b">';
 			myHTMLOutput += '<input type="image"  style="' + stl + '" src="'
@@ -134,9 +134,9 @@ function addFoodsToMainPage() {
 
 		i++;
 		if (i < imageFoodLen) {
-			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height: 20%;";
+			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
 			if (mainPageFoods[i][2] == 1) {
-				stl = "border:2px solid white;margin:2px;max-width:91%;max-height: 20%;";
+				stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
 			}
 			myHTMLOutput += '<div class="ui-block-c">';
 			myHTMLOutput += '<input type="image" style="' + stl + '" src="'
