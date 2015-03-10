@@ -106,13 +106,14 @@ function addFoodsToMainPage() {
 	var imageFoodLen = mainPageFoods.length;
 
 	// if (imageFoodLen > FOOD_NUMBER_ON_MAIN) imageFoodLen = FOOD_NUMBER_ON_MAIN;
-	myHTMLOutput = '<div class="ui-grid-b" data-scroll="true" id="mainFoodList" style="height: 900px">';
+	myHTMLOutput = '<div class="ui-grid-b" data-scroll="true" id="mainFoodList">';
 
 	for (var i = 0; i < imageFoodLen;) {
-		myHTMLOutput += '<div class="ui-block-a">';
-		stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
+		// smallest height is apparently 72px
+		myHTMLOutput += '<div class="ui-block-a" style="max-height: 72px; overflow: hidden;">';
+		stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;height:91%";
 		if (mainPageFoods[i][2] == 1) {
-			stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
+			stl = "border:2px solid white;margin:2px;max-width:91%;height:91%";
 		}
 		myHTMLOutput += '<input type="image" style="' + stl + '" src="'
 				+ mainPageFoods[i][1] + '" id="' + mainPageFoods[i][0]
@@ -121,11 +122,11 @@ function addFoodsToMainPage() {
 
 		i++;
 		if (i < imageFoodLen) {
-			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
+			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;height:91%";
 			if (mainPageFoods[i][2] == 1) {
-				stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
+				stl = "border:2px solid white;margin:2px;max-width:91%;height:91%";
 			}
-			myHTMLOutput += '<div class="ui-block-b">';
+			myHTMLOutput += '<div class="ui-block-b" style="max-height: 72px; overflow: hidden;">';
 			myHTMLOutput += '<input type="image"  style="' + stl + '" src="'
 					+ mainPageFoods[i][1] + '" id="' + mainPageFoods[i][0]
 					+ '"  value="' + mainPageFoods[i][2] + '" >'
@@ -134,11 +135,11 @@ function addFoodsToMainPage() {
 
 		i++;
 		if (i < imageFoodLen) {
-			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%;max-height:10%;";
+			stl = "border:2px solid #7E7E7E;margin:2px;max-width:91%; height:91%";
 			if (mainPageFoods[i][2] == 1) {
-				stl = "border:2px solid white;margin:2px;max-width:91%;max-height:10%;";
+				stl = "border:2px solid white;margin:2px;max-width:91%; height:91%";
 			}
-			myHTMLOutput += '<div class="ui-block-c">';
+			myHTMLOutput += '<div class="ui-block-c" style="max-height: 72px; overflow: hidden;">';
 			myHTMLOutput += '<input type="image" style="' + stl + '" src="'
 					+ mainPageFoods[i][1] + '" id="' + mainPageFoods[i][0]
 					+ '" value="' + mainPageFoods[i][2] + '" >'
@@ -149,7 +150,9 @@ function addFoodsToMainPage() {
 	myHTMLOutput += '</div>';
 
 	//Update the DIV called Content Area with the HTML string
-	document.getElementById("ContentFoodArea").innerHTML = myHTMLOutput;
+	$('#ContentFoodArea').html(myHTMLOutput);
+//	$('#ContentFoodArea').css({height: 3 * 73 * imageFoodLen + "px"});
+	$('#ContentFoodArea').trigger("updatelayout");
 
 	for (var i = 0; i < imageFoodLen; i++) {
 		$("#" + mainPageFoods[i][0]).bind("tap", mainPageFoodHandler);
